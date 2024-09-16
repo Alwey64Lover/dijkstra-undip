@@ -1,0 +1,36 @@
+/* Scroll */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 10px 10px  #e1e3ea;
+    }
+
+    .required:after {
+        content:" *";
+        color: red;
+    }
+
+/* Form Element */
+    /* Password */
+        .toggle-password {
+            float: right;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: -25px;
+        }
+
+/* Table */
+    /* Datatable */
+        table#table {
+            width: 100%;
+        }
+
+        table#table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }

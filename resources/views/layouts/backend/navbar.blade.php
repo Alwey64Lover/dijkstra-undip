@@ -10,8 +10,8 @@
                         <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
                     </div>
                     <div class="text">
-                        <h6 class="user-dropdown-name">{{ auth()->user()->name }}</h6>
-                        <p class="user-dropdown-status text-sm text-muted">Administrator</p>
+                        <h6 class="user-dropdown-name">{{ user()->name }}</h6>
+                        <p class="user-dropdown-status text-sm text-muted">{{ config('roles.'.user()->role) }}</p>
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="topbarUserDropdown">

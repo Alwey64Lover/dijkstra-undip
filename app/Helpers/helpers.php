@@ -7,6 +7,11 @@ function routeIsActive($route): string
     return request()->routeIs($route) ? 'active' : '';
 }
 
+function user(): mixed
+{
+    return auth()->user();
+}
+
 function actionMessage($type, $action): string
 {
     if ($type == 'failed') {

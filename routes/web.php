@@ -17,12 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticatedSessionController::class, 'checkLogin']);
 
-Route::get('/dashboard', function () {
-    return view('modules.backend.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('modules.backend.dashboard');
+    })
+        ->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::simpleResource('users', UserController::class);
+    Route::middleware(['roles:superadmin|dean'])->group(function () {
+        Route::simpleResource('users', UserController::class);
+    });
 });
 
 require __DIR__.'/auth.php';

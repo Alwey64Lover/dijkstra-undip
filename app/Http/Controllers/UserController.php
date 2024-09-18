@@ -134,7 +134,7 @@ class UserController extends Controller
 
                     break;
                 case 'delete':
-                    if ($id == auth()->user()->id) {
+                    if ($id == user()->id) {
                         throw new \Exception("You can't delete your own account.");
                     }
 

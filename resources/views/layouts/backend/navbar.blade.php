@@ -1,32 +1,43 @@
-<nav class="navbar navbar-expand navbar-light navbar-top">
-    <div class="container-fluid">
-        <a href="#" class="burger-btn d-block">
-            <i class="bi bi-justify fs-3"></i>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <div class="dropdown ms-auto mb-lg-0">
-                <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="user-menu d-flex">
-                        <div class="user-name text-end me-3">
-                            <h6 class="mb-0 text-gray-600">{{ auth()->user()->name }}</h6>
-                            <p class="mb-0 text-sm text-gray-600">Administrator</p>
-                        </div>
-
-                        <div class="user-img d-flex align-items-center">
-                            <div class="avatar avatar-md">
-                                <img src="{{asset('assets/compiled/jpg/1.jpg')}}">
-                            </div>
-                        </div>
+<div class="header-top">
+    <div class="container">
+        <div class="logo">
+            <a href="index.html"><img src="{{ asset('assets/compiled/svg/logo.svg') }}" alt="Logo"></a>
+        </div>
+        <div class="header-top-right">
+            <div class="dropdown">
+                <a href="#" id="topbarUserDropdown" class="user-dropdown d-flex align-items-center dropend dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="avatar avatar-md2" >
+                        <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+                    </div>
+                    <div class="text">
+                        <h6 class="user-dropdown-name">{{ auth()->user()->name }}</h6>
+                        <p class="user-dropdown-status text-sm text-muted">Administrator</p>
                     </div>
                 </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="topbarUserDropdown">
+                    {{-- <li><a class="dropdown-item" href="#">My Account</a></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><hr class="dropdown-divider"></li> --}}
+                    <li>
+                        <a href="#" class='dropdown-item' data-bs-toggle="modal" data-bs-target="#modal_logout">
+                            <i class="bi bi-box-arrow-left"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
+
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
         </div>
+    </div>
+</div>
+
+<nav class="main-navbar">
+    <div class="container">
+        <ul>
+            @include('layouts.backend.item-menu')
+        </ul>
     </div>
 </nav>

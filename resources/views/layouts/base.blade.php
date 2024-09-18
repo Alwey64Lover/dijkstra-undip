@@ -19,16 +19,16 @@
         @endforeach
     @endif
 
-    <title>@yield('title') | Template Mazer</title>
+    <title>@yield('title') | Dijkstra Undip</title>
 
     <link rel="shortcut icon" href="{{ asset('assets/compiled/svg/favicon.svg') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/app.css') }}">
     {{-- <link rel="stylesheet" href="{{ asset('assets/compiled/css/app-dark.css') }}"> --}}
-    <link rel="stylesheet" href="{{ asset('assets/helpers/helpers.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/@fortawesome/fontawesome-free/css/all.min.css') }}">
 
     @stack('css')
+    <link rel="stylesheet" href="{{ asset('assets/helpers/helpers.css') }}">
 </head>
 
 <body>

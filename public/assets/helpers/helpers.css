@@ -36,10 +36,39 @@
         }
 
 /* Auth */
-#auth #auth-left .auth-title{
-    font-size: 40px;
-}
+    #auth #auth-left .auth-title{
+        font-size: 40px;
+    }
 
-#auth #auth-left .auth-logo{
-    margin-bottom: 88px;
-}
+    #auth #auth-left .auth-logo{
+        margin-bottom: 88px;
+    }
+
+/* dashboard */
+    .dashboard .summary{
+        cursor: pointer;
+        transition: all 1s ease;
+    }
+
+    .dashboard .value{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .dashboard .summary:hover h4{
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+    }
+
+    .stats-icon{
+        background-color: #435EBE;
+    }
+
+    .stats-icon i{
+        width: 48px;
+        height: 48px;
+        line-height: 48px;
+        text-align: center;
+    }

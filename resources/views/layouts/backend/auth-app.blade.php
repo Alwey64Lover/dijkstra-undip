@@ -13,10 +13,9 @@
                 </div>
             </div>
 
-            <div class="col-lg-7 d-none d-lg-block" style="max-height: 100%">
+            <div class="col-lg-7 d-none d-lg-block" style="height: 100%">
                 <div id="auth-right" style="overflow: hidden;">
                     <img src="{{ asset('storage/static/fsm.jpg') }}" alt="" >
-
                 </div>
             </div>
         </div>

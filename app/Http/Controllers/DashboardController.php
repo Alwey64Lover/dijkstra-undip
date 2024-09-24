@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class DashboardController extends Controller
+{
+    public function index(){
+        $dashboard = '';
+        switch (user()->role) {
+            case 'lecturer':
+                 $dashboard = $this->lecturerIndex();
+                break;
+            
+            default:
+                abort(404);
+                break;
+        }
+        return $dashboard;
+    }
+
+    
+    public function lecturerIndex(){
+        return view('modules.dashboard.lecturerDashboard');
+    }
+}

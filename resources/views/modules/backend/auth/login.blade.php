@@ -6,7 +6,7 @@
     <div class="auth-logo">
         <a href="{{ route('login') }}"><img src="./assets/compiled/svg/logo.svg" alt="Logo"></a>
     </div>
-
+    
     <h1 class="auth-title">Silahkan Masuk</h1>
 
     <form method="POST" action="{{ route('login') }}">

@@ -17,6 +17,10 @@ class DashboardController extends Controller
                  $dashboard = $this->studentIndex();
                 break;
 
+            case 'head_of_department':
+                $dashboard = $this->studentIndex();
+            break;
+
             default:
                 abort(404);
                 break;
@@ -31,5 +35,9 @@ class DashboardController extends Controller
 
     public function studentIndex(){
         return view('modules.dashboard.student');
+    }
+
+    public function headOfDepartmentIndex(){
+        return view('modules.dashboard.headofdepartment');
     }
 }

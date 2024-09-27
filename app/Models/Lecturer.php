@@ -14,4 +14,12 @@ class Lecturer extends Model
     protected $guarded = [
         'id', 'created_at'
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function students(){
+        return $this->hasMany(Student::class, 'academic_advisor_id', );
+    }
 }

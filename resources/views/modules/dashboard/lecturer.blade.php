@@ -1,4 +1,3 @@
-{{-- @dd($students) --}}
 <style>
     .search{
         width: 15%; 
@@ -11,6 +10,11 @@
         float: right; 
         top: -30px; 
         left:-10px
+    }
+    .table-contents{
+        position: relative;
+        height:40px;
+        line-height:40px;
     }
     h6.search-label{
         position: relative;
@@ -57,39 +61,48 @@
             {{-- List of Students [start] --}}
             <div class="container">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-1">
+                    </div>
+                    <div class="col-2">
                         <h6>NIM</h6>
                     </div>
-                    <div class="col">
+                    <div class="col-3">
                         <h6>Nama</h6>
                     </div>
-                    <div class="col">
+                    <div class="col-2">
                         <h6>Angkatan</h6>
                     </div>
                     <div class="col">
                         <h6>Email</h6>
                     </div>
+                    <div class="col-1">
+                    </div>
                 </div>
-                <hr style="margin-top: -10px">
+                <hr style="margin-top: -4px">
                 @foreach ($students as $student)
                     <div class="row">
-                        <div class="col">
-                            {{ $student->nim }}
-                            <hr>
+                        <div class="col-1">
+                            <div class="avatar avatar-md2" >
+                                <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="table-contents">{{ $student->nim }}</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="table-contents">{{ $student->user->name }}</div>
+                        </div>
+                        <div class="col-2">
+                            <div class="table-contents">{{ $student->year }}</div>
                         </div>
                         <div class="col">
-                            {{ $student->user->name }}
-                            <hr>
+                            <div class="table-contents">{{ $student->user->email }}</div>
                         </div>
-                        <div class="col">
-                            {{ $student->year }}
-                            <hr>
-                        </div>
-                        <div class="col">
-                            {{ $student->user->email }}
-                            <hr>
+                        <div class="col-1">
+                            <button type="button" class="btn btn-primary">Detail</button>
                         </div>
                     </div>
+                    <hr>
                     @endforeach
                     
             </div>    

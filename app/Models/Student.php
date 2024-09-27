@@ -18,4 +18,8 @@ class Student extends Model
     public function user(){
         return $this->belongsTo(User::class); 
     }
+
+    public function lecturer(){
+        return $this->belongsTo(Lecturer::class, "academic_advisor_id");
+    }
 }

@@ -43,4 +43,8 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    public function lecturer(){
+        return $this->hasOne(Lecturer::class);
+    }
 }

@@ -26,10 +26,10 @@ class DashboardController extends Controller
 
 
     public function lecturerIndex(){
-        return view('modules.dashboard.lecturer-dashboard');
+        return view('modules.dashboard.lecturer');
     }
 
     public function studentIndex(){
-        return view('modules.dashboard.student-dashboard');
+        return view('modules.dashboard.student');
     }
 }

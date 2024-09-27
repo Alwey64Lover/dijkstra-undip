@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -26,7 +27,9 @@ class DashboardController extends Controller
 
 
     public function lecturerIndex(){
-        return view('modules.dashboard.lecturer');
+        return view('modules.dashboard.lecturer', [
+            "students" => Student::all() 
+        ]);
     }
 
     public function studentIndex(){

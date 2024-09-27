@@ -60,6 +60,18 @@ class UserSeeder extends DatabaseSeeder
                     'password' => bcrypt('password'),
                     'role' => 'student',
                 ]),
+                $this->data([
+                    'name' => 'I love life',
+                    'email' => 'ilovelife@students.undip.ac.id',
+                    'password' => bcrypt('password'),
+                    'role' => 'student',
+                ]),
+                $this->data([
+                    'name' => 'I love everything',
+                    'email' => 'iloveeverything@students.undip.ac.id',
+                    'password' => bcrypt('password'),
+                    'role' => 'student',
+                ]),
             ];
 
         // Lecturer & Student Details
@@ -101,6 +113,18 @@ class UserSeeder extends DatabaseSeeder
                     'user_id' => $students[0]['id'],
                     'academic_advisor_id' => $lecturerDetails[3]['id'],
                     'nim' => '24060122140044',
+                    'year' => 2022,
+                ]),
+                $this->data([
+                    'user_id' => $students[1]['id'],
+                    'academic_advisor_id' => $lecturerDetails[1]['id'],
+                    'nim' => '24060121130044',
+                    'year' => 2021,
+                ]),
+                $this->data([
+                    'user_id' => $students[2]['id'],
+                    'academic_advisor_id' => $lecturerDetails[2]['id'],
+                    'nim' => '24060122140104',
                     'year' => 2022,
                 ])
             ];

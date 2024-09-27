@@ -70,22 +70,28 @@
                         <h6>Email</h6>
                     </div>
                 </div>
-                <div class="row">
-                    @foreach ($students as $student)
+                <hr style="margin-top: -10px">
+                @foreach ($students as $student)
+                    <div class="row">
                         <div class="col">
                             {{ $student->nim }}
+                            <hr>
                         </div>
                         <div class="col">
                             {{ $student->user->name }}
+                            <hr>
                         </div>
                         <div class="col">
                             {{ $student->year }}
+                            <hr>
                         </div>
                         <div class="col">
                             {{ $student->user->email }}
+                            <hr>
                         </div>
+                    </div>
                     @endforeach
-                </div>
+                    
             </div>    
             {{-- List of Students [end] --}}
         </div>

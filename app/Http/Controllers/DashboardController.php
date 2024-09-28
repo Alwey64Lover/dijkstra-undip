@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Lecturer;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -20,7 +21,11 @@ class DashboardController extends Controller
 
             case 'head_of_department':
                 $dashboard = $this->headOfDepartmentIndex();
-            break;
+                break;
+
+            case 'academic_division':
+                $dashboard = $this->academicDivisionIndex();
+                break;
 
             default:
                 abort(404);
@@ -43,5 +48,11 @@ class DashboardController extends Controller
 
     public function headOfDepartmentIndex(){
         return view('modules.dashboard.headofdepartment');
+    }
+    public function academicDivisionIndex(){
+        return view('modules.dashboard.academic-division', [
+            "lecturer" => Lecturer::find(1)->lecturer,
+            "students" => Lecturer::find(1)->students
+        ]);
     }
 }

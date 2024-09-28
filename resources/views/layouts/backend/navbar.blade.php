@@ -1,12 +1,14 @@
 <div class="header-top">
-    <div class="container">
-        <div class="logo">
-            <a href="index.html"><img src="{{ asset('assets/compiled/svg/logo.svg') }}" alt="Logo"></a>
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="logo logo-md">
+            <a href="index.html">
+                <img src="{{ asset('storage/static/dijkstraLogo.png') }}" alt="Logo" style="height: 78px; width: auto; margin:-22px;">
+            </a>
         </div>
         <div class="header-top-right">
             <div class="dropdown">
-                <a href="#" id="topbarUserDropdown" class="user-dropdown d-flex align-items-center dropend dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="avatar avatar-md2" >
+                <a href="#" id="topbarUserDropdown" class="user-dropdown d-flex align-items-center dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="avatar avatar-md2">
                         <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
                     </div>
                     <div class="text">
@@ -15,11 +17,8 @@
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="topbarUserDropdown">
-                    {{-- <li><a class="dropdown-item" href="#">My Account</a></li>
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                    <li><hr class="dropdown-divider"></li> --}}
                     <li>
-                        <a href="#" class='dropdown-item' data-bs-toggle="modal" data-bs-target="#modal_logout">
+                        <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_logout">
                             <i class="bi bi-box-arrow-left"></i>
                             <span>Logout</span>
                         </a>

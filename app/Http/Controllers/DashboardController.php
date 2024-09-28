@@ -19,7 +19,7 @@ class DashboardController extends Controller
                 break;
 
             case 'head_of_department':
-                $dashboard = $this->studentIndex();
+                $dashboard = $this->headOfDepartmentIndex();
             break;
 
             default:

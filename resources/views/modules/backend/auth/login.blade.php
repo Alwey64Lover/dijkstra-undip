@@ -3,11 +3,13 @@
 @section('title', $title)
 
 @section('content')
-    <div class="auth-logo">
-        <a href="{{ route('login') }}"><img src="./assets/compiled/svg/logo.svg" alt="Logo"></a>
+    <div class="auth-logo" style="text-align: center; margin-bottom: 10px;">
+        <a href="{{ route('login') }}">
+            <img src="storage/static/dijkstraLogo.png" alt="Logo" style="height: 142px; width: auto;">
+        </a>
     </div>
-    
-    <h1 class="auth-title">Silahkan Masuk</h1>
+
+    <h1 class="auth-title" style="text-align: left;">Silahkan Masuk</h1>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf

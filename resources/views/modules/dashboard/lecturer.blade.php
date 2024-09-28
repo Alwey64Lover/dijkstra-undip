@@ -1,14 +1,14 @@
 <style>
     .search{
-        width: 15%; 
+        width: 15%;
         margin-right: 5%;
     }
     .search-icon{
-        position: relative; 
-        width: 25px; 
-        height: auto; 
-        float: right; 
-        top: -30px; 
+        position: relative;
+        width: 25px;
+        height: auto;
+        float: right;
+        top: -30px;
         left:-10px
     }
     .table-contents{
@@ -29,8 +29,8 @@
     <section class="section dashboard">
         <div class="card">
             {{-- Search bars [start] --}}
-            <div class="card-body"> 
-                <div class="input-group mb-3"> 
+            <div class="card-body">
+                <div class="input-group mb-3">
                     <div class="search nim">
                         <label for="search-nim">
                             <h6 class="search-label">NIM</h6>
@@ -104,8 +104,8 @@
                     </div>
                     <hr>
                     @endforeach
-                    
-            </div>    
+
+            </div>
             {{-- List of Students [end] --}}
         </div>
     </section>

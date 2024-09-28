@@ -11,11 +11,6 @@
         top: -30px; 
         left:-10px
     }
-    .table-contents{
-        position: relative;
-        height:40px;
-        line-height:40px;
-    }
     h6.search-label{
         position: relative;
         right: -12px;
@@ -59,53 +54,44 @@
             {{-- Search bars [end] --}}
 
             {{-- List of Students [start] --}}
-            <div class="container">
-                <div class="row">
-                    <div class="col-1">
-                    </div>
-                    <div class="col-2">
-                        <h6>NIM</h6>
-                    </div>
-                    <div class="col-3">
-                        <h6>Nama</h6>
-                    </div>
-                    <div class="col-2">
-                        <h6>Angkatan</h6>
-                    </div>
-                    <div class="col">
-                        <h6>Email</h6>
-                    </div>
-                    <div class="col-1">
-                    </div>
-                </div>
-                <hr style="margin-top: -4px">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"><h6>NIM</h6></th>
+                        <th scope="col"><h6>Nama</h6></th>
+                        <th scope="col"><h6>Angkatan</h6></th>
+                        <th scope="col"><h6>Email</h6></th>
+                        <th scope="col"><h6></h6></th>
+                    </tr>
+                </thead>
                 @foreach ($students as $student)
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="avatar avatar-md2" >
-                                <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="table-contents">{{ $student->nim }}</div>
-                        </div>
-                        <div class="col-3">
-                            <div class="table-contents">{{ $student->user->name }}</div>
-                        </div>
-                        <div class="col-2">
-                            <div class="table-contents">{{ $student->year }}</div>
-                        </div>
-                        <div class="col">
-                            <div class="table-contents">{{ $student->user->email }}</div>
-                        </div>
-                        <div class="col-1">
-                            <button type="button" class="btn btn-primary">Detail</button>
-                        </div>
-                    </div>
-                    <hr>
-                    @endforeach
-                    
-            </div>    
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                                <div class="avatar avatar-md2" >
+                                    <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+                                </div>
+                            </th>
+                            <td>
+                                <div class="table-contents">{{ $student->nim }}</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">{{ $student->user->name }}</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">{{ $student->year }}</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">{{ $student->user->email }}</div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary">Detail</button>
+                            </td>
+                        </tr>
+                @endforeach
+                </tbody>
+            </table>
             {{-- List of Students [end] --}}
         </div>
     </section>

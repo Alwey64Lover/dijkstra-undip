@@ -9,7 +9,7 @@
         font-family: Arial, sans-serif;
     }
     .dashboard {
-        display: flex; /* Use flexbox layout to align sidebar and calendar */
+        display: flex;
         justify-content: space-between;
     }
     .sidebar {
@@ -30,25 +30,73 @@
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    #calendar {
+    #calendar, #mini-calendar {
         max-width: 100%;
         margin: 0;
+    }
+
+    .subject-list ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .subject-list li {
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #f1f1f1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .subject-list .color {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+
+    #mini-calendar {
+        margin-bottom: 20px;
+    }
+
+    #mini-calendar .fc-toolbar-title {
+        font-size: 16px;
+        white-space: nowrap;
+    }
+
+    #mini-calendar .fc .fc-toolbar-chunk {
+        padding: 0 5px;
     }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
+        var miniCalendarEl = document.getElementById('mini-calendar');
+        var mainCalendarEl = document.getElementById('calendar');
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'listDay', // Display calendar as list
+        var miniCalendar = new FullCalendar.Calendar(miniCalendarEl, {
+            initialView: 'dayGridMonth',
             headerToolbar: {
-                left: 'prev,next today',
+                left: 'prev',
+                center: 'title',
+                right: 'next'
+            },
+            dateClick: function(info) {
+                mainCalendar.changeView('listDay', info.dateStr);
+            }
+        });
+
+        var mainCalendar = new FullCalendar.Calendar(mainCalendarEl, {
+            initialView: 'listDay',
+            headerToolbar: {
+                left: 'today',
                 center: 'title',
                 right: ''
             },
             noEventsContent: function() {
-                // Custom message when no events are available for the day
                 return 'No events for today. Check again later!';
             },
             events: [
@@ -85,7 +133,9 @@
             ]
         });
 
-        calendar.render();
+        // Rendering Calendar
+        miniCalendar.render();
+        mainCalendar.render();
     });
 </script>
 
@@ -96,7 +146,19 @@
     <section class="section dashboard">
         <!-- Sidebar section -->
         <div class="sidebar">
-            <!-- Sidebar content can go here -->
+            <!-- Mini calendar di sidebar -->
+            <div id="mini-calendar"></div>
+
+            <div class="subject-list">
+                <ul>
+                    <li><span class="color" style="background-color: red;"></span> Dasar Pemrograman</li>
+                    <li><span class="color" style="background-color: orange;"></span> Algoritma Pemrograman</li>
+                    <li><span class="color" style="background-color: blue;"></span> Kualitas Perangkat Lunak</li>
+                    <li><span class="color" style="background-color: pink;"></span> Matematika I</li>
+                    <li><span class="color" style="background-color: green;"></span> Pembelajaran Mesin</li>
+                    <a href="#" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
+                </ul>
+            </div>
         </div>
 
         <!-- Calendar section -->

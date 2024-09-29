@@ -17,6 +17,7 @@
         background-color: #EAEAEA;
         border-radius: 10px;
         border-top-right-radius: 0px;
+        border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;
         padding: 20px;
         box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -27,6 +28,7 @@
         border-radius: 10px;
         border-top-left-radius: 0px;
         border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -62,6 +64,9 @@
         margin-bottom: 20px;
     }
 
+    #mini-calendar .fc-daygrid-day:hover{
+        background-color: whitesmoke;
+    }
     #mini-calendar .fc-toolbar-title {
         font-size: 16px;
         white-space: nowrap;

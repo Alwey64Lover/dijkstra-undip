@@ -2,11 +2,37 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
 
 <style>
-    #calendar {
-        max-width: 1024px;
-        margin: 0 auto;
-        margin-right: 0px;
+    body {
+        background-color: #d4eaff;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+    .dashboard {
+        display: flex; /* Use flexbox layout to align sidebar and calendar */
+        justify-content: space-between;
+    }
+    .sidebar {
+        width: 300px;
+        background-color: #EAEAEA;
+        border-radius: 10px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
         padding: 20px;
+        box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    #calendar-container {
+        flex-grow: 1;
+        background-color: white;
+        border-radius: 10px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    #calendar {
+        max-width: 100%;
+        margin: 0;
     }
 </style>
 
@@ -15,7 +41,7 @@
         var calendarEl = document.getElementById('calendar');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'listDay', // Mengubah tampilan ke daftar
+            initialView: 'listDay', // Display calendar as list
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
@@ -68,6 +94,14 @@
 
 @section('content')
     <section class="section dashboard">
-        <div id="calendar"></div>
+        <!-- Sidebar section -->
+        <div class="sidebar">
+            <!-- Sidebar content can go here -->
+        </div>
+
+        <!-- Calendar section -->
+        <div id="calendar-container">
+            <div id="calendar"></div>
+        </div>
     </section>
 @endsection

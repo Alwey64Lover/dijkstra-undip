@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,8 @@ Route::get('/', [AuthenticatedSessionController::class, 'checkLogin']);
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware(['auth', 'verified'])->name('dashboard');
+
+    Route::get('dashboard/search', [StudentController::class, 'searchName']);
 
     Route::middleware(['roles:superadmin|dean'])->group(function () {
         Route::simpleResource('users', UserController::class);

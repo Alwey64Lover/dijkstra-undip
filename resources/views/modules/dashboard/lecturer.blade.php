@@ -15,6 +15,15 @@
         position: relative;
         right: -12px;
     }
+    .table {
+    table-layout: fixed; /* Fixed layout for the table */
+    width: 100%; /* Full width */
+    }
+    .table td {
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+    }
 </style>
 
 @extends('layouts.backend.app')
@@ -36,7 +45,7 @@
                     <div class="search nama">
                         <label for="search-nama">
                             <h6 class="search-label">Nama</h6>
-                            <input type="text" class="form-control rounded-pill" id="search-nama" aria-describedby="basic-addon2" style="background-color: #D9D9D9">
+                            <input type="text" class="form-control rounded-pill" id="search-nama" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudentName()">
                             <img class="search-icon" src="{{ asset('storage/static/magnifying-glass-solid.svg') }} ">
                         </label>
                     </div>
@@ -57,16 +66,16 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col"></th>
-                        <th scope="col"><h6>NIM</h6></th>
-                        <th scope="col"><h6>Nama</h6></th>
-                        <th scope="col"><h6>Angkatan</h6></th>
-                        <th scope="col"><h6>Email</h6></th>
-                        <th scope="col"><h6></h6></th>
+                        <th scope="col" style="width: 5%"></th>
+                        <th scope="col" style="width: 19%"><h6>NIM</h6></th>
+                        <th scope="col" style="width: 19%"><h6>Nama</h6></th>
+                        <th scope="col" style="width: 19%"><h6>Angkatan</h6></th>
+                        <th scope="col" style="width: 19%"><h6>Email</h6></th>
+                        <th scope="col" style="width: 7%"><h6></h6></th>
                     </tr>
                 </thead>
+                <tbody id="tbody">
                 @foreach ($students as $student)
-                    <tbody>
                         <tr>
                             <th scope="row">
                                 <div class="avatar avatar-md2" >
@@ -95,4 +104,69 @@
             {{-- List of Students [end] --}}
         </div>
     </section>
+
+    <script>
+        function getXMLHTTPRequest() {
+            if (window.XMLHttpRequest) {
+                return new XMLHttpRequest();
+            } else {
+                return new ActiveXObject("Microsoft.XMLHTTP");
+            }
+        }
+
+        function searchStudentName() {
+            var originalData = @json($students);
+            var xmlhttp = getXMLHTTPRequest();
+
+            var name = encodeURI(document.getElementById('search-nama').value);
+            var url = "dashboard/search?name=" + name;
+            var inner = "tbody"
+
+            // Validate
+            if (name != "") {
+                xmlhttp.open('GET', url, true);
+                xmlhttp.onreadystatechange = function() {
+                    document.getElementById(inner).innerHTML = 'loading';
+                    if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)){
+                        document.getElementById(inner).innerHTML = xmlhttp.responseText;    
+                    }
+                    return false;
+                }
+                xmlhttp.send(null);
+            } else {
+                // Reset tbody to original data when search bar is empty
+            var tbodyElement = document.getElementById(inner);
+            if (tbodyElement) {
+                tbodyElement.innerHTML = ''; // Clear current content
+                
+                // Populate with original data
+                originalData.forEach(function(student) {
+                    tbodyElement.innerHTML += `
+                        <tr>
+                            <th scope="row">
+                                <div class="avatar avatar-md2">
+                                    <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+                                </div>
+                            </th>
+                            <td>
+                                <div class="table-contents">${student.nim}</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">${student.user.name}</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">${student.year}</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">${student.user.email}</div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary">Detail</button>
+                            </td>
+                        </tr>`;
+                });
+            }
+            }
+        }
+    </script>
 @endsection

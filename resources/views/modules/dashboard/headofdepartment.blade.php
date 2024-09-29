@@ -1,5 +1,6 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@6.1.4/index.global.min.js"></script>
 
 <style>
     body {
@@ -82,6 +83,16 @@
     document.addEventListener('DOMContentLoaded', function() {
         var miniCalendarEl = document.getElementById('mini-calendar');
         var mainCalendarEl = document.getElementById('calendar');
+        var sidebarEl = document.querySelector('.subject-list ul');
+
+        function updateSidebar(events) {
+            sidebarEl.innerHTML = '';
+            events.forEach(function(event) {
+                var li = document.createElement('li');
+                li.textContent = event.title;
+                sidebarEl.appendChild(li);
+            });
+        }
 
         var miniCalendar = new FullCalendar.Calendar(miniCalendarEl, {
             initialView: 'dayGridMonth',
@@ -109,39 +120,80 @@
                 {
                     title: 'Morning Exercise',
                     start: '2024-09-28T06:00:00',
-                    end: '2024-09-28T07:00:00'
+                    end: '2024-09-28T07:00:00',
+                    rrule: {
+                        freq: 'weekly',
+                        interval: 1,
+                        dtstart: '2024-09-28T06:00:00',
+                        until: '2025-03-28T23:59:59'  
+                    }
                 },
                 {
                     title: 'Morning Exalt',
                     start: '2024-09-28T06:00:00',
-                    end: '2024-09-28T07:00:00'
+                    end: '2024-09-28T07:00:00',
+                    rrule: {
+                        freq: 'weekly',
+                        interval: 1,
+                        dtstart: '2024-09-28T06:00:00',
+                        until: '2025-03-28T23:59:59'
+                    }
                 },
                 {
                     title: 'Morning Camp',
                     start: '2024-09-28T06:00:00',
-                    end: '2024-09-28T07:15:00'
+                    end: '2024-09-28T07:15:00',
+                    rrule: {
+                        freq: 'weekly',
+                        interval: 1,
+                        dtstart: '2024-09-28T06:00:00',
+                        until: '2025-03-28T23:59:59'
+                    }
                 },
                 {
                     title: 'Team Meeting',
                     start: '2024-09-28T10:00:00',
-                    end: '2024-09-28T11:00:00'
+                    end: '2024-09-28T11:00:00',
+                    rrule: {
+                        freq: 'weekly',
+                        interval: 1,
+                        dtstart: '2024-09-28T10:00:00',
+                        until: '2025-03-28T23:59:59'
+                    }
                 },
                 {
                     title: 'Lunch Break',
                     start: '2024-09-28T12:00:00',
-                    end: '2024-09-28T13:00:00'
+                    end: '2024-09-28T13:00:00',
+                    rrule: {
+                        freq: 'weekly',
+                        interval: 1,
+                        dtstart: '2024-09-28T12:00:00',
+                        until: '2025-03-28T23:59:59'
+                    }
                 },
                 {
                     title: 'Client Call',
                     start: '2024-09-28T15:00:00',
-                    end: '2024-09-29T16:00:00'
+                    end: '2024-09-29T16:00:00',
+                    rrule: {
+                        freq: 'weekly',
+                        interval: 1,
+                        dtstart: '2024-09-28T15:00:00',
+                        until: '2025-03-28T23:59:59'
+                    }
                 }
             ]
         });
 
+        mainCalendar.on('eventsSet', function() {
+            var events = mainCalendar.getEvents();
+            updateSidebar(events);
+        });
         // Rendering Calendar
         miniCalendar.render();
         mainCalendar.render();
+
     });
 </script>
 
@@ -157,13 +209,9 @@
 
             <div class="subject-list">
                 <ul>
-                    <li><span class="color" style="background-color: red;"></span> Dasar Pemrograman</li>
-                    <li><span class="color" style="background-color: orange;"></span> Algoritma Pemrograman</li>
-                    <li><span class="color" style="background-color: blue;"></span> Kualitas Perangkat Lunak</li>
-                    <li><span class="color" style="background-color: pink;"></span> Matematika I</li>
-                    <li><span class="color" style="background-color: green;"></span> Pembelajaran Mesin</li>
-                    <a href="#" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
+
                 </ul>
+                    <a href="#" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
             </div>
         </div>
 

@@ -37,8 +37,7 @@ class DashboardController extends Controller
 
     public function lecturerIndex(){
         return view('modules.dashboard.lecturer', [
-            "lecturer" => user()->lecturer,
-            "students" => user()->lecturer->students
+            "students" => user()->lecturer->students->load(['user'])
         ]);
     }
 

@@ -3,8 +3,9 @@
 
 <style>
     #calendar {
-        max-width: 1100px;
+        max-width: 1024px;
         margin: 0 auto;
+        margin-right: 0px;
         padding: 20px;
     }
 </style>

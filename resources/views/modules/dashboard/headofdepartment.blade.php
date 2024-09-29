@@ -66,6 +66,7 @@
 
     #mini-calendar .fc-daygrid-day:hover{
         background-color: whitesmoke;
+        cursor: pointer;
     }
     #mini-calendar .fc-toolbar-title {
         font-size: 16px;

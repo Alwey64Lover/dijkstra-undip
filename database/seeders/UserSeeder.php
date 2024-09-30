@@ -72,6 +72,42 @@ class UserSeeder extends DatabaseSeeder
                     'password' => bcrypt('password'),
                     'role' => 'student',
                 ]),
+                $this->data([
+                    'name' => 'Student 1',
+                    'email' => 'student1@students.undip.ac.id',
+                    'password' => bcrypt('password'),
+                    'role' => 'student',
+                ]),
+                $this->data([
+                    'name' => 'Student 2',
+                    'email' => 'student2@students.undip.ac.id',
+                    'password' => bcrypt('password'),
+                    'role' => 'student',
+                ]),
+                $this->data([
+                    'name' => 'Student 3',
+                    'email' => 'student3@students.undip.ac.id',
+                    'password' => bcrypt('password'),
+                    'role' => 'student',
+                ]),
+                $this->data([
+                    'name' => 'Student 4',
+                    'email' => 'student4@students.undip.ac.id',
+                    'password' => bcrypt('password'),
+                    'role' => 'student',
+                ]),
+                $this->data([
+                    'name' => 'Student 5',
+                    'email' => 'student5@students.undip.ac.id',
+                    'password' => bcrypt('password'),
+                    'role' => 'student',
+                ]),
+                $this->data([
+                    'name' => 'Student 6',
+                    'email' => 'student6@students.undip.ac.id',
+                    'password' => bcrypt('password'),
+                    'role' => 'student',
+                ]),
             ];
 
         // Lecturer & Student Details
@@ -125,6 +161,42 @@ class UserSeeder extends DatabaseSeeder
                     'user_id' => $students[2]['id'],
                     'academic_advisor_id' => $lecturerDetails[2]['id'],
                     'nim' => '24060122140104',
+                    'year' => 2022,
+                ]),
+                $this->data([
+                    'user_id' => $students[3]['id'],
+                    'academic_advisor_id' => $lecturerDetails[3]['id'],
+                    'nim' => '24060122120001',
+                    'year' => 2022,
+                ]),
+                $this->data([
+                    'user_id' => $students[4]['id'],
+                    'academic_advisor_id' => $lecturerDetails[1]['id'],
+                    'nim' => '24060122120002',
+                    'year' => 2022,
+                ]),
+                $this->data([
+                    'user_id' => $students[5]['id'],
+                    'academic_advisor_id' => $lecturerDetails[2]['id'],
+                    'nim' => '24060122120003',
+                    'year' => 2022,
+                ]),
+                $this->data([
+                    'user_id' => $students[6]['id'],
+                    'academic_advisor_id' => $lecturerDetails[3]['id'],
+                    'nim' => '24060122120004',
+                    'year' => 2022,
+                ]),
+                $this->data([
+                    'user_id' => $students[7]['id'],
+                    'academic_advisor_id' => $lecturerDetails[1]['id'],
+                    'nim' => '24060122120005',
+                    'year' => 2022,
+                ]),
+                $this->data([
+                    'user_id' => $students[8]['id'],
+                    'academic_advisor_id' => $lecturerDetails[2]['id'],
+                    'nim' => '24060122120006',
                     'year' => 2022,
                 ])
             ];

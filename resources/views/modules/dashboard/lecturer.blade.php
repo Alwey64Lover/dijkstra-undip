@@ -38,23 +38,24 @@
                     <div class="search nim">
                         <label for="search-nim">
                             <h6 class="search-label">NIM</h6>
-                            <input type="text" class="form-control rounded-pill" id="search-nim" aria-describedby="basic-addon2" style="background-color: #D9D9D9">
+                            <input type="text" class="form-control rounded-pill" id="search-nim" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudent()">
                             <img class="search-icon" src="{{ asset('storage/static/magnifying-glass-solid.svg') }} " >
                         </label>
                     </div>
                     <div class="search name">
                         <label for="search-name">
                             <h6 class="search-label">Nama</h6>
-                            <input type="text" class="form-control rounded-pill" id="search-name" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudentName()">
+                            <input type="text" class="form-control rounded-pill" id="search-name" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudent()">
                             <img class="search-icon" src="{{ asset('storage/static/magnifying-glass-solid.svg') }} ">
                         </label>
                     </div>
                     <div class="search year">
                             <h6 class="search-label">Angkatan</h6>
-                            <select class="form-control rounded-pill" aria-describedby="basic-addon2" style="background-color: #D9D9D9">
-                                <option>2020</option>
-                                <option>2021</option>
-                                <option>2022</option>
+                            <select class="form-control rounded-pill" id="search-year" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onchange="searchStudent()">
+                                <option value="all">Semua Angkatan</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
                             </select>
                             <img class="search-icon" src="{{ asset('storage/static/arrow-down.svg') }} ">
                     </div>
@@ -114,22 +115,22 @@
             }
         }
 
-        function searchStudentName() {
-            console.log(@json($students));
+        function searchStudent() {
             var originalData = Object.values(@json($students));
-            console.log(originalData);
             var xmlhttp = getXMLHTTPRequest();
 
-            var name = encodeURI(document.getElementById('search-name').value);
-            var url = "dashboard/search?name=" + name;
+            nim = encodeURI(document.getElementById('search-nim').value);
+            name = encodeURI(document.getElementById('search-name').value);
+            year = encodeURI(document.getElementById('search-year').value);
+            var url = "dashboard/search?nim=" + nim + "&name=" + name + "&year=" + year;
             var inner = "tbody"
 
-            // Validate
-            if (name != "") {
+            if (nim != "" || name != "" || year != "") {
                 xmlhttp.open('GET', url, true);
                 xmlhttp.onreadystatechange = function() {
                     if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)){
                         var students = JSON.parse(xmlhttp.responseText);
+                        console.log(students);
                         document.getElementById(inner).innerHTML = '';
 
                         students.forEach(function(student){

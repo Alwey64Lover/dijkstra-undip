@@ -63,14 +63,31 @@ class StudentController extends Controller
         //
     }
 
-    public function searchName(Request $request){
-        
+    public function search(Request $request){
+            $nim = $request->input('nim');
             $name = $request->input('name');
+            $year = $request->input('year');
 
-            $students = Student::with(['user'])->whereHas('user', function ($q) use ($name) {
-                $q->where('name', 'like', '%' . $name . '%');
-            })->orderBy('nim')->get();
+            $students = Student::with(['user']);
+
+            // Apply filters conditionally
+            if (!empty($nim)) {
+                $students->where('nim', 'like', '%' . $nim . '%'); // Filter by NIM if provided
+            }
+
+            if (!empty($name)) {
+                $students->whereHas('user', function ($q) use ($name) {
+                    $q->where('name', 'like', '%' . $name . '%'); // Filter by name if provided
+                });
+            }
+
+            if ($year != "all") {
+                $students->where('year', '=', $year); // Filter by year if provided
+            }
+
+            // Order by NIM and get the results
+            $students = $students->orderBy('nim')->get();
+
             return response()->json($students, 200);
-        
     }
 }

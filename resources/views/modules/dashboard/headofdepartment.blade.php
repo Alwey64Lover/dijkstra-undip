@@ -1,6 +1,5 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@6.1.4/index.global.min.js"></script>
 
 <style>
     body {
@@ -87,13 +86,40 @@
 
         function updateSidebar(events) {
             sidebarEl.innerHTML = '';
+            let addedEvents = new Set(); // Set untuk menyimpan event yang sudah ditambahkan
             events.forEach(function(event) {
-                var li = document.createElement('li');
-                li.textContent = event.title;
-                sidebarEl.appendChild(li);
+                // Cek apakah event sudah ditambahkan sebelumnya berdasarkan judulnya
+                if (!addedEvents.has(event.title)) {
+                    var li = document.createElement('li');
+                    li.textContent = event.title;
+                    sidebarEl.appendChild(li);
+                    addedEvents.add(event.title); // Tambahkan judul event ke set
+                }
             });
         }
 
+        // Fungsi untuk membuat event berulang secara manual
+        function generateRepeatingEvents(title, startDate, endDate, intervalDays, count) {
+            let events = [];
+            let currentStartDate = new Date(startDate);
+            let currentEndDate = new Date(endDate);
+
+            for (let i = 0; i < count; i++) {
+                events.push({
+                    title: title,
+                    start: currentStartDate.toISOString(),
+                    end: currentEndDate.toISOString()
+                });
+
+                // Update tanggal untuk pengulangan berikutnya
+                currentStartDate.setDate(currentStartDate.getDate() + intervalDays);
+                currentEndDate.setDate(currentEndDate.getDate() + intervalDays);
+            }
+
+            return events;
+        }
+
+        // Mini calendar di sidebar
         var miniCalendar = new FullCalendar.Calendar(miniCalendarEl, {
             initialView: 'dayGridMonth',
             headerToolbar: {
@@ -106,6 +132,7 @@
             }
         });
 
+        // Main calendar dengan event berulang secara manual
         var mainCalendar = new FullCalendar.Calendar(mainCalendarEl, {
             initialView: 'listDay',
             headerToolbar: {
@@ -113,87 +140,29 @@
                 center: 'title',
                 right: ''
             },
-            noEventsContent: function() {
-                return 'No events for today. Check again later!';
-            },
             events: [
-                {
-                    title: 'Morning Exercise',
-                    start: '2024-09-28T06:00:00',
-                    end: '2024-09-28T07:00:00',
-                    rrule: {
-                        freq: 'weekly',
-                        interval: 1,
-                        dtstart: '2024-09-28T06:00:00',
-                        until: '2025-03-28T23:59:59'  
-                    }
-                },
-                {
-                    title: 'Morning Exalt',
-                    start: '2024-09-28T06:00:00',
-                    end: '2024-09-28T07:00:00',
-                    rrule: {
-                        freq: 'weekly',
-                        interval: 1,
-                        dtstart: '2024-09-28T06:00:00',
-                        until: '2025-03-28T23:59:59'
-                    }
-                },
-                {
-                    title: 'Morning Camp',
-                    start: '2024-09-28T06:00:00',
-                    end: '2024-09-28T07:15:00',
-                    rrule: {
-                        freq: 'weekly',
-                        interval: 1,
-                        dtstart: '2024-09-28T06:00:00',
-                        until: '2025-03-28T23:59:59'
-                    }
-                },
-                {
-                    title: 'Team Meeting',
-                    start: '2024-09-28T10:00:00',
-                    end: '2024-09-28T11:00:00',
-                    rrule: {
-                        freq: 'weekly',
-                        interval: 1,
-                        dtstart: '2024-09-28T10:00:00',
-                        until: '2025-03-28T23:59:59'
-                    }
-                },
-                {
-                    title: 'Lunch Break',
-                    start: '2024-09-28T12:00:00',
-                    end: '2024-09-28T13:00:00',
-                    rrule: {
-                        freq: 'weekly',
-                        interval: 1,
-                        dtstart: '2024-09-28T12:00:00',
-                        until: '2025-03-28T23:59:59'
-                    }
-                },
-                {
-                    title: 'Client Call',
-                    start: '2024-09-28T15:00:00',
-                    end: '2024-09-29T16:00:00',
-                    rrule: {
-                        freq: 'weekly',
-                        interval: 1,
-                        dtstart: '2024-09-28T15:00:00',
-                        until: '2025-03-28T23:59:59'
-                    }
-                }
-            ]
+                // Menggunakan fungsi untuk membuat event berulang secara manual
+                ...generateRepeatingEvents('Morning Exercise', '2024-09-28T06:00:00', '2024-09-28T07:00:00', 7, 10),
+                ...generateRepeatingEvents('Team Meeting', '2024-09-28T10:00:00', '2024-09-28T11:00:00', 7, 10),
+                ...generateRepeatingEvents('Lunch Break', '2024-09-28T12:00:00', '2024-09-28T13:00:00', 7, 10),
+                ...generateRepeatingEvents('Client Call', '2024-09-28T15:00:00', '2024-09-28T16:00:00', 7, 10)
+            ],
+            eventDidMount: function(info) {
+                console.log('Event mounted:', info.event.title);
+            },
+            noEventsContent: function() {
+                return 'No events for today.';
+            }
         });
 
         mainCalendar.on('eventsSet', function() {
             var events = mainCalendar.getEvents();
             updateSidebar(events);
         });
-        // Rendering Calendar
+
+        // Render both calendars
         miniCalendar.render();
         mainCalendar.render();
-
     });
 </script>
 

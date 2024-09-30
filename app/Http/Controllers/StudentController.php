@@ -67,36 +67,10 @@ class StudentController extends Controller
         
             $name = $request->input('name');
 
-            $students = Student::whereHas('user', function ($q) use ($name) {
+            $students = Student::with(['user'])->whereHas('user', function ($q) use ($name) {
                 $q->where('name', 'like', '%' . $name . '%');
-            })->get();
-            $output = "";
-            foreach ($students as $row){
-                $output .= "
-                    <tr>
-                        <th scope=\"row\">
-                            <div class=\"avatar avatar-md2\" >
-                                <img src=\"". asset('assets/compiled/jpg/1.jpg')."\" alt=\"Avatar\">
-                            </div>
-                        </th>
-                        <td>
-                            <div class=\"table-contents\">" .$row->nim ."</div>
-                        </td>
-                        <td>
-                            <div class=\"table-contents\">". $row->user->name."</div>
-                        </td>
-                        <td>
-                            <div class=\"table-contents\">". $row->year ."</div>
-                        </td>
-                        <td>
-                            <div class=\"table-contents\">". $row->user->email."</div>
-                        </td>
-                        <td>
-                            <button type=\"button\" class=\"btn btn-primary\">Detail</button>
-                        </td>
-                    </tr>";
-            }
-            return response($output, 200);
+            })->orderBy('nim')->get();
+            return response()->json($students, 200);
         
     }
 }

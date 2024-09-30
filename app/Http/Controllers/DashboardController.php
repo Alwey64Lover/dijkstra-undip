@@ -26,6 +26,10 @@ class DashboardController extends Controller
             case 'academic_division':
                 $dashboard = $this->academicDivisionIndex();
                 break;
+            
+            case 'dean':
+                $dashboard = $this->deanIndex();
+                break;
 
             default:
                 abort(404);
@@ -39,6 +43,10 @@ class DashboardController extends Controller
         return view('modules.dashboard.lecturer', [
             "students" => user()->lecturer->students()->with('user')->orderBy('nim')->get()
         ]);
+    }
+
+    public function deanIndex(){
+        return view('modules.dashboard.dean');
     }
 
     public function studentIndex(){

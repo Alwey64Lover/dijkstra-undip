@@ -1,4 +1,11 @@
 <style>
+    .avatar{
+        display: flex;
+    align-items: center; 
+    }
+    img{
+        margin-right: 10px;
+    }
     .search{
         width: 15%;
         margin-right: 5%;
@@ -37,27 +44,17 @@
                 <div class="input-group mb-3">
                     <div class="search nim">
                         <label for="search-nim">
-                            <h6 class="search-label">NIM</h6>
+                            <h6 class="search-label">Departemen</h6>
                             <input type="text" class="form-control rounded-pill" id="search-nim" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudent()">
                             <img class="search-icon" src="{{ asset('storage/static/magnifying-glass-solid.svg') }} " >
                         </label>
                     </div>
                     <div class="search name">
                         <label for="search-name">
-                            <h6 class="search-label">Nama</h6>
+                            <h6 class="search-label">Nama Ketua</h6>
                             <input type="text" class="form-control rounded-pill" id="search-name" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudent()">
                             <img class="search-icon" src="{{ asset('storage/static/magnifying-glass-solid.svg') }} ">
                         </label>
-                    </div>
-                    <div class="search year">
-                            <h6 class="search-label">Angkatan</h6>
-                            <select class="form-control rounded-pill" id="search-year" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onchange="searchStudent()">
-                                <option value="all">Semua Angkatan</option>
-                                <option value="2020">2020</option>
-                                <option value="2021">2021</option>
-                                <option value="2022">2022</option>
-                            </select>
-                            <img class="search-icon" src="{{ asset('storage/static/arrow-down.svg') }} ">
                     </div>
                   </div>
             </div>
@@ -67,46 +64,41 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 5%"></th>
-                        <th scope="col" style="width: 19%"><h6>NIM</h6></th>
-                        <th scope="col" style="width: 19%"><h6>Nama</h6></th>
-                        <th scope="col" style="width: 19%"><h6>Angkatan</h6></th>
+                        <th scope="col" style="width: 19%"><h6>Departemen</h6></th>
+                        <th scope="col" style="width: 19%"><h6>Ketua</h6></th>
                         <th scope="col" style="width: 19%"><h6>Email</h6></th>
                         <th scope="col" style="width: 7%"><h6></h6></th>
                     </tr>
                 </thead>
                 <tbody id="tbody">
-                @foreach ($students as $student)
+                {{-- @foreach ($students as $student) --}}
                         <tr>
-                            <th scope="row">
-                                <div class="avatar avatar-md2" >
-                                    <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+                            <td>
+                                <div class="table-contents">Informatika</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">
+                                    <div class="avatar avatar-md2" >
+                                        <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+                                    </div>
+                                    Alponso Raka Buming Raka
                                 </div>
-                            </th>
-                            <td>
-                                <div class="table-contents">{{ $student->nim }}</div>
                             </td>
                             <td>
-                                <div class="table-contents">{{ $student->user->name }}</div>
+                                <div class="table-contents">'fufufafa@informatics.undip.ac.id'</div>
                             </td>
                             <td>
-                                <div class="table-contents">{{ $student->year }}</div>
-                            </td>
-                            <td>
-                                <div class="table-contents">{{ $student->user->email }}</div>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary">Detail</button>
+                                <button type="button" class="btn btn-primary">Lihat Jadwal</button>
                             </td>
                         </tr>
-                @endforeach
+                {{-- @endforeach --}}
                 </tbody>
             </table>
             {{-- List of Students [end] --}}
         </div>
     </section>
 
-    <script>
+    {{-- <script>
         function getXMLHTTPRequest() {
             if (window.XMLHttpRequest) {
                 return new XMLHttpRequest();
@@ -195,5 +187,5 @@
                     </tr>`;
             });
         }
-    </script>
+    </script> --}}
 @endsection

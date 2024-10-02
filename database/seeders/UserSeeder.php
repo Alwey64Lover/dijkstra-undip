@@ -226,3 +226,4 @@ class UserSeeder extends DatabaseSeeder
 
     }
 }
+// 'user_id' => $lecturers[rand(0, count($lecturers))]['id'],

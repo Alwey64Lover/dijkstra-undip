@@ -25,7 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware(['auth', 'verified'])->name('dashboard');
 
     Route::get('dashboard/search', [StudentController::class, 'search']);
-    Route::get('dashboard', [DepartmentController::class, 'getAllClasses']);
+    // Route::get('dashboard', [DepartmentController::class, 'getAllClasses']);
 
     Route::middleware(['roles:superadmin|dean'])->group(function () {
         Route::simpleResource('users', UserController::class);

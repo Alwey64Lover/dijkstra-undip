@@ -85,20 +85,18 @@
         var sidebarEl = document.querySelector('.subject-list ul');
 
         function updateSidebar(events) {
-            sidebarEl.innerHTML = '';
-            let addedEvents = new Set(); // Set untuk menyimpan event yang sudah ditambahkan
+            // sidebarEl.innerHTML = '';
+            let addedEvents = new Set();
             events.forEach(function(event) {
-                // Cek apakah event sudah ditambahkan sebelumnya berdasarkan judulnya
                 if (!addedEvents.has(event.title)) {
                     var li = document.createElement('li');
                     li.textContent = event.title;
                     sidebarEl.appendChild(li);
-                    addedEvents.add(event.title); // Tambahkan judul event ke set
+                    addedEvents.add(event.title);
                 }
             });
         }
 
-        // Fungsi untuk membuat event berulang secara manual
         function generateRepeatingEvents(title, startDate, endDate, intervalDays, count) {
             let events = [];
             let currentStartDate = new Date(startDate);
@@ -111,7 +109,6 @@
                     end: currentEndDate.toISOString()
                 });
 
-                // Update tanggal untuk pengulangan berikutnya
                 currentStartDate.setDate(currentStartDate.getDate() + intervalDays);
                 currentEndDate.setDate(currentEndDate.getDate() + intervalDays);
             }
@@ -132,7 +129,6 @@
             }
         });
 
-        // Main calendar dengan event berulang secara manual
         var mainCalendar = new FullCalendar.Calendar(mainCalendarEl, {
             initialView: 'listDay',
             headerToolbar: {
@@ -141,11 +137,10 @@
                 right: ''
             },
             events: [
-                // Menggunakan fungsi untuk membuat event berulang secara manual
-                ...generateRepeatingEvents('Morning Exercise', '2024-09-28T06:00:00', '2024-09-28T07:00:00', 7, 10),
-                ...generateRepeatingEvents('Team Meeting', '2024-09-28T10:00:00', '2024-09-28T11:00:00', 7, 10),
-                ...generateRepeatingEvents('Lunch Break', '2024-09-28T12:00:00', '2024-09-28T13:00:00', 7, 10),
-                ...generateRepeatingEvents('Client Call', '2024-09-28T15:00:00', '2024-09-28T16:00:00', 7, 10)
+                // ...generateRepeatingEvents('Morning Exercise', '2024-09-28T06:00:00', '2024-09-28T07:00:00', 7, 10),
+                // ...generateRepeatingEvents('Team Meeting', '2024-09-28T10:00:00', '2024-09-28T11:00:00', 7, 10),
+                // ...generateRepeatingEvents('Lunch Break', '2024-09-28T12:00:00', '2024-09-28T13:00:00', 7, 10),
+                // ...generateRepeatingEvents('Client Call', '2024-09-28T15:00:00', '2024-09-28T16:00:00', 7, 10)
             ],
             eventDidMount: function(info) {
                 console.log('Event mounted:', info.event.title);
@@ -175,13 +170,14 @@
         <div class="sidebar">
             <!-- Mini calendar di sidebar -->
             <div id="mini-calendar"></div>
-
-            <div class="subject-list">
-                <ul>
-
-                </ul>
-                    <a href="#" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
-            </div>
+            @foreach ($courses as $course)
+                <div class="subject-list">
+                    <ul>
+                        <li>{{ $course->name }}</li>
+                    </ul>
+                </div>
+            @endforeach
+        <a href="#" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
         </div>
 
         <!-- Calendar section -->

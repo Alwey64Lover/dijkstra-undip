@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\Lecturer;
+use App\Models\Course;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -26,7 +27,7 @@ class DashboardController extends Controller
             case 'academic_division':
                 $dashboard = $this->academicDivisionIndex();
                 break;
-            
+
             case 'dean':
                 $dashboard = $this->deanIndex();
                 break;
@@ -59,7 +60,9 @@ class DashboardController extends Controller
     }
 
     public function headOfDepartmentIndex(){
-        return view('modules.dashboard.headofdepartment');
+        // dump(Course::all());
+        return view('modules.dashboard.headofdepartment',
+    ['courses'=>Course::all()]);
     }
     public function academicDivisionIndex(){
         return view('modules.dashboard.academic-division', [

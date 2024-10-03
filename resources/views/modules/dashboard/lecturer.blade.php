@@ -52,7 +52,7 @@
                     <div class="search year">
                             <h6 class="search-label">Angkatan</h6>
                             <select class="form-control rounded-pill" id="search-year" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onchange="searchStudent()">
-                                <option value="all">Semua Angkatan</option>
+                                <option value="">Semua Angkatan</option>
                                 <option value="2020">2020</option>
                                 <option value="2021">2021</option>
                                 <option value="2022">2022</option>
@@ -76,7 +76,7 @@
                     </tr>
                 </thead>
                 <tbody id="tbody">
-                @foreach ($students as $student)
+                {{-- @foreach ($students as $student)
                         <tr>
                             <th scope="row">
                                 <div class="avatar avatar-md2" >
@@ -99,7 +99,7 @@
                                 <button type="button" class="btn btn-primary">Detail</button>
                             </td>
                         </tr>
-                @endforeach
+                @endforeach --}}
                 </tbody>
             </table>
             {{-- List of Students [end] --}}
@@ -107,34 +107,33 @@
     </section>
 
     <script>
-        function getXMLHTTPRequest() {
-            if (window.XMLHttpRequest) {
-                return new XMLHttpRequest();
-            } else {
-                return new ActiveXObject("Microsoft.XMLHTTP");
-            }
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            searchStudent();
+        });
 
-        function searchStudent() {
-            var originalData = Object.values(@json($students));
-            var xmlhttp = getXMLHTTPRequest();
+        function searchStudent(){
+            $('#tbody').html('')
 
-            nim = encodeURI(document.getElementById('search-nim').value);
-            name = encodeURI(document.getElementById('search-name').value);
-            year = encodeURI(document.getElementById('search-year').value);
-            var url = "dashboard/search?nim=" + nim + "&name=" + name + "&year=" + year;
-            var inner = "tbody"
+            let name = $('#search-name').val();
+            let nim = $('#search-nim').val();
+            let year = $('#search-year').val();
 
-            if (nim != "" || name != "" || year != "all") {
-                xmlhttp.open('GET', url, true);
-                xmlhttp.onreadystatechange = function() {
-                    if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)){
-                        var students = JSON.parse(xmlhttp.responseText);
-                        console.log(students);
-                        document.getElementById(inner).innerHTML = '';
+            $.ajax({
+                url: ("{{ route('students.search', ['lecturerId' => 'user()->lecturer->id']) }}"),
+                data: {
+                    "name" : name,
+                    "nim" : nim,
+                    "year" : year,
+                },
+                cache : false,
+                success: function(data){
+                    console.log(name, nim, year);
 
-                        students.forEach(function(student){
-                            document.getElementById(inner).innerHTML += `<tr>
+                    let html = '';
+                    
+                    data['students'].forEach(function(student){
+                        html += 
+                        `<tr>
                             <th scope="row">
                                 <div class="avatar avatar-md2">
                                     <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
@@ -156,44 +155,103 @@
                                 <button type="button" class="btn btn-primary">Detail</button>
                             </td>
                         </tr>`;
-                        })
-                    }
-                    return false;
+                    })
+
+                    $('#tbody').html(html)
+                },
+                error: function(error){
+                    console.error(error);
                 }
-                xmlhttp.send(null);
-            }else{
-                populateTable(originalData);
-            }
-        }
-
-        function populateTable(students) {
-            document.getElementById('tbody').innerHTML = '';
-
-            students.forEach(function(student) {
-                document.getElementById('tbody').innerHTML += `
-                    <tr>
-                        <th scope="row">
-                            <div class="avatar avatar-md2">
-                                <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
-                            </div>
-                        </th>
-                        <td>
-                            <div class="table-contents">${student.nim}</div>
-                        </td>
-                        <td>
-                            <div class="table-contents">${student.user.name}</div>
-                        </td>
-                        <td>
-                            <div class="table-contents">${student.year}</div>
-                        </td>
-                        <td>
-                            <div class="table-contents">${student.user.email}</div>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-primary">Detail</button>
-                        </td>
-                    </tr>`;
             });
         }
+
+        // function getXMLHTTPRequest() {
+        //     if (window.XMLHttpRequest) {
+        //         return new XMLHttpRequest();
+        //     } else {
+        //         return new ActiveXObject("Microsoft.XMLHTTP");
+        //     }
+        // }
+
+        // function searchStudent() {
+        //     var originalData = Object.values( {{--@json($students) --}});
+        //     var xmlhttp = getXMLHTTPRequest();
+
+        //     nim = encodeURI(document.getElementById('search-nim').value);
+        //     name = encodeURI(document.getElementById('search-name').value);
+        //     year = encodeURI(document.getElementById('search-year').value);
+        //     var url = "dashboard/search?nim=" + nim + "&name=" + name + "&year=" + year;
+        //     var inner = "tbody"
+
+        //     if (nim != "" || name != "" || year != "all") {
+        //         xmlhttp.open('GET', url, true);
+        //         xmlhttp.onreadystatechange = function() {
+        //             if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)){
+        //                 var students = JSON.parse(xmlhttp.responseText);
+        //                 console.log(students);
+        //                 document.getElementById(inner).innerHTML = '';
+
+        //                 students.forEach(function(student){
+        //                     document.getElementById(inner).innerHTML += `<tr>
+        //                     <th scope="row">
+        //                         <div class="avatar avatar-md2">
+        //                             <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+        //                         </div>
+        //                     </th>
+        //                     <td>
+        //                         <div class="table-contents">${student.nim}</div>
+        //                     </td>
+        //                     <td>
+        //                         <div class="table-contents">${student.user.name}</div>
+        //                     </td>
+        //                     <td>
+        //                         <div class="table-contents">${student.year}</div>
+        //                     </td>
+        //                     <td>
+        //                         <div class="table-contents">${student.user.email}</div>
+        //                     </td>
+        //                     <td>
+        //                         <button type="button" class="btn btn-primary">Detail</button>
+        //                     </td>
+        //                 </tr>`;
+        //                 })
+        //             }
+        //             return false;
+        //         }
+        //         xmlhttp.send(null);
+        //     }else{
+        //         populateTable(originalData);
+        //     }
+        // }
+
+        // function populateTable(students) {
+        //     document.getElementById('tbody').innerHTML = '';
+
+        //     students.forEach(function(student) {
+        //         document.getElementById('tbody').innerHTML += `
+        //             <tr>
+        //                 <th scope="row">
+        //                     <div class="avatar avatar-md2">
+        //                         <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+        //                     </div>
+        //                 </th>
+        //                 <td>
+        //                     <div class="table-contents">${student.nim}</div>
+        //                 </td>
+        //                 <td>
+        //                     <div class="table-contents">${student.user.name}</div>
+        //                 </td>
+        //                 <td>
+        //                     <div class="table-contents">${student.year}</div>
+        //                 </td>
+        //                 <td>
+        //                     <div class="table-contents">${student.user.email}</div>
+        //                 </td>
+        //                 <td>
+        //                     <button type="button" class="btn btn-primary">Detail</button>
+        //                 </td>
+        //             </tr>`;
+        //     });
+        // }
     </script>
 @endsection

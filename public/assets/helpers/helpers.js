@@ -65,9 +65,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Table
     // Datatable
-        $("#table").DataTable({
-            responsive: false,
-        })
+        // $("#table").DataTable({
+        //     responsive: false,
+        // })
 
 // Filepond
     let ponds = $('.image-preview-filepond')

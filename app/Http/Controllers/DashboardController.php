@@ -42,11 +42,9 @@ class DashboardController extends Controller
 
     public function lecturerIndex(){
         try {
-            $data["students"] = Student::orderBy('nim')->with(['lecturer', 'user'])->get();
-
-            return view("modules.dashboard.lecturer", $data);
+            return view("modules.dashboard.lecturer");
         } catch (\Exception $e) {
-            logError($e, actionMessage("failed", "retrieved"), 'table');
+            logError($e, actionMessage("failed", "open"), 'index');
             abort(500);
         }
     }

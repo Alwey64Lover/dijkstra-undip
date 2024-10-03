@@ -97,7 +97,7 @@
             });
         }
 
-        function generateRepeatingEvents(title, startDate, endDate, intervalDays, count) {
+        function generateRepeatingEvents(title, startDate, endDate, intervalDays=7, count=10) {
             let events = [];
             let currentStartDate = new Date(startDate);
             let currentEndDate = new Date(endDate);
@@ -115,6 +115,12 @@
 
             return events;
         }
+
+        var events = []
+        coursesData.forEach(function (course) {
+            var repeatingEvents = generateRepeatingEvents(course.name, course.start_date, course.end_date);
+            events.push(...repeatingEvents);
+        })
 
         // Mini calendar di sidebar
         var miniCalendar = new FullCalendar.Calendar(miniCalendarEl, {
@@ -136,12 +142,7 @@
                 center: 'title',
                 right: ''
             },
-            events: [
-                // ...generateRepeatingEvents('Morning Exercise', '2024-09-28T06:00:00', '2024-09-28T07:00:00', 7, 10),
-                // ...generateRepeatingEvents('Team Meeting', '2024-09-28T10:00:00', '2024-09-28T11:00:00', 7, 10),
-                // ...generateRepeatingEvents('Lunch Break', '2024-09-28T12:00:00', '2024-09-28T13:00:00', 7, 10),
-                // ...generateRepeatingEvents('Client Call', '2024-09-28T15:00:00', '2024-09-28T16:00:00', 7, 10)
-            ],
+            events: events,
             eventDidMount: function(info) {
                 console.log('Event mounted:', info.event.title);
             },

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->foreignUlid('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();

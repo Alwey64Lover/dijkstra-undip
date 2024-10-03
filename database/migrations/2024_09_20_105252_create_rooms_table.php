@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->char('type');
+            $table->boolean('is_type_front')->default(true);
             $table->string('name');
             $table->integer('capacity')->default(0);
             $table->timestamps();

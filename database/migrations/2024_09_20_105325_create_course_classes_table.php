@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('course_classes', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('room_id')->nullable()->constrained('rooms')->onDelete('set null');
-            $table->foreignUlid('course_department_id')->nullable()->constrained('course_departments')->onDelete('set null');
+            $table->foreignUlid('course_department_detail_id')->nullable()->constrained('course_department_details')->onDelete('set null');
             $table->string('name');
             $table->string('day');
             $table->time('start_time');

@@ -211,7 +211,7 @@ class UserSeeder extends DatabaseSeeder
                 ]),
                 $this->data([
                     'name' => 'Singh Khir Khan',
-                    'email' => 'singkhirkhan@operator.undip.ac.id',
+                    'email' => 'singkhirkhan@academic.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'academic_division',
                 ]),

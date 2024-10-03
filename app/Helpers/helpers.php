@@ -30,3 +30,8 @@ function arrayOnly(array $array, array $keys): array
 {
     return array_intersect_key($array, array_flip($keys));
 }
+
+function randomArray(array $array, int $from = 0): mixed
+{
+    return $array[rand($from, (count($array) - 1))];
+}

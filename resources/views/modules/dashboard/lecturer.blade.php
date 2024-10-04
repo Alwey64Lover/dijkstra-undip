@@ -59,51 +59,59 @@
                             </select>
                             <img class="search-icon" src="{{ asset('storage/static/arrow-down.svg') }} ">
                     </div>
-                  </div>
-            </div>
-            {{-- Search bars [end] --}}
+                </div>
+                {{-- Search bars [end] --}}
 
-            {{-- List of Students [start] --}}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col" style="width: 5%"></th>
-                        <th scope="col" style="width: 19%"><h6>NIM</h6></th>
-                        <th scope="col" style="width: 19%"><h6>Nama</h6></th>
-                        <th scope="col" style="width: 19%"><h6>Angkatan</h6></th>
-                        <th scope="col" style="width: 19%"><h6>Email</h6></th>
-                        <th scope="col" style="width: 7%"><h6></h6></th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                {{-- @foreach ($students as $student)
+                {{-- List of Students [start] --}}
+                <div class="ms-2 mb-3">Show 
+                    <select class="form-select form-select-sm d-inline" name="rows-per-page" id="rows-per-page" aria-label=".form-select-sm example" style="width:60px;" onchange="searchStudent()">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select> Entries
+                </div>
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th scope="row">
-                                <div class="avatar avatar-md2" >
-                                    <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
-                                </div>
-                            </th>
-                            <td>
-                                <div class="table-contents">{{ $student->nim }}</div>
-                            </td>
-                            <td>
-                                <div class="table-contents">{{ $student->user->name }}</div>
-                            </td>
-                            <td>
-                                <div class="table-contents">{{ $student->year }}</div>
-                            </td>
-                            <td>
-                                <div class="table-contents">{{ $student->user->email }}</div>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary">Detail</button>
-                            </td>
+                            <th scope="col" style="width: 5%"></th>
+                            <th scope="col" style="width: 19%"><h6>NIM</h6></th>
+                            <th scope="col" style="width: 19%"><h6>Nama</h6></th>
+                            <th scope="col" style="width: 19%"><h6>Angkatan</h6></th>
+                            <th scope="col" style="width: 19%"><h6>Email</h6></th>
+                            <th scope="col" style="width: 7%"><h6></h6></th>
                         </tr>
-                @endforeach --}}
-                </tbody>
-            </table>
-            {{-- List of Students [end] --}}
-            <a id="pagination-links"></a>
+                    </thead>
+                    <tbody id="tbody">
+                    {{-- @foreach ($students as $student)
+                            <tr>
+                                <th scope="row">
+                                    <div class="avatar avatar-md2" >
+                                        <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+                                    </div>
+                                </th>
+                                <td>
+                                    <div class="table-contents">{{ $student->nim }}</div>
+                                </td>
+                                <td>
+                                    <div class="table-contents">{{ $student->user->name }}</div>
+                                </td>
+                                <td>
+                                    <div class="table-contents">{{ $student->year }}</div>
+                                </td>
+                                <td>
+                                    <div class="table-contents">{{ $student->user->email }}</div>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary">Detail</button>
+                                </td>
+                            </tr>
+                    @endforeach --}}
+                    </tbody>
+                </table>
+                <div class="ms-2 mt3" id="rows-info"></div>
+                {{-- List of Students [end] --}}
+                <div class="d-flex flex-row-reverse "><a id="pagination-links"></a></div>
+            </div>
         </div>
     </section>
 
@@ -114,62 +122,66 @@
 
         function searchStudent(page = 1) {
 
-    let name = $('#search-name').val();
-    let nim = $('#search-nim').val();
-    let year = $('#search-year').val();
-    $('#tbody').html('KONTOL');
+            let name = $('#search-name').val();
+            let nim = $('#search-nim').val();
+            let year = $('#search-year').val();
+            let rows = $('#rows-per-page').val();
+            $('#tbody').html('KONTOL');
 
-    $.ajax({
-        url: ("{{ route('students.search', ['lecturerId' => 'user()->lecturer->id']) }}"),
-        data: {
-            "name": name,
-            "nim": nim,
-            "year": year,
-            "page": page // Pass the current page number
-        },
-        cache: false,
-        success: function(data) {
-            console.log(data);
-            let html = '';
-            data['students']['data'].forEach(function(student) {
-                html += 
-                `<tr>
-                    <th scope="row">
-                        <div class="avatar avatar-md2">
-                            <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
-                        </div>
-                    </th>
-                    <td>
-                        <div class="table-contents">${student.nim}</div>
-                    </td>
-                    <td>
-                        <div class="table-contents">${student.user.name}</div>
-                    </td>
-                    <td>
-                        <div class="table-contents">${student.year}</div>
-                    </td>
-                    <td>
-                        <div class="table-contents">${student.user.email}</div>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary">Detail</button>
-                    </td>
-                </tr>`;
-            });
+            $.ajax({
+                url: ("{{ route('students.search', ['lecturerId' => 'user()->lecturer->id']) }}"),
+                data: {
+                    "name": name,
+                    "nim": nim,
+                    "year": year,
+                    "page": page, // Pass the current page number
+                    "rows" : rows
+                },
+                cache: false,
+                success: function(data) {
+                    console.log(data);
+                    let html = '';
+                    data['students']['data'].forEach(function(student) {
+                        html += 
+                        `<tr>
+                            <th scope="row">
+                                <div class="avatar avatar-md2">
+                                    <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+                                </div>
+                            </th>
+                            <td>
+                                <div class="table-contents">${student.nim}</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">${student.user.name}</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">${student.year}</div>
+                            </td>
+                            <td>
+                                <div class="table-contents">${student.user.email}</div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary">Detail</button>
+                            </td>
+                        </tr>`;
+                    });
 
-            $('#tbody').html(html);
-            $('#pagination-links').html(data['pagination']['links']); // Update the pagination links
-            $('#pagination-links a').on('click', function(e) {
-                e.preventDefault(); // Prevent default link behavior
-                let url = $(this).attr('href'); // Get the URL from the link
-                let page = url.split('page=')[1]; // Extract page number from URL
-                searchStudent(page); // Call searchStudent with the new page
+                    $('#tbody').html(html);
+                    $('#rows-info').html('<div class="ms-2 mt-3">Showing ' + data['students']['from'] + ' to ' + data['students']['to'] + ' of ' + data['students']['total'] + ' entries</div>');
+                    $('#pagination-links').html(data['pagination']['links']); // Update the pagination links
+                    $('#pagination-links a').on('click', function(e) {
+                        e.preventDefault(); // Prevent default link behavior
+                        let url = $(this).attr('href'); // Get the URL from the link
+                        console.log(url);
+                        let page = url.split('page=')[1]; // Extract page number from URL
+                        searchStudent(page); // Call searchStudent with the new page
+                    });
+                },
+                error: function(error) {
+                    console.error(error);
+                }
             });
-        },
-        error: function(error) {
-            console.error(error);
-        }
-    });
 }
 
 

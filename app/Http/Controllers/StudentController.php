@@ -77,7 +77,7 @@ class StudentController extends Controller
                 })
                 ->orderBy('nim')
                 ->with(['lecturer', 'user'])
-                ->paginate(5);
+                ->paginate($request->rows);
     
             // Create a new instance of the LengthAwarePaginator to preserve query parameters
             $data['pagination'] = [

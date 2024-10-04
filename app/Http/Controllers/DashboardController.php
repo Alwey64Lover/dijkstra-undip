@@ -64,8 +64,7 @@ class DashboardController extends Controller
     }
     public function academicDivisionIndex(){
         return view('modules.dashboard.academic-division', [
-            "lecturer" => Lecturer::find(1)->lecturer,
-            "students" => Lecturer::find(1)->students
+            'students' => Student::all()
         ]);
     }
 }

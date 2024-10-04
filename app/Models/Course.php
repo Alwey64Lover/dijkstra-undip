@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\CourseDepartmentDetail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,4 +16,8 @@ class Course extends Model
     protected $guarded = [
         'id', 'created_at'
     ];
+
+    public function courseDepartmentDetail(){
+        return $this->hasMany(CourseDepartmentDetail::class);
+    }
 }

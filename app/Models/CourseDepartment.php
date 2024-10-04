@@ -22,4 +22,8 @@ class CourseDepartment extends Model
         'accepted',
         'rejected',
     ];
+
+    public function courseDepartmentDetails(){
+        return $this->hasMany(CourseDepartmentDetail::class);
+    }
 }

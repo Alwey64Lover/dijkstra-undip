@@ -65,22 +65,8 @@ class StudentController extends Controller
         //
     }
 
-    public function search(Request $request, string | null $lecturerId = null){
+    public function search(Request $request, string | null $lecturerId = null) {
         try {
-            $lecturerId = $lecturerId;
-            // $data['students'] = Student::
-            //     where(function($query) use($request){
-            //         $query->whereHas('user', function($query) use($request){
-            //                 $query->Where('name', 'like', "%$request->name%");
-            //             })
-            //             ->orWhere('nim', 'like', "%$request->nim%")
-            //             ->orWhere('year', 'like', "%$request->year%");
-            //     })
-            //     ->where('academic_advisor_id', $lecturerId)
-            //     ->with(['lecturer', 'user'])
-            //     ->orderBy('nim')
-            //     ->get()
-            //     ;
             $data["students"] = Student::where('academic_advisor_id', user()->lecturer->id)
                 ->where(function($query) use($request){
                     $query->whereHas('user', function($query) use($request){
@@ -91,37 +77,19 @@ class StudentController extends Controller
                 })
                 ->orderBy('nim')
                 ->with(['lecturer', 'user'])
-                ->get();
-
-                // dd($data);
+                ->paginate(5);
+    
+            // Create a new instance of the LengthAwarePaginator to preserve query parameters
+            $data['pagination'] = [
+                'links' => $data['students']->appends($request->query())->links()->render(),
+            ];
+            
         } catch (\Exception $e) {
             logError($e, actionMessage("failed", "search"), 'index');
             abort(500);
         }
-            // $nim = $request->input('nim');
-            // $name = $request->input('name');
-            // $year = $request->input('year');
-
-            // $students = Student::with(['user']);
-
-            // // Apply filters conditionally
-            // if (!empty($nim)) {
-            //     $students->where('nim', 'like', '%' . $nim . '%'); // Filter by NIM if provided
-            // }
-
-            // if (!empty($name)) {
-            //     $students->whereHas('user', function ($q) use ($name) {
-            //         $q->where('name', 'like', '%' . $name . '%'); // Filter by name if provided
-            //     });
-            // }
-
-            // if ($year != "all") {
-            //     $students->where('year', '=', $year); // Filter by year if provided
-            // }
-
-            // Order by NIM and get the results
-            // $students = $students->orderBy('nim')->get();
-
+    
         return response()->json($data, 200);
     }
+    
 }

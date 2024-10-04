@@ -103,6 +103,7 @@
                 </tbody>
             </table>
             {{-- List of Students [end] --}}
+            <a id="pagination-links"></a>
         </div>
     </section>
 
@@ -111,59 +112,66 @@
             searchStudent();
         });
 
-        function searchStudent(){
-            $('#tbody').html('')
+        function searchStudent(page = 1) {
 
-            let name = $('#search-name').val();
-            let nim = $('#search-nim').val();
-            let year = $('#search-year').val();
+    let name = $('#search-name').val();
+    let nim = $('#search-nim').val();
+    let year = $('#search-year').val();
+    $('#tbody').html('KONTOL');
 
-            $.ajax({
-                url: ("{{ route('students.search', ['lecturerId' => 'user()->lecturer->id']) }}"),
-                data: {
-                    "name" : name,
-                    "nim" : nim,
-                    "year" : year,
-                },
-                cache : false,
-                success: function(data){
-                    console.log(name, nim, year);
-
-                    let html = '';
-                    
-                    data['students'].forEach(function(student){
-                        html += 
-                        `<tr>
-                            <th scope="row">
-                                <div class="avatar avatar-md2">
-                                    <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
-                                </div>
-                            </th>
-                            <td>
-                                <div class="table-contents">${student.nim}</div>
-                            </td>
-                            <td>
-                                <div class="table-contents">${student.user.name}</div>
-                            </td>
-                            <td>
-                                <div class="table-contents">${student.year}</div>
-                            </td>
-                            <td>
-                                <div class="table-contents">${student.user.email}</div>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary">Detail</button>
-                            </td>
-                        </tr>`;
-                    })
-
-                    $('#tbody').html(html)
-                },
-                error: function(error){
-                    console.error(error);
-                }
+    $.ajax({
+        url: ("{{ route('students.search', ['lecturerId' => 'user()->lecturer->id']) }}"),
+        data: {
+            "name": name,
+            "nim": nim,
+            "year": year,
+            "page": page // Pass the current page number
+        },
+        cache: false,
+        success: function(data) {
+            console.log(data);
+            let html = '';
+            data['students']['data'].forEach(function(student) {
+                html += 
+                `<tr>
+                    <th scope="row">
+                        <div class="avatar avatar-md2">
+                            <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
+                        </div>
+                    </th>
+                    <td>
+                        <div class="table-contents">${student.nim}</div>
+                    </td>
+                    <td>
+                        <div class="table-contents">${student.user.name}</div>
+                    </td>
+                    <td>
+                        <div class="table-contents">${student.year}</div>
+                    </td>
+                    <td>
+                        <div class="table-contents">${student.user.email}</div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary">Detail</button>
+                    </td>
+                </tr>`;
             });
+
+            $('#tbody').html(html);
+            $('#pagination-links').html(data['pagination']['links']); // Update the pagination links
+            $('#pagination-links a').on('click', function(e) {
+                e.preventDefault(); // Prevent default link behavior
+                let url = $(this).attr('href'); // Get the URL from the link
+                let page = url.split('page=')[1]; // Extract page number from URL
+                searchStudent(page); // Call searchStudent with the new page
+            });
+        },
+        error: function(error) {
+            console.error(error);
         }
+    });
+}
+
 
         // function getXMLHTTPRequest() {
         //     if (window.XMLHttpRequest) {

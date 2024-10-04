@@ -17,9 +17,9 @@ class CourseDepartment extends Model
         'id', 'created_at'
     ];
 
-    public const STATUSES = [
-        'WAITING',
-        'ACCEPTED',
-        'REJECTED',
+    public const ACTIONS = [
+        'waiting',
+        'accepted',
+        'rejected',
     ];
 }

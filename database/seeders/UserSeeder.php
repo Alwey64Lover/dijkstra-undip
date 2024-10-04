@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Department;
 use App\Models\Lecturer;
 use App\Models\Student;
 use App\Models\User;
@@ -13,6 +14,8 @@ class UserSeeder extends DatabaseSeeder
      */
     public function run(): void
     {
+        $informaticDepartment = Department::where('name', 'Informatika')->first();
+
         // Lecturers & Students
             $lecturers = [
                 $this->data([
@@ -20,36 +23,42 @@ class UserSeeder extends DatabaseSeeder
                     'email' => 'johndoe@lecturer.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'lecturer',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Dr.Eng. Adi Wibowo, S.Si., M.Kom.',
                     'email' => 'adiwibowo@lecturer.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'lecturer',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Etna Vianita, S.Mat., M.Mat.',
                     'email' => 'etna@lecturer.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'lecturer',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Sandy Kurniawan, S.Kom., M.Kom.',
                     'email' => 'sandy@lecturer.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'lecturer',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Clement Ponso',
                     'email' => 'clementponso@deans.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'dean',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Alfonso Rakabuming Putra Widodo',
                     'email' => 'fufufafa@informatics.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'head_of_department',
+                    'department_id' => $informaticDepartment->id,
                 ]),
             ];
 
@@ -59,54 +68,63 @@ class UserSeeder extends DatabaseSeeder
                     'email' => 'dafairuz@students.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'student',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'I love life',
                     'email' => 'ilovelife@students.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'student',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'I love everything',
                     'email' => 'iloveeverything@students.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'student',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Student 1',
                     'email' => 'student1@students.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'student',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Student 2',
                     'email' => 'student2@students.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'student',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Student 3',
                     'email' => 'student3@students.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'student',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Student 4',
                     'email' => 'student4@students.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'student',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Student 5',
                     'email' => 'student5@students.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'student',
+                    'department_id' => $informaticDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Student 6',
                     'email' => 'student6@students.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'student',
+                    'department_id' => $informaticDepartment->id,
                 ]),
             ];
 
@@ -208,12 +226,14 @@ class UserSeeder extends DatabaseSeeder
                     'email' => 'admin@gmail.com',
                     'password' => bcrypt('password'),
                     'role' => 'superadmin',
+                    'department_id' => null,
                 ]),
                 $this->data([
                     'name' => 'Singh Khir Khan',
                     'email' => 'singkhirkhan@academic.undip.ac.id',
                     'password' => bcrypt('password'),
                     'role' => 'academic_division',
+                    'department_id' => null,
                 ]),
             ];
 
@@ -226,4 +246,3 @@ class UserSeeder extends DatabaseSeeder
 
     }
 }
-// 'user_id' => $lecturers[rand(0, count($lecturers))]['id'],

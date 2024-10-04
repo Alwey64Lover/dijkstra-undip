@@ -18,8 +18,8 @@ class CourseDepartmentDetail extends Model
     ];
 
     public const STATUSES = [
-        'WAJIB',
-        'PILIHAN',
+        'mandatory' => 'Wajib',
+        'optional' => 'Pilihan',
     ];
 
     protected $casts = [

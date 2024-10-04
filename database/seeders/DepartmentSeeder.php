@@ -20,27 +20,21 @@ class DepartmentSeeder extends DatabaseSeeder
             $departments = [
                 $this->data([
                     'name' => 'Informatika',
-                    'user_id' => $headOfDepartment->id,
                 ]),
                 $this->data([
                     'name' => 'Biologi',
-                    'user_id' => null,
                 ]),
                 $this->data([
                     'name' => 'Matematika',
-                    'user_id' => null,
                 ]),
                 $this->data([
                     'name' => 'Fisika',
-                    'user_id' => null,
                 ]),
                 $this->data([
                     'name' => 'Kimia',
-                    'user_id' => null,
                 ]),
                 $this->data([
                     'name' => 'Statistika',
-                    'user_id' => null,
                 ]),
             ];
 

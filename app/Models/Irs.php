@@ -16,4 +16,15 @@ class Irs extends Model
     protected $guarded = [
         'id', 'created_at'
     ];
+
+    public const STATUSES = [
+        'opened' => 'Dibuka',
+        'closed' => 'Ditutup',
+    ];
+
+    public const ACTIONS = [
+        'waiting',
+        'accepted',
+        'rejected',
+    ];
 }

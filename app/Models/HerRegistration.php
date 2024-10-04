@@ -16,4 +16,10 @@ class HerRegistration extends Model
     protected $guarded = [
         'id', 'created_at'
     ];
+
+    const STATUSES = [
+        'active' => 'Aktif',
+        'leave' => 'Cuti',
+        'drop_out' => 'Keluar(DO)',
+    ];
 }

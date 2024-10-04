@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\Lecturer;
 use App\Models\Course;
+use App\Models\CourseClass;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -57,10 +58,23 @@ class DashboardController extends Controller
         return view('modules.dashboard.student');
     }
 
+
     public function headOfDepartmentIndex(){
         // dump(Course::all());
-        return view('modules.dashboard.headofdepartment',
-    ['courses'=>Course::all()]);
+        // dd($data);
+        try {
+            $data['courseclasses'] = CourseClass::whereHas('courseDepartmentDetail', function($query) {
+                $query->whereHas('courseDepartment', function($query){
+                    $query->where('department_id', user()->department_id);
+                });
+            })
+            ->with('courseDepartmentDetail.course')
+            ->get();
+            return view('modules.dashboard.headofdepartment', $data);
+        } catch (\Exception $e) {
+            logError($e, actionMessage("failed", "retrieved"), 'dashboard');
+            abort(500);
+        }
     }
     public function academicDivisionIndex(){
         return view('modules.dashboard.academic-division', [

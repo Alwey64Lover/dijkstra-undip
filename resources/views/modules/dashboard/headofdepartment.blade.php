@@ -78,6 +78,14 @@
     }
 </style>
 
+<!-- Pass course data from Laravel to JavaScript -->
+<script>
+    // Serialize courses data from the controller
+    var coursesData = @json($courseclasses);
+    // console.log(coursesData);
+</script>
+
+<!-- FullCalendar and custom scripts -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var miniCalendarEl = document.getElementById('mini-calendar');
@@ -85,7 +93,8 @@
         var sidebarEl = document.querySelector('.subject-list ul');
 
         function updateSidebar(events) {
-            // sidebarEl.innerHTML = '';
+            sidebarEl.innerHTML = '';
+            // Ensure each course is displayed in the sidebar
             let addedEvents = new Set();
             events.forEach(function(event) {
                 if (!addedEvents.has(event.title)) {
@@ -97,32 +106,35 @@
             });
         }
 
-        function generateRepeatingEvents(title, startDate, endDate, intervalDays=7, count=10) {
+        function generateRepeatingEvents(course_name, name_class, start_time, end_time, start_date = '2024-08-21', end_date = '2024-12-21', interval_days = 7, count = 10) {
             let events = [];
-            let currentStartDate = new Date(startDate);
-            let currentEndDate = new Date(endDate);
+            let currentstart_date = new Date(`${start_date}T${start_time}`);
+            let currentend_date = new Date(`${start_date}T${end_time}`);
+            let lastend_date = new Date(end_date); // Convert end_date to Date object
 
-            for (let i = 0; i < count; i++) {
+            // Loop until currentstart_date exceeds or equals lastend_date
+            while (currentstart_date <= lastend_date) {
                 events.push({
-                    title: title,
-                    start: currentStartDate.toISOString(),
-                    end: currentEndDate.toISOString()
+                    title: `${course_name} ${name_class}`,
+                    start: currentstart_date.toISOString(),
+                    end: currentend_date.toISOString()
                 });
 
-                currentStartDate.setDate(currentStartDate.getDate() + intervalDays);
-                currentEndDate.setDate(currentEndDate.getDate() + intervalDays);
+                currentstart_date.setDate(currentstart_date.getDate() + interval_days);
+                currentend_date.setDate(currentend_date.getDate() + interval_days);
             }
 
             return events;
         }
 
-        var events = []
-        coursesData.forEach(function (course) {
-            var repeatingEvents = generateRepeatingEvents(course.name, course.start_date, course.end_date);
+        var events = [];
+        coursesData.forEach(function(courseClass) {
+            var course = courseClass.course_department_detail.course; // Akses relasi course
+            var repeatingEvents = generateRepeatingEvents(course.name, courseClass.name, courseClass.start_time, courseClass.end_time);
             events.push(...repeatingEvents);
-        })
+        });
 
-        // Mini calendar di sidebar
+        // Initialize the mini calendar in the sidebar
         var miniCalendar = new FullCalendar.Calendar(miniCalendarEl, {
             initialView: 'dayGridMonth',
             headerToolbar: {
@@ -135,6 +147,7 @@
             }
         });
 
+        // Initialize the main calendar
         var mainCalendar = new FullCalendar.Calendar(mainCalendarEl, {
             initialView: 'listDay',
             headerToolbar: {
@@ -142,7 +155,7 @@
                 center: 'title',
                 right: ''
             },
-            events: events,
+            events: events, // Use events generated from the courses data
             eventDidMount: function(info) {
                 console.log('Event mounted:', info.event.title);
             },
@@ -151,6 +164,7 @@
             }
         });
 
+        // Update the sidebar once events are set in the main calendar
         mainCalendar.on('eventsSet', function() {
             var events = mainCalendar.getEvents();
             updateSidebar(events);
@@ -158,7 +172,9 @@
 
         // Render both calendars
         miniCalendar.render();
+        console.log('Mini Calendar rendered.');
         mainCalendar.render();
+        console.log('Main Calendar rendered.');
     });
 </script>
 
@@ -171,13 +187,11 @@
         <div class="sidebar">
             <!-- Mini calendar di sidebar -->
             <div id="mini-calendar"></div>
-            @foreach ($courses as $course)
-                <div class="subject-list">
-                    <ul>
-                        <li>{{ $course->name }}</li>
-                    </ul>
-                </div>
-            @endforeach
+            <div class="subject-list">
+                <ul>
+
+                </ul>
+            </div>
         <a href="#" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
         </div>
 

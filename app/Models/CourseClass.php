@@ -26,4 +26,8 @@ class CourseClass extends Model
         'saturday' => 'Sabtu',
         'sunday' => 'Minggu',
     ];
+
+    public function CourseDepartmentDetail(){
+        return $this->belongsTo(CourseDepartmentDetail::class);
+    }
 }

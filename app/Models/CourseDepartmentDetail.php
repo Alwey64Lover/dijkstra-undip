@@ -25,4 +25,14 @@ class CourseDepartmentDetail extends Model
     protected $casts = [
         'lecturer_ids' => 'json',
     ];
+
+    public function course(){
+        return $this->belongsTo(Course::class);
+    }
+    public function courseClasses(){
+        return $this->hasMany(CourseClass::class);
+    }
+    public function courseDepartment(){
+        return $this->belongsTo(CourseDepartment::class);
+    }
 }

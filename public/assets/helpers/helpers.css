@@ -24,11 +24,11 @@
 
 /* Table */
     /* Datatable */
-        table#table {
+        .datatable {
             width: 100%;
         }
 
-        table#table td {
+        .datatable td {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;

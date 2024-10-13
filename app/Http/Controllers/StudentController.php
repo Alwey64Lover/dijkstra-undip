@@ -64,32 +64,4 @@ class StudentController extends Controller
     {
         //
     }
-
-    public function search(Request $request, string | null $lecturerId = null) {
-        try {
-            $data["students"] = Student::where('academic_advisor_id', user()->lecturer->id)
-                ->where(function($query) use($request){
-                    $query->whereHas('user', function($query) use($request){
-                            $query->where('name', 'like', "%{$request->name}%");
-                        })
-                        ->where('nim', 'like', "%{$request->nim}%")
-                        ->where('year', 'like', "%{$request->year}%");
-                })
-                ->orderBy('nim')
-                ->with(['lecturer', 'user'])
-                ->paginate($request->rows);
-    
-            // Create a new instance of the LengthAwarePaginator to preserve query parameters
-            $data['pagination'] = [
-                'links' => $data['students']->appends($request->query())->links()->render(),
-            ];
-            
-        } catch (\Exception $e) {
-            logError($e, actionMessage("failed", "search"), 'index');
-            abort(500);
-        }
-    
-        return response()->json($data, 200);
-    }
-    
 }

@@ -24,6 +24,7 @@
                     :id="$element['id'] ?? ''"
                     :name="$element['name'] ?? ''"
                     :placeholder="$element['placeholder'] ?? '...'"
+                    :disabledPlaceholder="$element['disabledPlaceholder'] ?? false"
                     :required="$element['required'] ?? ''"
                     :value="$element['value'] ?? ''"
                     :options="$element['options'] ?? []"

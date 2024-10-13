@@ -10,11 +10,15 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index(){
+    protected $data = [
+        'title' => 'Dashboard',
+    ];
+
+    public function index(Request $request){
         $dashboard = '';
         switch (user()->role) {
             case 'lecturer':
-                 $dashboard = $this->lecturerIndex();
+                 $dashboard = $this->lecturerIndex($request);
                 break;
 
             case 'student':
@@ -41,9 +45,34 @@ class DashboardController extends Controller
     }
 
 
-    public function lecturerIndex(){
+    public function lecturerIndex(Request $request){
+        $data = $this->data;
+
         try {
-            return view("modules.dashboard.lecturer");
+            $year = $request->year ?? '';
+
+            $data['year'] = [
+                'type' => 'select',
+                'id' => 'year',
+                'name' => 'year',
+                'placeholder' => 'Semua Angkatan',
+                'value' => $year,
+                'options' => Student::orderBy('year')
+                    ->pluck('year', 'year')
+                    ->toArray()
+            ];
+
+            $data["students"] = Student::where('academic_advisor_id', user()->lecturer->id)
+                ->where(function ($query) use($year) {
+                    if (filled($year)) {
+                        $query->where('year', $year);
+                    }
+                })
+                ->orderBy('nim')
+                ->with(['lecturer', 'user'])
+                ->get();
+
+            return view("modules.dashboard.lecturer", $data);
         } catch (\Exception $e) {
             logError($e, actionMessage("failed", "open"), 'index');
             abort(500);
@@ -60,8 +89,6 @@ class DashboardController extends Controller
 
 
     public function headOfDepartmentIndex(){
-        // dump(Course::all());
-        // dd($data);
         try {
             $data['courseclasses'] = CourseClass::whereHas('courseDepartmentDetail', function($query) {
                 $query->whereHas('courseDepartment', function($query){

@@ -115,7 +115,7 @@
             // Loop until currentstart_date exceeds or equals lastend_date
             while (currentstart_date <= lastend_date) {
                 events.push({
-                    title: `${course_name} ${name_class}`,
+                    title: `${course_name} - Kelas${name_class}`,
                     start: currentstart_date.toISOString(),
                     end: currentend_date.toISOString()
                 });

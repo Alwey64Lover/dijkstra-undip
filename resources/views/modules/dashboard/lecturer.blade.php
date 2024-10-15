@@ -1,3 +1,4 @@
+{{-- @dd($students) --}}
 @extends('layouts.backend.app')
 
 @section('title', $title)
@@ -34,7 +35,7 @@
                                     <td>{{ $student->year }}</td>
                                     <td>{{ @$student->user->email }}</td>
                                     <td>
-                                        <a href="/"><button type="button" class="btn btn-primary">Detail</button></a>
+                                        <a href="students/{{ $student->nim }}"><button type="button" class="btn btn-primary">Detail</button></a>
                                     </td>
                                 </tr>
                             @empty

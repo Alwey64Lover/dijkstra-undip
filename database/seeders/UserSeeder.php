@@ -171,13 +171,13 @@ class UserSeeder extends DatabaseSeeder
                 ]),
                 $this->data([
                     'user_id' => $students[1]['id'],
-                    'academic_advisor_id' => $lecturerDetails[0]['id'],
+                    'academic_advisor_id' => $lecturerDetails[1]['id'],
                     'nim' => '24060121130044',
                     'year' => 2021,
                 ]),
                 $this->data([
                     'user_id' => $students[2]['id'],
-                    'academic_advisor_id' => $lecturerDetails[0]['id'],
+                    'academic_advisor_id' => $lecturerDetails[2]['id'],
                     'nim' => '24060122140104',
                     'year' => 2022,
                 ]),
@@ -189,13 +189,13 @@ class UserSeeder extends DatabaseSeeder
                 ]),
                 $this->data([
                     'user_id' => $students[4]['id'],
-                    'academic_advisor_id' => $lecturerDetails[0]['id'],
+                    'academic_advisor_id' => $lecturerDetails[1]['id'],
                     'nim' => '24060122120002',
                     'year' => 2022,
                 ]),
                 $this->data([
                     'user_id' => $students[5]['id'],
-                    'academic_advisor_id' => $lecturerDetails[0]['id'],
+                    'academic_advisor_id' => $lecturerDetails[2]['id'],
                     'nim' => '24060122120003',
                     'year' => 2022,
                 ]),
@@ -207,7 +207,7 @@ class UserSeeder extends DatabaseSeeder
                 ]),
                 $this->data([
                     'user_id' => $students[7]['id'],
-                    'academic_advisor_id' => $lecturerDetails[0]['id'],
+                    'academic_advisor_id' => $lecturerDetails[1]['id'],
                     'nim' => '24060122120005',
                     'year' => 2022,
                 ]),

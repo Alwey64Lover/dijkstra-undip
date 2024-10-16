@@ -44,7 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             "student" => $student,
             "khs" => Khs::with(['irsDetail.irs.herRegistration.student' => function ($query) use ($student){
                 $query->where('nim', $student->nim);
-            }])
+            }])->get()
         ]);
     });
 

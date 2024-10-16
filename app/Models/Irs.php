@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PDO;
 
 class Irs extends Model
 {
@@ -27,4 +28,12 @@ class Irs extends Model
         'accepted',
         'rejected',
     ];
+
+    public function irsDetails(){
+        return $this->hasMany(irsDetail::class);
+    }
+
+    public function herRegistration(){
+        return $this->belongsTo(herRegistration::class);
+    }
 }

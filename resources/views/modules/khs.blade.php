@@ -1,3 +1,5 @@
+{{-- @dd($khs) --}}
+
 @extends('layouts.backend.app')
 
 @include('assets.table.datatable')

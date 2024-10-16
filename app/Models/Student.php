@@ -24,4 +24,8 @@ class Student extends Model
     public function lecturer(){
         return $this->belongsTo(Lecturer::class, "academic_advisor_id");
     }
+
+    public function herRegistrations(){
+        return $this->hasMany(HerRegistration::class);
+    }
 }

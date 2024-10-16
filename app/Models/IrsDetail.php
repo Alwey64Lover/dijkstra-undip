@@ -16,4 +16,13 @@ class IrsDetail extends Model
     protected $guarded = [
         'id', 'created_at'
     ];
+
+
+    public function khss(){
+        return $this->hasMany(khs::class);
+    }
+
+    public function irs(){
+        return $this->belongsTo(irs::class);
+    }
 }

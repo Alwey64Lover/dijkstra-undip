@@ -22,4 +22,12 @@ class HerRegistration extends Model
         'leave' => 'Cuti',
         'drop_out' => 'Keluar(DO)',
     ];
+
+    public function irss(){
+        return $this->hasMany(Irs::class);
+    }
+
+    public function student(){
+        return $this->belongsTo(student::class);
+    }
 }

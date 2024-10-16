@@ -42,9 +42,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('modules.khs', [
             "title" => "KHS",
             "student" => $student,
-            "khs" => Khs::with(['irsDetail.irs.herRegistration.student' => function ($query) use ($student){
-                $query->where('nim', $student->nim);
-            }])->get()
+            "khs" => Khs::whereHas('irsDetail.irs.herRegistration', function ($query) use ($student){
+                $query->where('student_id', $student->id);
+            })
+            ->with(['irsDetail.irs.herRegistration'])
+            ->get()
         ]);
     });
 

@@ -52,7 +52,7 @@
                                     <td>kontol</td>
                                     <td>kontol</td>
                                     <td>{{ $mk->score }}</td>
-                                    <td>kontol</td>
+                                    <td>{{ $mk->irsDetail->irs->herRegistration->student_id }}</td>
                                 </tr>
                             @empty
                                 <tr>

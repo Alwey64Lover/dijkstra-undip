@@ -35,7 +35,7 @@
                                     <td>{{ $student->year }}</td>
                                     <td>{{ @$student->user->email }}</td>
                                     <td>
-                                        <a href="students/{{ $student->nim }}"><button type="button" class="btn btn-primary">Detail</button></a>
+                                        <a href="{{ $student->nim }}/irs"><button type="button" class="btn btn-primary">Detail</button></a>
                                     </td>
                                 </tr>
                             @empty

@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
+use App\Models\Khs;
 use App\Models\Student;
 use Illuminate\Support\Facades\Route;
 
@@ -28,10 +29,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('students/search/{lecturerId?}', [StudentController::class, 'search'])->name('students.search');
     // Route::get('dashboard', [DepartmentController::class, 'getAllClasses']);
 
-    Route::get('students/{nim}', function ($nim) {
+    // temporary
+    Route::get('/{student:nim}/irs', function (Student $student) {
         return view('modules.irs', [
-            "title" => ":)",
-            "student" => Student::where('nim', $nim)->with('user')->first()
+            "title" => "IRS",
+            "student" => $student
+         ]);
+    });
+
+    // temporary
+    Route::get('/{student:nim}/khs', function (Student $student) {
+        return view('modules.khs', [
+            "title" => "KHS",
+            "student" => $student,
+            "khs" => Khs::with(['irsDetail.irs.herRegistration.student' => function ($query) use ($student){
+                $query->where('nim', $student->nim);
+            }])
         ]);
     });
 

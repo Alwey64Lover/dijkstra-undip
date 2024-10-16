@@ -24,33 +24,10 @@
                     <option selected>Semester 4</option>
                 </select>
                 <button id="irs-button" class="ms-auto btn btn-primary rounded-pill me-2" style="width: 230.38px">IRS</button>
-                <button id="khs-button" class="ms-auto btn btn-outline-primary rounded-pill" style="width: 230.38px">KHS</button>
+                <a href="./khs"><button id="khs-button" class="ms-auto btn btn-outline-primary rounded-pill" style="width: 230.38px">KHS</button></a>
             </div>
         </div>
     </section>
-
-@push('js')
-    <script>
-        const irs = document.getElementById('irs-button');
-        const khs = document.getElementById('khs-button');
-
-        irs.onclick = function(){
-            irs.classList.remove('btn-outline-primary');
-            irs.classList.add('btn-primary');
-
-            khs.classList.remove('btn-primary');
-            khs.classList.add('btn-outline-primary');
-        }
-
-        khs.onclick = function(){
-            khs.classList.remove('btn-outline-primary');
-            khs.classList.add('btn-primary');
-
-            irs.classList.remove('btn-primary');
-            irs.classList.add('btn-outline-primary');
-        }
-    </script>
-@endpush
 @endsection
 
 {{-- <div class="input-group mb-3">

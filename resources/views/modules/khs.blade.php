@@ -1,12 +1,14 @@
 @extends('layouts.backend.app')
 
+@include('assets.table.datatable')
+
 @section('title', $title)
 
 @section('content')
     <section class="section">
-        <div class="card mb-2">
-            <div class="card-header col-12">
-                <div class="d-flex align-items-center gap-2">
+        <div class="card">
+            <div class="card-header col-12 mb-3">
+                <div class="d-flex align-items-center gap-2 mb-3">
                     <div class="avatar avatar-md2" >
                         <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
                     </div>
@@ -15,42 +17,52 @@
                     <h6 style="margin: 0">{{ $student->user->name }}</h6>
                     <button class="ms-auto btn btn-primary">Cetak Transkrip Keseluruhan</button>
                 </div>
-            </div>
-            <div class="card-body">
                 <select class="form-select mb-5" aria-label="Default select example" style="width: 230.38px">
                     <option>Semester 1</option>
                     <option>Semester 2</option>
                     <option>Semester 3</option>
                     <option selected>Semester 4</option>
                 </select>
-                <button id="irs-button" class="ms-auto btn btn-primary rounded-pill me-2" style="width: 230.38px">IRS</button>
-                <button id="khs-button" class="ms-auto btn btn-outline-primary rounded-pill" style="width: 230.38px">KHS</button>
+                <a href="./irs"><button id="irs-button" class="ms-auto btn btn-outline-primary rounded-pill me-2" style="width: 230.38px">IRS</button></a>
+                <button id="khs-button" class="ms-auto btn btn-primary rounded-pill" style="width: 230.38px">KHS</button>
+            </div>
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table datatable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode</th>
+                                <th>Mata Kuliah</th>
+                                <th>Status</th>
+                                <th>SKS</th>
+                                <th>Nilai (Bobot)</th>
+                                <th>SKS x Bobot</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($khs as $mk)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>kontol</td>
+                                    <td>kontol</td>
+                                    <td>kontol</td>
+                                    <td>kontol</td>
+                                    <td>{{ $mk->score }}</td>
+                                    <td>kontol</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">Data tidak ada</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </section>
-
-@push('js')
-    <script>
-        const irs = document.getElementById('irs-button');
-        const khs = document.getElementById('khs-button');
-
-        irs.onclick = function(){
-            irs.classList.remove('btn-outline-primary');
-            irs.classList.add('btn-primary');
-
-            khs.classList.remove('btn-primary');
-            khs.classList.add('btn-outline-primary');
-        }
-
-        khs.onclick = function(){
-            khs.classList.remove('btn-outline-primary');
-            khs.classList.add('btn-primary');
-
-            irs.classList.remove('btn-primary');
-            irs.classList.add('btn-outline-primary');
-        }
-    </script>
-@endpush
 @endsection
 
 {{-- <div class="input-group mb-3">

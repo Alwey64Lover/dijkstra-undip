@@ -68,7 +68,7 @@ class LecturerController extends Controller
 
     function showStudentIrs(Request $request) {
         $student = Student::where('nim', $request->nim)->first();
-        return view('modules.irs', [
+        return view('modules.lecturer.irs', [
             "title" => "IRS",
             "student" => $student
         ]);
@@ -91,11 +91,17 @@ class LecturerController extends Controller
             'type' => 'select',
             'id' => 'semester',
             'name' => 'semester',
-            'placeholder' => 'KONTOL',
+            'disabledPlaceholder' => 1,
             'value' => $semester_request,
-            'options' => HerRegistration::where('student_id', $student->id)->orderBy('semester')->pluck('semester', 'semester')->toArray()
+            'options' => HerRegistration::where('student_id', $student->id)
+                        ->orderBy('semester')
+                        ->pluck('semester', 'semester')
+                        ->mapWithKeys(function ($semester) {
+                            return [$semester => "Semester ".$semester];
+                        })
+                        ->toArray()
         ];
-        return view('modules.khs', [
+        return view('modules.lecturer.khs', [
             "title" => "KHS",
             "student" => $student,
             "khs" => $khs,

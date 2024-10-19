@@ -16,4 +16,8 @@ class Department extends Model
     protected $guarded = [
         'id', 'created_at'
     ];
+
+    public function users(){
+        return $this->hasMany(User::class);
+    }
 }

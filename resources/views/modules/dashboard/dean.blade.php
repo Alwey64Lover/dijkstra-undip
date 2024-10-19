@@ -29,9 +29,9 @@
                                         <div class="avatar avatar-md2" >
                                             <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
                                         </div>
-                                        {{ $department->users->first()->name }}
+                                        {{ $department->users->first()->name ?? 'n/a' }}
                                     </td>
-                                    <td>{{ $department->users->first()->email }}</td>
+                                    <td>{{ $department->users->first()->email ?? 'n/a'}}</td>
                                     <td>
                                         <form action="{{ route('lecturer.irs') }}" method="POST" style="display: inline">
                                             @csrf

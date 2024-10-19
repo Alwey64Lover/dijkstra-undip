@@ -84,9 +84,6 @@ class DashboardController extends Controller
         $data['departments'] = Department::with(['users' => function($query){
             $query->where('role', 'head_of_department');
         }])
-        ->whereHas('users', function($query){
-            $query->where('role', 'head_of_department');
-        })
         ->get();
         return view('modules.dashboard.dean', $data);
     }

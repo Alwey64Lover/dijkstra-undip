@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lecturer;
+use App\Models\Student;
+use App\Models\Khs;
+use App\Models\HerRegistration;
 use Illuminate\Http\Request;
 
 class LecturerController extends Controller
@@ -61,5 +64,42 @@ class LecturerController extends Controller
     public function destroy(Lecturer $lecturer)
     {
         //
+    }
+
+    function showStudentIrs(Request $request) {
+        $student = Student::where('nim', $request->nim)->first();
+        return view('modules.irs', [
+            "title" => "IRS",
+            "student" => $student
+        ]);
+    }
+
+    function showStudentKhs(Request $request) {
+        $student = Student::where('nim', $request->nim)->first();
+        $semester_request = $request->semester ?? '';
+        $khs = Khs::whereHas('irsDetail.irs.herRegistration', function ($query) use ($student, $semester_request){
+            $query->where('student_id', $student->id);
+            if (filled($semester_request)) {
+                $query->where('semester', $semester_request);
+            }
+        })
+        ->with(['irsDetail.irs.herRegistration'])
+        ->with(['irsDetail.courseClass.courseDepartmentDetail.course'])
+        ->get();
+
+        $semester = [
+            'type' => 'select',
+            'id' => 'semester',
+            'name' => 'semester',
+            'placeholder' => 'KONTOL',
+            'value' => $semester_request,
+            'options' => HerRegistration::where('student_id', $student->id)->orderBy('semester')->pluck('semester', 'semester')->toArray()
+        ];
+        return view('modules.khs', [
+            "title" => "KHS",
+            "student" => $student,
+            "khs" => $khs,
+            "semester" => $semester
+        ]);
     }
 }

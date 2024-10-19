@@ -25,4 +25,8 @@ class IrsDetail extends Model
     public function irs(){
         return $this->belongsTo(irs::class);
     }
+
+    public function courseClass(){
+        return $this->belongsTo(CourseClass::class);
+    }
 }

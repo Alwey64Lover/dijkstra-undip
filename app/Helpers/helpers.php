@@ -35,3 +35,26 @@ function randomArray(array $array, int $from = 0): mixed
 {
     return $array[rand($from, (count($array) - 1))];
 }
+
+function scoreToGrade($score): string
+{
+    $grade = '';
+    if ($score >= 80) $grade = 'A';
+    else if ($score >= 70) $grade = 'B';
+    else if ($score >= 60) $grade = 'C';
+    else if ($score >= 50) $grade = 'D';
+    else $grade = 'E';
+
+    return $grade;  
+}
+
+function bobot($score): int
+{
+    $bobot = 0;
+    if ($score >= 80) $bobot = 4;
+    else if ($score >= 70) $bobot = 3;
+    else if ($score >= 60) $bobot = 2;
+    else if ($score >= 50) $bobot = 1;
+
+    return $bobot;  
+}

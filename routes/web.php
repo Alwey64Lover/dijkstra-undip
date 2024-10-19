@@ -3,11 +3,14 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
+use App\Models\HerRegistration;
 use App\Models\Khs;
 use App\Models\Student;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,25 +33,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('dashboard', [DepartmentController::class, 'getAllClasses']);
 
     // temporary
-    Route::get('/{student:nim}/irs', function (Student $student) {
-        return view('modules.irs', [
-            "title" => "IRS",
-            "student" => $student
-         ]);
-    });
+    Route::post('/irs', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
 
     // temporary
-    Route::get('/{student:nim}/khs', function (Student $student) {
-        return view('modules.khs', [
-            "title" => "KHS",
-            "student" => $student,
-            "khs" => Khs::whereHas('irsDetail.irs.herRegistration', function ($query) use ($student){
-                $query->where('student_id', $student->id);
-            })
-            ->with(['irsDetail.irs.herRegistration'])
-            ->get()
-        ]);
-    });
+    Route::post('/khs', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
 
     Route::middleware(['roles:superadmin|dean'])->group(function () {
         Route::simpleResource('users', UserController::class);

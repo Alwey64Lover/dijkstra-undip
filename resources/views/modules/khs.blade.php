@@ -19,13 +19,22 @@
                     <h6 style="margin: 0">{{ $student->user->name }}</h6>
                     <button class="ms-auto btn btn-primary">Cetak Transkrip Keseluruhan</button>
                 </div>
-                <select class="form-select mb-5" aria-label="Default select example" style="width: 230.38px">
-                    <option>Semester 1</option>
-                    <option>Semester 2</option>
-                    <option>Semester 3</option>
-                    <option selected>Semester 4</option>
-                </select>
-                <a href="./irs"><button id="irs-button" class="ms-auto btn btn-outline-primary rounded-pill me-2" style="width: 230.38px">IRS</button></a>
+                <div class="card-header col-12">
+                    <div class="col-2">
+                        <x-form-element :element="@$semester"/>
+                    </div>
+                </div>
+                {{-- <select id="semester" class="form-select mb-5" aria-label="Default select example" style="width: 230.38px">
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4" selected>Semester 4</option>
+                </select> --}}
+                <form action="{{ route('lecturer.irs') }}"method="POST" style="display: inline;">
+                    @csrf
+                    <input type="hidden" name="nim" value="{{ $student->nim }}">
+                    <button type="submit" class="ms-auto btn btn-outline-primary rounded-pill" style="width: 230.38px">IRS</button>
+                </form>
                 <button id="khs-button" class="ms-auto btn btn-primary rounded-pill" style="width: 230.38px">KHS</button>
             </div>
             <div class="card-body">
@@ -47,12 +56,12 @@
                             @forelse ($khs as $mk)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->course->code }}</td>
+                                    <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->course->name }}</td>
                                     <td>kontol</td>
-                                    <td>kontol</td>
-                                    <td>kontol</td>
-                                    <td>kontol</td>
-                                    <td>{{ $mk->score }}</td>
-                                    <td>{{ $mk->irsDetail->irs->herRegistration->student_id }}</td>
+                                    <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->sks }}</td>
+                                    <td>{{ scoreToGrade($mk->score) }} ({{ bobot($mk->score) }})</td>
+                                    <td>{{ bobot($mk->score)*$mk->irsDetail->courseClass->courseDepartmentDetail->sks }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -65,31 +74,42 @@
             </div>
         </div>
     </section>
+    @push('js')
+    <script>
+        $('#semester').on('change', function() {
+            const semester = $('#semester').val(); // Get the selected semester
+    
+            // Create a form programmatically
+            const form = $('<form>', {
+                method: 'POST',
+                action: "{{ route('lecturer.khs') }}", // The route for the POST request
+            });
+    
+            // Append CSRF token
+            form.append($('<input>', {
+                type: 'hidden',
+                name: '_token',
+                value: '{{ csrf_token() }}' // CSRF token for security
+            }));
+    
+            // Append the student NIM
+            form.append($('<input>', {
+                type: 'hidden',
+                name: 'nim',
+                value: '{{ $student->nim }}' // Include the student NIM
+            }));
+    
+            // Append the selected semester
+            form.append($('<input>', {
+                type: 'hidden',
+                name: 'semester',
+                value: semester // The selected semester
+            }));
+    
+            // Append the form to the body and submit
+            $(document.body).append(form);
+            form.submit(); // Submit the form
+        });
+    </script>
+    @endpush
 @endsection
-
-{{-- <div class="input-group mb-3">
-    <div class="search nim">
-        <label for="search-nim">
-            <h6 class="search-label">NIM</h6>
-            <input type="text" class="form-control rounded-pill" id="search-nim" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudent()">
-            <img class="search-icon" src="{{ asset('storage/static/magnifying-glass-solid.svg') }} " >
-        </label>
-    </div>
-    <div class="search name">
-        <label for="search-name">
-            <h6 class="search-label">Nama</h6>
-            <input type="text" class="form-control rounded-pill" id="search-name" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudent()">
-            <img class="search-icon" src="{{ asset('storage/static/magnifying-glass-solid.svg') }} ">
-        </label>
-    </div>
-    <div class="search year">
-            <h6 class="search-label">Angkatan</h6>
-            <select class="form-control rounded-pill" id="search-year" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onchange="searchStudent()">
-                <option value="">Semua Angkatan</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-            </select>
-            <img class="search-icon" src="{{ asset('storage/static/arrow-down.svg') }} ">
-    </div>
-</div> --}}

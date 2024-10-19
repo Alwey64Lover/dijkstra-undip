@@ -126,7 +126,6 @@
             let nim = $('#search-nim').val();
             let year = $('#search-year').val();
             let rows = $('#rows-per-page').val();
-            $('#tbody').html('KONTOL');
 
             $.ajax({
                 url: ("{{ route('students.search', ['lecturerId' => 'user()->lecturer->id']) }}"),

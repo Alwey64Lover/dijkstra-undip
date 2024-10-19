@@ -8,11 +8,11 @@
 @section('content')
     <section class="section">
         <div class="card">
-            {{-- <div class="card-header col-12">
+            <div class="card-header col-12">
                 <div class="col-2">
                     <x-form-element :element="@$year"/>
                 </div>
-            </div> --}}
+            </div>
 
             <div class="card-body">
                 <div class="table-responsive">
@@ -35,7 +35,11 @@
                                     <td>{{ $student->year }}</td>
                                     <td>{{ @$student->user->email }}</td>
                                     <td>
-                                        <a href="{{ $student->nim }}/irs"><button type="button" class="btn btn-primary">Detail</button></a>
+                                        <form action="{{ route('lecturer.irs') }}" method="POST" style="display: inline">
+                                            @csrf
+                                            <input type="hidden" name="nim" value="{{ $student->nim }}">
+                                            <button type="submit" class="btn btn-primary">Detail</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty

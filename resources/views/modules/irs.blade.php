@@ -24,7 +24,11 @@
                     <option selected>Semester 4</option>
                 </select>
                 <button id="irs-button" class="ms-auto btn btn-primary rounded-pill me-2" style="width: 230.38px">IRS</button>
-                <a href="./khs"><button id="khs-button" class="ms-auto btn btn-outline-primary rounded-pill" style="width: 230.38px">KHS</button></a>
+                <form action="{{ route('lecturer.khs') }}"method="POST" style="display: inline;">
+                    @csrf
+                    <input type="hidden" name="nim" value="{{ $student->nim }}">
+                    <button type="submit" class="ms-auto btn btn-outline-primary rounded-pill" style="width: 230.38px">KHS</button>
+                </form>
             </div>
         </div>
     </section>

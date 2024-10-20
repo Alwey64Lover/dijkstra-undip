@@ -20,7 +20,7 @@ class CourseDepartmentDetailController extends Controller
      */
     public function create()
     {
-        //
+        return view('modules.courses.addcourse');
     }
 
     /**
@@ -28,7 +28,9 @@ class CourseDepartmentDetailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $request->validate([
+        //     'course'
+        // ]);
     }
 
     /**

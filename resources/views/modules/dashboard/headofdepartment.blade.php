@@ -78,14 +78,11 @@
     }
 </style>
 
-<!-- Pass course data from Laravel to JavaScript -->
+
 <script>
-    // Serialize courses data from the controller
     var coursesData = @json($courseclasses);
-    // console.log(coursesData);
 </script>
 
-<!-- FullCalendar and custom scripts -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var miniCalendarEl = document.getElementById('mini-calendar');
@@ -94,7 +91,7 @@
 
         function updateSidebar(events) {
             sidebarEl.innerHTML = '';
-            // Ensure each course is displayed in the sidebar
+
             let addedEvents = new Set();
             events.forEach(function(event) {
                 if (!addedEvents.has(event.title)) {
@@ -110,9 +107,9 @@
             let events = [];
             let currentstart_date = new Date(`${start_date}T${start_time}`);
             let currentend_date = new Date(`${start_date}T${end_time}`);
-            let lastend_date = new Date(end_date); // Convert end_date to Date object
+            let lastend_date = new Date(end_date);
 
-            // Loop until currentstart_date exceeds or equals lastend_date
+
             while (currentstart_date <= lastend_date) {
                 events.push({
                     title: `${course_name} - Kelas${name_class}`,
@@ -129,12 +126,12 @@
 
         var events = [];
         coursesData.forEach(function(courseClass) {
-            var course = courseClass.course_department_detail.course; // Akses relasi course
+            var course = courseClass.course_department_detail.course;
             var repeatingEvents = generateRepeatingEvents(course.name, courseClass.name, courseClass.start_time, courseClass.end_time);
             events.push(...repeatingEvents);
         });
 
-        // Initialize the mini calendar in the sidebar
+
         var miniCalendar = new FullCalendar.Calendar(miniCalendarEl, {
             initialView: 'dayGridMonth',
             headerToolbar: {
@@ -147,7 +144,7 @@
             }
         });
 
-        // Initialize the main calendar
+
         var mainCalendar = new FullCalendar.Calendar(mainCalendarEl, {
             initialView: 'listDay',
             headerToolbar: {
@@ -155,7 +152,7 @@
                 center: 'title',
                 right: ''
             },
-            events: events, // Use events generated from the courses data
+            events: events,
             eventDidMount: function(info) {
                 console.log('Event mounted:', info.event.title);
             },
@@ -164,17 +161,37 @@
             }
         });
 
-        // Update the sidebar once events are set in the main calendar
+
         mainCalendar.on('eventsSet', function() {
             var events = mainCalendar.getEvents();
             updateSidebar(events);
         });
 
-        // Render both calendars
+
         miniCalendar.render();
         console.log('Mini Calendar rendered.');
         mainCalendar.render();
         console.log('Main Calendar rendered.');
+
+        //INI BAGIAN FORM YA LE
+        var addCourseButton = document.getElementById('add-course-button');
+        var formContainer = document.getElementById('form-container');
+        var dashboardBodyContainer = document.getElementById('dashboard-container')
+
+        addCourseButton.addEventListener('click', function(event){
+            event.preventDefault();
+            fetch('{{route('CourseDepartmentDetail.create')}}')
+            .then(response=>response.text())
+            .then(html=>{
+                dashboardBodyContainer.style.display = 'none';
+                formContainer.innerHTML = html;
+                formContainer.style.display = 'block';
+                history.pushState(null, '', '/dashboard/addcourse');
+            })
+            .catch(error=>{
+                console.log('Error loading form: ', error);
+            });
+        });
     });
 </script>
 
@@ -182,7 +199,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <section class="section dashboard">
+    <section class="section dashboard" id="dashboard-container">
         <!-- Sidebar section -->
         <div class="sidebar">
             <!-- Mini calendar di sidebar -->
@@ -192,7 +209,7 @@
 
                 </ul>
             </div>
-        <a href="#" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
+        <a href="#" id="add-course-button" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
         </div>
 
         <!-- Calendar section -->
@@ -200,4 +217,5 @@
             <div id="calendar"></div>
         </div>
     </section>
+    <div id="form-container" style="display:none;"></div>
 @endsection

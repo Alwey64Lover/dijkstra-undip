@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\CourseDepartmentDetailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LecturerController;
@@ -29,6 +30,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware(['auth', 'verified'])->name('dashboard');
 
+
+    //PALA DEPT
+    Route::get('/CourseDepartmentDetail/create', [CourseDepartmentDetailController::class, 'create'])->name('CourseDepartmentDetail.create');
+
+    //END OF PALA DEPT
+    
     Route::get('students/search/{lecturerId?}', [StudentController::class, 'search'])->name('students.search');
     // Route::get('dashboard', [DepartmentController::class, 'getAllClasses']);
 

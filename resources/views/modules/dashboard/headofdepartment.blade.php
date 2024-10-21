@@ -176,22 +176,44 @@
         //INI BAGIAN FORM YA LE
         var addCourseButton = document.getElementById('add-course-button');
         var formContainer = document.getElementById('form-container');
-        var dashboardBodyContainer = document.getElementById('dashboard-container')
+        var dashboardBodyContainer = document.getElementById('dashboard-container');
 
-        addCourseButton.addEventListener('click', function(event){
+        addCourseButton.addEventListener('click', function(event) {
             event.preventDefault();
-            fetch('{{route('CourseDepartmentDetail.create')}}')
-            .then(response=>response.text())
-            .then(html=>{
+
+            // Simpan konten dashboard ke Local Storage
+            localStorage.setItem('dashboardContent', dashboardBodyContainer.innerHTML);
+
+            fetch('{{ route('CourseDepartmentDetail.create') }}', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
                 dashboardBodyContainer.style.display = 'none';
                 formContainer.innerHTML = html;
                 formContainer.style.display = 'block';
-                history.pushState(null, '', '/dashboard/addcourse');
+                history.pushState(null, '', '/CourseDepartmentDetail/create');
+
+                // Tambahkan event listener ke tombol "Batal"
+                document.getElementById('cancel-button').addEventListener('click', function(event) {
+                    formContainer.style.display = 'none';
+                    dashboardBodyContainer.style.display = 'flex';
+                    history.pushState(null, '', '/dashboard');
+                });
             })
-            .catch(error=>{
-                console.log('Error loading form: ', error);
-            });
+            .catch(error => console.log('Error loading form: ', error));
         });
+
+        if (window.location.pathname === '/CourseDepartmentDetail/create') {
+            var dashboardContent = localStorage.getItem('dashboardContent');
+            if (dashboardContent) {
+                dashboardBodyContainer.innerHTML = dashboardContent;
+                formContainer.style.display = 'block';
+                dashboardBodyContainer.style.display = 'none';
+            }
+        }
     });
 </script>
 

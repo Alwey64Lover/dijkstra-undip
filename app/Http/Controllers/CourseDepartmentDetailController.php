@@ -20,7 +20,11 @@ class CourseDepartmentDetailController extends Controller
      */
     public function create()
     {
-        return view('modules.courses.addcourse');
+        if(request()->ajax()){
+            return view('modules.courses.addcoursedeptdetail');
+        }else{
+            return view('modules.courses.addcoursedeptdetailfull');
+        }
     }
 
     /**

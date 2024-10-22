@@ -42,21 +42,3 @@
         </div>
     </div>
 </div>
-
-
-<script>
-    // document.addEventListener('click', function(event) {
-    //     if (event.target && event.target.id === 'cancel-button') {
-    //         history.pushState(null, '', '/dashboard');
-    //     }
-
-    //     if (window.location.pathname === '/dashboard') {
-    //     var dashboardContent = localStorage.getItem('dashboardContent');
-    //     if (dashboardContent) {
-    //         dashboardBodyContainer.innerHTML = dashboardContent;
-    //         dashboardBodyContainer.style.display = 'block';
-    //         formContainer.style.display = 'none';
-    //     }
-    //     }
-    // });
-</script>

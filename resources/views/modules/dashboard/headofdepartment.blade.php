@@ -180,10 +180,6 @@
 
         addCourseButton.addEventListener('click', function(event) {
             event.preventDefault();
-
-            // Simpan konten dashboard ke Local Storage
-            localStorage.setItem('dashboardContent', dashboardBodyContainer.innerHTML);
-
             fetch('{{ route('CourseDepartmentDetail.create') }}', {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
@@ -196,7 +192,7 @@
                 formContainer.style.display = 'block';
                 history.pushState(null, '', '/CourseDepartmentDetail/create');
 
-                // Tambahkan event listener ke tombol "Batal"
+
                 document.getElementById('cancel-button').addEventListener('click', function(event) {
                     formContainer.style.display = 'none';
                     dashboardBodyContainer.style.display = 'flex';
@@ -205,15 +201,6 @@
             })
             .catch(error => console.log('Error loading form: ', error));
         });
-
-        if (window.location.pathname === '/CourseDepartmentDetail/create') {
-            var dashboardContent = localStorage.getItem('dashboardContent');
-            if (dashboardContent) {
-                dashboardBodyContainer.innerHTML = dashboardContent;
-                formContainer.style.display = 'block';
-                dashboardBodyContainer.style.display = 'none';
-            }
-        }
     });
 </script>
 

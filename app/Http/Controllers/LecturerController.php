@@ -76,12 +76,17 @@ class LecturerController extends Controller
 
     function showStudentKhs(Request $request) {
         $student = Student::where('nim', $request->nim)->first();
-        $semester_request = $request->semester ?? '';
+        $options = HerRegistration::where('student_id', $student->id)
+        ->orderBy('semester')
+        ->pluck('semester', 'semester')
+        ->mapWithKeys(function ($semester) {
+            return [$semester => "Semester ".$semester];
+        })
+        ->toArray();
+        $semester_request = $request->semester ?? collect(array_keys($options))->last();
         $khs = Khs::whereHas('irsDetail.irs.herRegistration', function ($query) use ($student, $semester_request){
-            $query->where('student_id', $student->id);
-            if (filled($semester_request)) {
-                $query->where('semester', $semester_request);
-            }
+            $query->where('student_id', $student->id)
+            ->where('semester', $semester_request);
         })
         ->with(['irsDetail.irs.herRegistration'])
         ->with(['irsDetail.courseClass.courseDepartmentDetail.course'])
@@ -93,13 +98,7 @@ class LecturerController extends Controller
             'name' => 'semester',
             'disabledPlaceholder' => 1,
             'value' => $semester_request,
-            'options' => HerRegistration::where('student_id', $student->id)
-                        ->orderBy('semester')
-                        ->pluck('semester', 'semester')
-                        ->mapWithKeys(function ($semester) {
-                            return [$semester => "Semester ".$semester];
-                        })
-                        ->toArray()
+            'options' => $options
         ];
         return view('modules.lecturer.khs', [
             "title" => "KHS",

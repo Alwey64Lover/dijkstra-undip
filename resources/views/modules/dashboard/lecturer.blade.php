@@ -28,7 +28,7 @@
                         </thead>
 
                         <tbody>
-                            @forelse ($students as $student)
+                            @foreach ($students as $student)
                                 <tr>
                                     <td>{{ $student->nim }}</td>
                                     <td>{{ @$student->user->name }}</td>
@@ -42,11 +42,7 @@
                                         </form>
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">Data tidak ada</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

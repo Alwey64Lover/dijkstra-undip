@@ -53,7 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($khs as $mk)
+                            @foreach ($khs as $mk)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->course->code }}</td>
@@ -63,11 +63,7 @@
                                     <td>{{ scoreToGrade($mk->score) }} ({{ bobot($mk->score) }})</td>
                                     <td>{{ bobot($mk->score)*$mk->irsDetail->courseClass->courseDepartmentDetail->sks }}</td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center">Data tidak ada</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

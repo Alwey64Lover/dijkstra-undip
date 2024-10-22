@@ -4,7 +4,7 @@
 
 @include('assets.table.datatable')
 
-@section('title', $title)
+@section('title', 'KHS')
 
 @section('content')
     <section class="section">
@@ -66,6 +66,19 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+
+                <div class="d-inline-flex align-items-start w-50">
+                    <div class="grid mt-4 me-auto">
+                        <h5>IP Semester&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;: {{ $total_bobot_sem/($total_sks_sem == 0 ? 1 : $total_sks_sem) }}</h5>
+                        {{ $total_bobot_sem.'/'.$total_sks_sem }} <br>
+                        Total (SKS x Bobot) / Total SKS
+                    </div>
+                    <div class="grid mt-4">
+                        <h5>IP Kumulatif&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;: {{ $total_bobot_all/($total_sks_all == 0 ? 1 : $total_sks_all) }}</h5>
+                        {{ $total_bobot_all.'/'.$total_sks_all }} <br>
+                        Total (SKS x Bobot) semua semester <br>/ Total SKS semua semester
+                    </div>
                 </div>
             </div>
         </div>

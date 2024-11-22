@@ -12,3 +12,11 @@
     </li>
 @endif
 
+@if (in_array(user()->role, ['head_of_department']))
+    <li class="menu-item {{ routeIsActive('schedule.*') }}">
+        <a href="{{ route('schedule.table') }}" class='menu-link'>
+            <span><i class="bi bi-journals"></i> Schedule</span>
+        </a>
+    </li>
+@endif
+

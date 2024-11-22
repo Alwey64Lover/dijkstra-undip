@@ -32,10 +32,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     //PALA DEPT
-    Route::get('/CourseDepartmentDetail/create', [CourseDepartmentDetailController::class, 'create'])->name('CourseDepartmentDetail.create');
+    Route::middleware(['roles:head_of_department'])->group(function () {
+        Route::simpleResource('schedule', CourseDepartmentDetailController::class);
+    });
 
     //END OF PALA DEPT
-    
+
     Route::get('students/search/{lecturerId?}', [StudentController::class, 'search'])->name('students.search');
     // Route::get('dashboard', [DepartmentController::class, 'getAllClasses']);
 

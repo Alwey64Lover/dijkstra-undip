@@ -180,7 +180,7 @@
 
         addCourseButton.addEventListener('click', function(event) {
             event.preventDefault();
-            fetch('{{ route('schedule.form', 'add_schedule') }}', {
+            fetch('{{ route('schedule.form', ['action' => 'create']) }}', {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
                 }

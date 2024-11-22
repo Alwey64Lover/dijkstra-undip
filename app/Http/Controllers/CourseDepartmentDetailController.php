@@ -21,9 +21,9 @@ class CourseDepartmentDetailController extends Controller
             })
             ->with('courseDepartmentDetail.course')
             ->get();
-            return view('modules.dashboard.headofdepartment', $data);
+            return view('modules.headofdepartment.schedules', $data);
         } catch (\Exception $e) {
-            logError($e, actionMessage("failed", "retrieved"), 'dashboard');
+            logError($e, actionMessage("failed", "retrieved"), 'schedule');
             abort(500);
         }
     }

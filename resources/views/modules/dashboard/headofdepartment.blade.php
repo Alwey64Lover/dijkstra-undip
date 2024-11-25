@@ -21,27 +21,27 @@
                         <i class="bi-person-fill"></i>
                     </div>
                     <div class="col-xl", style>
-                        <h6 class="text-muted font-semibold">Jumlah Mahasiswa</h6>
-                        <h6 class="font-extrabold mb-0">112.000</h6>
+                        <h6 class="text-muted font-semibold">Jumlah Mahasiswa Total</h6>
+                        <h6 class="font-extrabold mb-0">6.062</h6>
                     </div>
                 </div>
                 <div class="card text-center" style="width: 15rem; margin-left:100px; margin-bottom:0px; margin-top:50px">
                     <span class="border rounded-top">
-                        <img src="storage/static/asa_kabinet.png" class="card-img-top" style="margin-top: 20px;margin-bottom: 20px; height: 120px; width: 120px;" />
+                        <img src="storage/static/if_undip.jpg" class="card-img-top" style="margin-top: 20px;margin-bottom: 20px; height: 120px; width: 120px;" />
                     </span>
                     <span class="border rounded-bottom">
                         <div class="card-body">
                           <h5 class="card-title ">2024/2025 Ganjil</h5>
                           <h6 class="card-text">Status : Berlangsung</h6>
-                          <h6 class="card-text">Mahasiswa Aktif : 760</h6>
-                          <a href="#" class="btn btn-primary">Lihat Jadwal</a>
+                          <h6 class="card-text">Mahasiswa Aktif : 844</h6>
+                          <a href="schedule" class="btn btn-primary">Lihat Jadwal</a>
                         </div>
                     </span>
                 </div>
             </div>
             <div class="col-8">
                 <div class="card-header">
-                    <h4>Capaian Belajar Mahasiswa Tiap Semester</h4>
+                    <h4>Jumlah Mahasiswa 5 Tahun Terakhir</h4>
                 </div>
                 <div class="card-body">
                     <canvas id="chart-profile-visit"></canvas>
@@ -57,19 +57,19 @@
     new Chart(document.getElementById("chart-profile-visit"), {
         type: "bar",
         data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            labels: ["2019", "2020", "2021", "2022", "2023", "2024"],
             datasets: [{
-                label: "Last year",
+                label: "Laki-Laki",
                 backgroundColor: "rgba(0, 123, 255, 1)",
                 borderColor: "rgba(0, 123, 255, 1)",
-                data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
+                data: [400,449, 550, 532, 670, 640],
                 barPercentage: 0.75,
                 categoryPercentage: 0.5,
             }, {
-                label: "This year",
+                label: "Perempuan",
                 backgroundColor: "#dee2e6",
                 borderColor: "#dee2e6",
-                data: [69, 66, 24, 48, 52, 51, 44, 53, 62, 79, 51, 68],
+                data: [75, 90, 82, 120, 150, 204],
                 barPercentage: 0.75,
                 categoryPercentage: 0.5,
             }],

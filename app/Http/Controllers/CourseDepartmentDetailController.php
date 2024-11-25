@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\CourseDepartmentDetail;
 use App\Models\CourseClass;
 use Illuminate\Http\Request;
@@ -33,11 +34,15 @@ class CourseDepartmentDetailController extends Controller
      */
     public function form(string $action, string $id = null)
     {
-        if(request()->ajax()){
-            return view('modules.courses.addcoursedeptdetail');
-        }else{
-            return view('modules.courses.addcoursedeptdetailfull');
+        try{
+            $data['allcourses'] = Course::get();
+            // dd( $data['allcourses']);
+            return view('modules.courses.addcoursedeptdetail', $data);
+        }catch(\Exception $e){
+            logError($e, actionMessage("failed", "retrieved"), 'load schedule form');
+            abort(500);
         }
+
     }
 
     /**

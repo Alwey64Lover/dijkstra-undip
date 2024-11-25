@@ -11,12 +11,12 @@
 
                         <div class="form-group mb-3">
                             <label for="course">Pilih Mata Kuliah</label>
-                            {{-- <select class="form-control" id="course" name="course_id" required>
+                            <select class="form-select" id="course" name="course_id" required>
                                 <option value="">Pilih mata kuliah</option>
-                                @foreach($unaddedCourses as $course)
-                                    <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                @foreach($allcourses as $course)
+                                    <option value="{{ $course->id }}">{{ $course->code }} - {{ $course->name }}</option>
                                 @endforeach
-                            </select> --}}
+                            </select>
                         </div>
 
                         <div class="form-group mb-3">

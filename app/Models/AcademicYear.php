@@ -16,4 +16,8 @@ class AcademicYear extends Model
     protected $guarded = [
         'id', 'created_at'
     ];
+
+    public function herRegistrations(){
+        return $this->hasMany(HerRegistration::class);
+    }
 }

@@ -58,7 +58,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->course->code }}</td>
                                     <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->course->name }}</td>
-                                    <td>kontol</td>
+                                    <td>Baru</td>
                                     <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->sks }}</td>
                                     <td>{{ scoreToGrade($mk->score) }} ({{ bobot($mk->score) }})</td>
                                     <td>{{ bobot($mk->score)*$mk->irsDetail->courseClass->courseDepartmentDetail->sks }}</td>
@@ -77,7 +77,7 @@
                     <div class="grid mt-4">
                         <h5>IP Kumulatif&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;: {{ $total_bobot_all/($total_sks_all == 0 ? 1 : $total_sks_all) }}</h5>
                         {{ $total_bobot_all.'/'.$total_sks_all }} <br>
-                        Total (SKS x Bobot) semua semester <br>/ Total SKS semua semester
+                        Total (SKS x Bobot) semua semester /<br> Total SKS semua semester
                     </div>
                 </div>
             </div>

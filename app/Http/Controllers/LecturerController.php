@@ -72,7 +72,7 @@ class LecturerController extends Controller
     function showStudentIrs(string $nim, Request $request) {
         $data['student'] = Student::where('nim', $nim)->first();
 
-        // try{
+        try{
             if ($data['student']->lecturer != user()->lecturer)
                 throw new Exception("Unauthorized access");
 
@@ -107,16 +107,16 @@ class LecturerController extends Controller
             ];
 
             return view('modules.lecturer.irs', $data);
-        // }catch (Exception $e){
-        //     logError($e, actionMessage("failed", "open"), 'index');
-        //     abort(500);
-        // }
+        }catch (Exception $e){
+            logError($e, actionMessage("failed", "open"), 'index');
+            abort(500);
+        }
     }
 
     function showStudentKhs(string $nim, Request $request) {
         $data['student'] = Student::where('nim', $nim)->first();
 
-        $data['options'] = Irs::where('student_id', $data['student']->id)
+        $data['options'] = HerRegistration::where('student_id', $data['student']->id)
         ->has('irs.irsDetails.khss')
         ->orderBy('semester')
         ->pluck('semester', 'semester')
@@ -131,14 +131,14 @@ class LecturerController extends Controller
             $query->where('student_id', $data['student']->id);
         })
         ->with(['irsDetail.irs.herRegistration'])
-        ->with(['irsDetail.courseClass.courseDetail.course'])
+        ->with(['irsDetail.courseClass.courseDepartmentDetail.course'])
         ->get();
 
         $data['total_bobot_all'] = $data['total_sks_all'] = 0;
 
         foreach($data['khs'] as $mk){
-            $data['total_bobot_all'] += bobot($mk->score)*$mk->irsDetail->courseClass->courseDetail->sks;
-            $data['total_sks_all'] += $mk->irsDetail->courseClass->courseDetail->sks;
+            $data['total_bobot_all'] += bobot($mk->score)*$mk->irsDetail->courseClass->courseDepartmentDetail->sks;
+            $data['total_sks_all'] += $mk->irsDetail->courseClass->courseDepartmentDetail->sks;
         }
 
         $data['khs'] = $data['khs']->filter(function ($item) use ($data) {
@@ -148,8 +148,8 @@ class LecturerController extends Controller
         $data['total_bobot_sem'] = $data['total_sks_sem'] = 0;
 
         foreach($data['khs'] as $mk){
-            $data['total_bobot_sem'] += bobot($mk->score)*$mk->irsDetail->courseClass->courseDetail->sks;
-            $data['total_sks_sem'] += $mk->irsDetail->courseClass->courseDetail->sks;
+            $data['total_bobot_sem'] += bobot($mk->score)*$mk->irsDetail->courseClass->courseDepartmentDetail->sks;
+            $data['total_sks_sem'] += $mk->irsDetail->courseClass->courseDepartmentDetail->sks;
         }
 
         $data['semester'] = [

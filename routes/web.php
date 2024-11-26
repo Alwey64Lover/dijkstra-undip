@@ -59,7 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/irs/{nim}', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
 
-        Route::post('/khs', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
+        Route::get('/khs/{nim}', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
     });
 
     Route::middleware(['roles:superadmin|dean'])->group(function () {

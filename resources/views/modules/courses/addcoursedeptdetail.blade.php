@@ -6,8 +6,9 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST"> {{-- action="{{ route('CourseDepartmentDetail.store') }}" --}}
-                        @csrf
+                    <form method="POST" action="">
+                        {{-- {{ route('CourseDepartmentDetail.store') }} --}}
+                    @csrf
 
                         <div class="form-group mb-3">
                             <label for="course">Pilih Mata Kuliah</label>
@@ -15,6 +16,26 @@
                                 <option value="">Pilih mata kuliah</option>
                                 @foreach($allcourses as $course)
                                     <option value="{{ $course->id }}">{{ $course->code }} - {{ $course->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="course">Pilih Semester</label>
+                            <select class="form-select" id="semester" name="semester_id" required>
+                                <option value="">Pilih Semester</option>
+                                @for ($i = 1; $i <= 7; $i++)
+                                    <option value="{{ $i }}">Semester {{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="course">Status Mata Kuliah</label>
+                            <select class="form-select" id="semester" name="semester_id" required>
+                                <option value="">Pilih Status Mata Kuliah</option>
+                                @foreach ($coursestatuses as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
                                 @endforeach
                             </select>
                         </div>

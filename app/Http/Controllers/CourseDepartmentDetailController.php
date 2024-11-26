@@ -36,7 +36,8 @@ class CourseDepartmentDetailController extends Controller
     {
         try{
             $data['allcourses'] = Course::get();
-            // dd( $data['allcourses']);
+            $data['coursestatuses'] = CourseDepartmentDetail::STATUSES;
+            // dd( $data);
             return view('modules.courses.addcoursedeptdetail', $data);
         }catch(\Exception $e){
             logError($e, actionMessage("failed", "retrieved"), 'load schedule form');
@@ -86,4 +87,10 @@ class CourseDepartmentDetailController extends Controller
     {
         //
     }
+
+    // public function store(Request $request){
+    //     $validated = $request->validate([
+    //         'course'
+    //     ])
+    // }
 }

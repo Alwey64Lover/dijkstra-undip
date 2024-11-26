@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
 class CourseDepartmentDetail extends Model
 {
     use HasFactory,
         HasUlids,
-        SoftDeletes;
+        SoftDeletes,
+        HasJsonRelationships;
 
     protected $guarded = [
         'id', 'created_at'
@@ -34,5 +36,9 @@ class CourseDepartmentDetail extends Model
     }
     public function courseDepartment(){
         return $this->belongsTo(CourseDepartment::class);
+    }
+
+    public function lecturers(){
+        return $this->belongsToJson(Lecturer::class, 'lecturer_ids', 'id');
     }
 }

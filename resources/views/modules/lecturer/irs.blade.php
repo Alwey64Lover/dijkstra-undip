@@ -1,62 +1,101 @@
 @extends('layouts.backend.app')
-
-@section('title', $title)
+{{-- @dd($options) --}}
+@section('title', 'IRS')
 
 @section('content')
     <section class="section">
         <div class="card mb-2">
-            <div class="card-header col-12">
-                <div class="d-flex align-items-center gap-2">
+            <div class="card-header col-12 mb-3">
+                <div class="d-flex align-items-center gap-2 mb-3">
                     <div class="avatar avatar-md2" >
                         <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
                     </div>
                     <h6 style="margin: 0">{{ $student->nim }}</h6>
                     <img src="{{ asset('storage/static/pipe.svg') }} ">
                     <h6 style="margin: 0">{{ $student->user->name }}</h6>
-                    <button class="ms-auto btn btn-primary">Cetak Transkrip Keseluruhan</button>
+                    @if (isset($irsDetails->first()->irs))
+                        @if ($irsDetails->first()->irs->status_name === 'accepted')
+                            <button class="ms-auto btn btn-primary">Cetak IRS</button>
+                        @endif
+                        {{-- @dd($irsDetails->first()->irs->status_name) --}}
+                        @if ($irsDetails->first()->irs->academicYear->is_active ==1)
+                            @if($irsDetails->first()->irs->status_name != 'accepted')
+                                <a class="ms-auto" href='/irs/{{ $irsDetails->first()->irs->id }}/accept'>
+                                    <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui IRS</button>
+                                </a>
+                            @else
+                                <a href='/irs/{{ $irsDetails->first()->irs->id }}/reject'>
+                                    <button class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Batalkan IRS</button>
+                                </a>
+                            @endif
+                        @endif
+                    @endif
                 </div>
-            </div>
-            <div class="card-body">
-                <select class="form-select mb-5" aria-label="Default select example" style="width: 230.38px">
-                    <option>Semester 1</option>
-                    <option>Semester 2</option>
-                    <option>Semester 3</option>
-                    <option selected>Semester 4</option>
-                </select>
+                <div class="card-header col-12">
+                    <div class="col-2">
+                        <x-form-element :element="@$semester"/>
+                    </div>
+                </div>
                 <button id="irs-button" class="ms-auto btn btn-primary rounded-pill me-2" style="width: 230.38px">IRS</button>
-                <form action="{{ route('lecturer.khs') }}"method="POST" style="display: inline;">
+                <form action="khs/{{ $student->nim }}"method="GET" style="display: inline;">
                     @csrf
                     <input type="hidden" name="nim" value="{{ $student->nim }}">
                     <button type="submit" class="ms-auto btn btn-outline-primary rounded-pill" style="width: 230.38px">KHS</button>
                 </form>
             </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode</th>
+                                <th>Mata Kuliah</th>
+                                <th>Kelas</th>
+                                <th>SKS</th>
+                                <th>Ruang</th>
+                                <th>Status</th>
+                                <th>Nama Dosen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($irsDetails as $mk)
+                                {{-- @dd($mk) --}}
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $mk->courseClass->courseDepartmentDetail->course->code }}</td>
+                                    <td>{{ $mk->courseClass->courseDepartmentDetail->course->name }}</td>
+                                    <td>{{ $mk->courseClass->name }}</td>
+                                    <td>{{ $mk->courseClass->courseDepartmentDetail->sks }}</td>
+                                    <td>{{ $mk->courseClass->room->type.$mk->courseClass->room->name }}</td>
+                                    <td>{{ \App\Models\IrsDetail::RETRIEVAL_STATUS[$mk->retrieval_status] }}</td>
+                                    <td>
+                                        <ul>
+                                            @foreach($mk->courseClass->courseDepartmentDetail->lecturers as $lecturer)
+                                                <li>{{ $lecturer->user->name }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
-@endsection
 
-{{-- <div class="input-group mb-3">
-    <div class="search nim">
-        <label for="search-nim">
-            <h6 class="search-label">NIM</h6>
-            <input type="text" class="form-control rounded-pill" id="search-nim" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudent()">
-            <img class="search-icon" src="{{ asset('storage/static/magnifying-glass-solid.svg') }} " >
-        </label>
-    </div>
-    <div class="search name">
-        <label for="search-name">
-            <h6 class="search-label">Nama</h6>
-            <input type="text" class="form-control rounded-pill" id="search-name" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onkeyup="searchStudent()">
-            <img class="search-icon" src="{{ asset('storage/static/magnifying-glass-solid.svg') }} ">
-        </label>
-    </div>
-    <div class="search year">
-            <h6 class="search-label">Angkatan</h6>
-            <select class="form-control rounded-pill" id="search-year" aria-describedby="basic-addon2" style="background-color: #D9D9D9" onchange="searchStudent()">
-                <option value="">Semua Angkatan</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-            </select>
-            <img class="search-icon" src="{{ asset('storage/static/arrow-down.svg') }} ">
-    </div>
-</div> --}}
+    {{-- <x-modal.modal-setuju-irs/> --}}
+
+    @push('js')
+        <script>
+            $('#semester').on('change', function(){
+                const semester = $('#semester').val();
+
+                window.location.href = (`{{ route('lecturer.irs', ['semester' => 'SEM', 'nim' => 'NIM']) }}`)
+                .replace('SEM', semester)
+                .replace('NIM', '{{ $student->nim }}');
+            });
+        </script>
+    @endpush
+@endsection

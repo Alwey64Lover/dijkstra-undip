@@ -23,9 +23,9 @@
             <span><i class="bi bi-journal-plus"></i> New Schedule</span>
         </a>
     </li>
-    <li class="menu-item {{ routeIsActive('newcourses.*') }}">
-        <a href="{{ route('newcourses') }}" class='menu-link'>
-            <span><i class="bi bi-plus-square"></i> New Courses</span>
+    <li class="menu-item {{ routeIsActive('courses.*') }}">
+        <a href="{{ route('courses') }}" class='menu-link'>
+            <span><i class="bi bi-plus-square"></i> Courses</span>
         </a>
     </li>
 @endif

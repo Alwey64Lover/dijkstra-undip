@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\CourseDepartment;
 use App\Models\CourseDepartmentDetail;
 use App\Models\CourseClass;
 use Illuminate\Http\Request;
@@ -96,9 +97,14 @@ class CourseDepartmentDetailController extends Controller
             abort(500);
         }
     }
-    public function add_course(Request $request){
+    public function display_course(Request $request){
         try{
-            return view('modules.headofdepartment.addcourses');
+            $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
+                $query->where('department_id', user()->department_id);
+            })->with(['course'])
+            ->get();
+            // dd($data['existing_dept_courses']);
+            return view('modules.headofdepartment.displaycourses',$data);
         }catch(\Exception $e){
             logError($e, actionMessage("failed", "retrieved"), 'load add course form');
             abort(500);

@@ -35,6 +35,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //PALA DEPT
     Route::middleware(['roles:head_of_department'])->group(function () {
         Route::simpleResource('schedule', CourseDepartmentDetailController::class);
+        Route::get('/newschedule', [CourseDepartmentDetailController::class, 'new_sched'])->name('newschedule');
+        Route::get('/addcourses', [CourseDepartmentDetailController::class, 'add_course'])->name('newcourses');
     });
 
     //END OF PALA DEPT

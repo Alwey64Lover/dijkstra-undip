@@ -88,9 +88,20 @@ class CourseDepartmentDetailController extends Controller
         //
     }
 
-    // public function store(Request $request){
-    //     $validated = $request->validate([
-    //         'course'
-    //     ])
-    // }
+    public function new_sched(Request $request){
+        try{
+            return view('modules.headofdepartment.newschedules');
+        }catch(\Exception $e){
+            logError($e, actionMessage("failed", "retrieved"), 'load new schedule form');
+            abort(500);
+        }
+    }
+    public function add_course(Request $request){
+        try{
+            return view('modules.headofdepartment.addcourses');
+        }catch(\Exception $e){
+            logError($e, actionMessage("failed", "retrieved"), 'load add course form');
+            abort(500);
+        }
+    }
 }

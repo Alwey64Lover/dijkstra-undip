@@ -121,7 +121,7 @@ class DashboardController extends Controller
         }
     }
     public function academicDivisionIndex(){
-        try {
+        // try {
             $data['courseclasses'] = CourseClass::whereHas('courseDepartmentDetail', function($query) {
                 $query->whereHas('courseDepartment', function($query){
                 });
@@ -129,10 +129,10 @@ class DashboardController extends Controller
             ->with('courseDepartmentDetail.course')
             ->get();
             return view('modules.dashboard.academic-division', $data);
-        } catch (\Exception $e) {
-            logError($e, actionMessage("failed", "retrieved"), 'dashboard');
-            abort(500);
-        }
+        // } catch (\Exception $e) {
+        //     logError($e, actionMessage("failed", "retrieved"), 'dashboard');
+        //     abort(500);
+        // }
     }
 }
 

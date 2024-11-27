@@ -91,7 +91,12 @@ class CourseDepartmentDetailController extends Controller
 
     public function new_sched(Request $request){
         try{
-            return view('modules.headofdepartment.newschedules');
+            $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
+                $query->where('department_id', user()->department_id);
+            })->with(['course'])
+            ->get();
+            // dd($data['existing_dept_courses']);
+            return view('modules.headofdepartment.newschedules', $data);
         }catch(\Exception $e){
             logError($e, actionMessage("failed", "retrieved"), 'load new schedule form');
             abort(500);

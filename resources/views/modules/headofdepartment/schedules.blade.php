@@ -172,32 +172,6 @@
         console.log('Mini Calendar rendered.');
         mainCalendar.render();
         console.log('Main Calendar rendered.');
-
-        //INI BAGIAN FORM YA LE
-        var addCourseButton = document.getElementById('add-course-button');
-        var formContainer = document.getElementById('form-container');
-        var dashboardBodyContainer = document.getElementById('dashboard-container');
-
-        addCourseButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            fetch('{{ route('schedule.form', ['action' => 'create']) }}', {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.text())
-            .then(html => {
-                dashboardBodyContainer.style.display = 'none';
-                formContainer.innerHTML = html;
-                formContainer.style.display = 'block';
-
-                document.getElementById('cancel-button').addEventListener('click', function(event) {
-                    formContainer.style.display = 'none';
-                    dashboardBodyContainer.style.display = 'flex';
-                });
-            })
-            .catch(error => console.log('Error loading form: ', error));
-        });
     });
 </script>
 
@@ -215,7 +189,6 @@
 
                 </ul>
             </div>
-        <a href="#" id="add-course-button" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
         </div>
 
         <!-- Calendar section -->

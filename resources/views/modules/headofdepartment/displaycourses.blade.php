@@ -1,3 +1,4 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
     .card .card:hover {
         box-shadow: 0 0 15px rgba(13, 110, 253, 0.2) !important;
@@ -7,8 +8,9 @@
 @extends('layouts.backend.app')
 @section('content')
 <div class="card">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="card-title">Available Courses</h4>
+        <button type="submit" class="btn btn-primary" id="addNewCourseBtn">Add New Courses</button>
     </div>
     <div class="card-body">
         <div class="row row-cols-1 row-cols-md-4 g-4">
@@ -28,4 +30,42 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+        $('#addNewCourseBtn').click(function(){
+            console.log('Button clicked');
+            $.ajax({
+                url: '{{ route('newcourse', ['action' => 'create']) }}',
+                type: 'GET',
+                success: function(response) {
+                    console.log('Ajax success', response);
+                    let modal = `
+                        <div class="modal fade" id="addCourseModal" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Add New Course</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ${response}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    if(!$('#addCourseModal').length) {
+                        $('body').append(modal);
+                    }
+
+                    $('#addCourseModal').modal('show');
+                },
+                error: function(xhr){
+                    console.log('Ajax error', xhr);
+                    alert('Error loading form');
+                }
+            });
+        });
+    });
+</script>
 @endsection

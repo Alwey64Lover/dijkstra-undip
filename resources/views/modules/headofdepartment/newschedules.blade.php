@@ -48,7 +48,12 @@
                             <form id="courseForm{{ $day }}">
                                 <div class="form-group mb-3">
                                     <label>Course Name</label>
-                                    <input type="text" class="form-control" name="course_name" required>
+                                    <select class="form-select" name="course_name">
+                                        <option value="">Pilih Mata Kuliah yang Tersedia</option>
+                                        @foreach ($existing_dept_courses as $courses )
+                                            <option value="{{$courses->course->id}}">{{$courses->course->name}} - {{$courses->sks}} SKS</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Class</label>
@@ -56,7 +61,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>Start Time</label>
-                                    <select class="form-control" name="start_time" required>
+                                    <select class="form-select" name="start_time" required>
                                         <option value="">Pilih Waktu Mulai</option>
                                         @php
                                             for ($hour = 7; $hour <= 18; $hour++) {

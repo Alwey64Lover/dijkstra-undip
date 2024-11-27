@@ -114,15 +114,7 @@ class DashboardController extends Controller
 
     public function headOfDepartmentIndex(){
         try {
-            $data['courseclasses'] = CourseClass::whereHas('courseDepartmentDetail', function($query) {
-                $query->whereHas('courseDepartment', function($query){
-                    $query->where('department_id', user()->department_id);
-                });
-            })
-            ->with('courseDepartmentDetail.course')
-            ->get();
-            @dd($data['courseclasses']);
-            return view('modules.dashboard.headofdepartment', $data);
+            return view('modules.dashboard.headofdepartment');
         } catch (\Exception $e) {
             logError($e, actionMessage("failed", "retrieved"), 'dashboard');
             abort(500);

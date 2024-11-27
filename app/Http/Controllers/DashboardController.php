@@ -19,11 +19,11 @@ class DashboardController extends Controller
         $dashboard = '';
         switch (user()->role) {
             case 'lecturer':
-                 $dashboard = $this->lecturerIndex($request);
+                $dashboard = $this->lecturerIndex($request);
                 break;
 
             case 'student':
-                 $dashboard = $this->studentIndex();
+                $dashboard = $this->studentIndex();
                 break;
 
             case 'head_of_department':
@@ -121,8 +121,18 @@ class DashboardController extends Controller
         }
     }
     public function academicDivisionIndex(){
-        return view('modules.dashboard.academic-division', [
-            'students' => Student::all()
-        ]);
+        try {
+            $data['courseclasses'] = CourseClass::whereHas('courseDepartmentDetail', function($query) {
+                $query->whereHas('courseDepartment', function($query){
+                });
+            })
+            ->with('courseDepartmentDetail.course')
+            ->get();
+            return view('modules.dashboard.academic-division', $data);
+        } catch (\Exception $e) {
+            logError($e, actionMessage("failed", "retrieved"), 'dashboard');
+            abort(500);
+        }
     }
 }
+

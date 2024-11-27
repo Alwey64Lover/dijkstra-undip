@@ -38,6 +38,16 @@ class SchedulingSeeder extends DatabaseSeeder
                     'name' => '202',
                     'capacity' => 60 // supaya kaga ribet dengan kondisi ketka max_student course departmennt detail > dari capacity rooms, gua kasih 60
                 ]),
+                $this->data([
+                    'type' => 'B',
+                    'name' => '203',
+                    'capacity' => 60 // supaya kaga ribet dengan kondisi ketka max_student course departmennt detail > dari capacity rooms, gua kasih 60
+                ]),
+                $this->data([
+                    'type' => 'C',
+                    'name' => '204',
+                    'capacity' => 60 // supaya kaga ribet dengan kondisi ketka max_student course departmennt detail > dari capacity rooms, gua kasih 60
+                ]),
             ];
 
         // course

@@ -117,7 +117,7 @@ class LecturerController extends Controller
         $data['student'] = Student::where('nim', $nim)->first();
 
         $data['options'] = HerRegistration::where('student_id', $data['student']->id)
-        ->has('irs.irsDetails.khss')
+        ->has('irs')
         ->orderBy('semester')
         ->pluck('semester', 'semester')
         ->mapWithKeys(function ($semester) {

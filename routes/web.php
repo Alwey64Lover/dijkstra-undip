@@ -8,6 +8,7 @@ use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\IrsController;
+use App\Http\Controllers\RoomController;
 use App\Models\HerRegistration;
 use App\Models\Khs;
 use App\Models\Student;
@@ -70,5 +71,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+Route::get('/dashboard/wibu', [RoomController::class, 'index']);
 
 require __DIR__.'/auth.php';

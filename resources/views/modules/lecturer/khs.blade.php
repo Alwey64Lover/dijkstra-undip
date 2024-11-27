@@ -30,7 +30,7 @@
                     <option value="3">Semester 3</option>
                     <option value="4" selected>Semester 4</option>
                 </select> --}}
-                <form action="{{ route('lecturer.irs') }}"method="POST" style="display: inline;">
+                <form action="/irs/{{ $student->nim }}"method="GET" style="display: inline;">
                     @csrf
                     <input type="hidden" name="nim" value="{{ $student->nim }}">
                     <button type="submit" class="ms-auto btn btn-outline-primary rounded-pill" style="width: 230.38px">IRS</button>
@@ -58,7 +58,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->course->code }}</td>
                                     <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->course->name }}</td>
-                                    <td>kontol</td>
+                                    <td>Baru</td>
                                     <td>{{ $mk->irsDetail->courseClass->courseDepartmentDetail->sks }}</td>
                                     <td>{{ scoreToGrade($mk->score) }} ({{ bobot($mk->score) }})</td>
                                     <td>{{ bobot($mk->score)*$mk->irsDetail->courseClass->courseDepartmentDetail->sks }}</td>
@@ -77,48 +77,22 @@
                     <div class="grid mt-4">
                         <h5>IP Kumulatif&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;: {{ $total_bobot_all/($total_sks_all == 0 ? 1 : $total_sks_all) }}</h5>
                         {{ $total_bobot_all.'/'.$total_sks_all }} <br>
-                        Total (SKS x Bobot) semua semester <br>/ Total SKS semua semester
+                        Total (SKS x Bobot) semua semester /<br> Total SKS semua semester
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     @push('js')
-    <script>
-        $('#semester').on('change', function() {
-            const semester = $('#semester').val(); // Get the selected semester
-    
-            // Create a form programmatically
-            const form = $('<form>', {
-                method: 'POST',
-                action: "{{ route('lecturer.khs') }}", // The route for the POST request
+        <script>
+            $('#semester').on('change', function(){
+                const semester = $('#semester').val();
+
+                window.location.href = (`{{ route('lecturer.khs', ['semester' => 'SEM', 'nim' => 'NIM']) }}`)
+                .replace('SEM', semester)
+                .replace('NIM', '{{ $student->nim }}');
             });
-    
-            // Append CSRF token
-            form.append($('<input>', {
-                type: 'hidden',
-                name: '_token',
-                value: '{{ csrf_token() }}' // CSRF token for security
-            }));
-    
-            // Append the student NIM
-            form.append($('<input>', {
-                type: 'hidden',
-                name: 'nim',
-                value: '{{ $student->nim }}' // Include the student NIM
-            }));
-    
-            // Append the selected semester
-            form.append($('<input>', {
-                type: 'hidden',
-                name: 'semester',
-                value: semester // The selected semester
-            }));
-    
-            // Append the form to the body and submit
-            $(document.body).append(form);
-            form.submit(); // Submit the form
-        });
-    </script>
+        </script>
     @endpush
 @endsection

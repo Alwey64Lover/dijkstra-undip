@@ -7,6 +7,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\IrsController;
 use App\Models\HerRegistration;
 use App\Models\Khs;
 use App\Models\Student;
@@ -32,18 +33,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     //PALA DEPT
-    Route::get('/CourseDepartmentDetail/create', [CourseDepartmentDetailController::class, 'create'])->name('CourseDepartmentDetail.create');
+    Route::middleware(['roles:head_of_department'])->group(function () {
+        Route::simpleResource('schedule', CourseDepartmentDetailController::class);
+        Route::get('/newschedule', [CourseDepartmentDetailController::class, 'new_sched'])->name('newschedule');
+        Route::get('/addcourses', [CourseDepartmentDetailController::class, 'add_course'])->name('newcourses');
+    });
 
     //END OF PALA DEPT
-    
-    Route::get('students/search/{lecturerId?}', [StudentController::class, 'search'])->name('students.search');
-    // Route::get('dashboard', [DepartmentController::class, 'getAllClasses']);
 
-    // temporary
-    Route::post('/irs', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
+    // Route::get('students/search/{lecturerId?}', [StudentController::class, 'search'])->name('students.search');
+    // // Route::get('dashboard', [DepartmentController::class, 'getAllClasses']);
 
-    // temporary
-    Route::post('/khs', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
+    // // temporary
+    // Route::post('/irs', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
+
+    // // temporary
+    // Route::post('/khs', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
+    Route::middleware(['roles:lecturer'])->group(function () {
+        Route::get('students/search/{lecturerId?}', [StudentController::class, 'search'])->name('students.search');
+        // Route::get('dashboard', [DepartmentController::class, 'getAllClasses']);
+
+        Route::get('/irs/{irs:id}/accept', [IrsController::class, 'accept'])->name('irs.accept');
+        Route::get('/irs/{irs:id}/reject', [IrsController::class, 'reject'])->name('irs.reject');
+
+        Route::get('/irs/{irs:id}/open', [IrsController::class, 'open'])->name('irs.open');
+        Route::get('/irs/{irs:id}/close', [IrsController::class, 'close'])->name('irs.close');
+
+        Route::get('/irs/{nim}', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
+
+        Route::get('/khs/{nim}', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
+    });
 
     Route::middleware(['roles:superadmin|dean'])->group(function () {
         Route::simpleResource('users', UserController::class);

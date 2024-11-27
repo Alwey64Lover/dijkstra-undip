@@ -30,4 +30,8 @@ class CourseClass extends Model
     public function CourseDepartmentDetail(){
         return $this->belongsTo(CourseDepartmentDetail::class);
     }
+
+    public function room(){
+        return $this->belongsTo(Room::class);
+    }
 }

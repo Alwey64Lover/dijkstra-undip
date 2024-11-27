@@ -23,11 +23,15 @@ class HerRegistration extends Model
         'drop_out' => 'Keluar(DO)',
     ];
 
-    public function irss(){
-        return $this->hasMany(Irs::class);
+    public function irs(){
+        return $this->hasOne(Irs::class);
     }
 
     public function student(){
         return $this->belongsTo(student::class);
+    }
+
+    public function academicYear(){
+        return $this->belongsTo(AcademicYear::class);
     }
 }

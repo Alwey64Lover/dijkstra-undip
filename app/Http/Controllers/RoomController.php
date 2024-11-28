@@ -15,7 +15,6 @@ class RoomController extends Controller
         $dataRoom = Room::select('id', 'type', 'name', 'capacity')->get();
         return view('modules/dashboard/academic-division', compact('dataRoom'));
     }
-
     /**
      * Show the form for creating a new resource.
      */

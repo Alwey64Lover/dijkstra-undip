@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\CourseDepartment;
 use App\Models\CourseDepartmentDetail;
 use App\Models\CourseClass;
+use App\Models\Lecturer;
 use Illuminate\Http\Request;
 
 class CourseDepartmentDetailController extends Controller
@@ -38,7 +39,9 @@ class CourseDepartmentDetailController extends Controller
         try{
             $data['allcourses'] = Course::get();
             $data['coursestatuses'] = CourseDepartmentDetail::STATUSES;
-            // dd( $data);
+            $data['lecturers'] = Lecturer::with('user')
+            ->get();
+            // dd( $data['lecturers']);
             return view('modules.courses.addcoursedeptdetail', $data);
         }catch(\Exception $e){
             logError($e, actionMessage("failed", "retrieved"), 'load schedule form');
@@ -115,4 +118,25 @@ class CourseDepartmentDetailController extends Controller
             abort(500);
         }
     }
+    public function store(Request $request)
+    {
+        $courseDepartmentDetail = new CourseDepartmentDetail();
+        $courseDepartmentDetail->course_department_id = CourseDepartment::inRandomOrder()->first()->id;
+        $courseDepartmentDetail->course_id = $request->course_id;
+        $courseDepartmentDetail->lecturer_ids = json_encode($request->lecturer_ids);
+        $courseDepartmentDetail->status = $request->status;
+        $courseDepartmentDetail->semester = $request->semester;
+        $courseDepartmentDetail->sks = $request->sks;
+        $courseDepartmentDetail->max_student = rand(40, 60);
+
+        // dd($request->all(), $courseDepartmentDetail->toArray());
+        $courseDepartmentDetail->save();
+
+        return response()->json([
+            'name' => $courseDepartmentDetail->course->name,
+            'semester' => $courseDepartmentDetail->semester,
+            'sks' => $courseDepartmentDetail->sks
+        ]);
+    }
+
 }

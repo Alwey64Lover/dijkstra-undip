@@ -33,12 +33,10 @@
 <script>
     $(document).ready(function(){
         $('#addNewCourseBtn').click(function(){
-            console.log('Button clicked');
             $.ajax({
                 url: '{{ route('newcourse', ['action' => 'create']) }}',
                 type: 'GET',
                 success: function(response) {
-                    console.log('Ajax success', response);
                     let modal = `
                         <div class="modal fade" id="addCourseModal" tabindex="-1">
                             <div class="modal-dialog modal-lg">
@@ -54,18 +52,44 @@
                             </div>
                         </div>
                     `;
+
                     if(!$('#addCourseModal').length) {
                         $('body').append(modal);
                     }
 
                     $('#addCourseModal').modal('show');
-                },
-                error: function(xhr){
-                    console.log('Ajax error', xhr);
-                    alert('Error loading form');
+
+                    // Handle form submission
+                    $('#addCourseModal form').on('submit', function(e) {
+                        e.preventDefault();
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: 'POST',
+                            data: $(this).serialize(),
+                            success: function(response) {
+                                // Add new course card
+                                let newCard = `
+                                    <div class="col">
+                                        <div class="card h-100 shadow-sm border border-primary" style="border-width: 2px !important; transition: all 0.3s ease;">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${response.name}</h5>
+                                                <div class="d-flex justify-content-between mt-3">
+                                                    <span class="badge bg-light-primary">Semester ${response.semester}</span>
+                                                    <span class="badge bg-light-success">${response.sks} SKS</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                $('.row-cols-1').append(newCard);
+                                $('#addCourseModal').modal('hide');
+                            }
+                        });
+                    });
                 }
             });
         });
     });
+
 </script>
 @endsection

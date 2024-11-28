@@ -6,18 +6,22 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="">
-                        {{-- {{ route('CourseDepartmentDetail.store') }} --}}
+                    <form method="POST" action="{{ route('storecourse') }}">
                     @csrf
 
                         <div class="form-group mb-3">
                             <label for="course">Nama Mata Kuliah</label>
-                            <input type="text" class="form-control" name="namamatkul" required>
+                            <select class="form-select" name="course_id" id="name">
+                                <option value="">Pilih Mata Kuliah yang Tersedia</option>
+                                @foreach ($allcourses as $course)
+                                    <option value="{{$course->id}}">{{$course->code}} - {{$course->name}}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="course">Pilih Semester</label>
-                            <select class="form-select" id="semester" name="semester_id" required>
+                            <label for="course">Semester</label>
+                            <select class="form-select" id="semester" name="semester" required>
                                 <option value="">Pilih Semester</option>
                                 @for ($i = 1; $i <= 8; $i++)
                                     <option value="{{ $i }}">Semester {{ $i }}</option>
@@ -45,9 +49,16 @@
                             </select>
                         </div>
 
-                        {{-- <div class="form-group mb-3">
-                            <label for="lecturer">Dosen Pengampu</label>
-                        </div> --}}
+                        <div class="form-group mb-3">
+                            <label for="course">Dosen Pengampu</label>
+                            <select class="form-select" id="lecturers" name="lecturer_ids[]" required>
+                                <option value="">Pilih Dosen Pengampu</option>
+                                @foreach ($lecturers as $lecture)
+                                    <option value="{{ $lecture->user_id }}">{{ $lecture->user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
 
                         <button type="submit" class="btn btn-primary">Tambah Mata Kuliah</button>
                         <button type="button" class="btn btn-secondary" id="cancel-button" data-bs-dismiss="modal">Batal</button>

@@ -60,6 +60,30 @@ class SchedulingSeeder extends DatabaseSeeder
                     'code' => 'KIAP0140',
                     'name' => 'Matematika I',
                 ]),
+                $this->data([
+                    'code' => 'PAIK6406',
+                    'name' => 'Sistem Cerdas',
+                ]),
+                $this->data([
+                    'code' => 'PAIK6404',
+                    'name' => 'Grafika dan Komputasi Visual',
+                ]),
+                $this->data([
+                    'code' => 'PAIK6401',
+                    'name' => 'Pemrograman Berorientasi Objek',
+                ]),
+                $this->data([
+                    'code' => 'PAIK6403',
+                    'name' => 'Manajemen Basis Data',
+                ]),
+                $this->data([
+                    'code' => 'PAIK6601',
+                    'name' => 'Analisis dan Strategi Algoritma',
+                ]),
+                $this->data([
+                    'code' => 'PAIK6405',
+                    'name' => 'Rekayasa Perangkat Lunak',
+                ]),
             ];
 
         // Course Department

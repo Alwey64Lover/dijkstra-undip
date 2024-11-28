@@ -79,17 +79,47 @@ class CourseDepartmentDetailController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CourseDepartmentDetail $courseDepartmentDetail)
+    public function course_update(Request $request, $id)
     {
-        //
+        $courseDepartmentDetail = CourseDepartmentDetail::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'semester' => 'required|integer|min:1|max:8',
+            'sks' => 'required|integer|min:1|max:6',
+            'lecturer_id' => 'required|exists:users,id'
+        ]);
+
+        $courseDepartmentDetail->course->update([
+            'name' => $validated['name']
+        ]);
+
+        $courseDepartmentDetail->update([
+            'semester' => $validated['semester'],
+            'sks' => $validated['sks'],
+            'lecturer_id' => $validated['lecturer_id']
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course updated successfully',
+            'data' => $courseDepartmentDetail
+        ]);
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CourseDepartmentDetail $courseDepartmentDetail)
+    public function course_destroy($id)
     {
-        //
+        $courseDepartmentDetail = CourseDepartmentDetail::findOrFail($id);
+        $courseDepartmentDetail->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course deleted successfully'
+        ]);
     }
 
     public function new_sched(Request $request){
@@ -111,6 +141,8 @@ class CourseDepartmentDetailController extends Controller
                 $query->where('department_id', user()->department_id);
             })->with(['course'])
             ->get();
+            $data['lecturers'] = Lecturer::with('user')
+            ->get();
             // dd($data['existing_dept_courses']);
             return view('modules.headofdepartment.displaycourses',$data);
         }catch(\Exception $e){
@@ -118,7 +150,7 @@ class CourseDepartmentDetailController extends Controller
             abort(500);
         }
     }
-    public function store(Request $request)
+    public function course_store(Request $request)
     {
         $courseDepartmentDetail = new CourseDepartmentDetail();
         $courseDepartmentDetail->course_department_id = CourseDepartment::inRandomOrder()->first()->id;

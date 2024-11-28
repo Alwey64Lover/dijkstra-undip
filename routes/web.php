@@ -36,10 +36,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //PALA DEPT
     Route::middleware(['roles:head_of_department'])->group(function () {
         Route::simpleResource('schedule', CourseDepartmentDetailController::class);
-        Route::get('/course/{action}', [CourseDepartmentDetailController::class, 'form'])->name('newcourse');
-        Route::post('/coursenew', [CourseDepartmentDetailController::class, 'store'])->name('storecourse');
         Route::get('/newschedule', [CourseDepartmentDetailController::class, 'new_sched'])->name('newschedule');
         Route::get('/courses', [CourseDepartmentDetailController::class, 'display_course'])->name('courses');
+        Route::get('/course/{action}', [CourseDepartmentDetailController::class, 'form'])->name('newcourse');
+        Route::post('/coursenew', [CourseDepartmentDetailController::class, 'course_store'])->name('storecourse');
+        Route::post('/courseupdate/{id}', [CourseDepartmentDetailController::class, 'course_update'])->name('updatecourse');
+        Route::delete('/coursedelete/{id}', [CourseDepartmentDetailController::class, 'course_destroy'])->name('deletecourse');
     });
 
     //END OF PALA DEPT

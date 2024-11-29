@@ -117,10 +117,18 @@
                             type: 'POST',
                             data: $(this).serialize(),
                             success: function(response) {
+                                console.log('Add course response:', response);
+                                location.reload();
                                 // Add new course card
                                 let newCard = `
                                     <div class="col">
-                                        <div class="card h-100 shadow-sm border border-primary" style="border-width: 2px !important; transition: all 0.3s ease;">
+                                        <div class="card h-100 shadow-sm border border-primary course-card"
+                                            style="border-width: 2px !important; transition: all 0.3s ease; cursor: pointer;"
+                                            data-course-id="${response.id}"
+                                            data-course-name="${response.name}"
+                                            data-course-semester="${response.semester}"
+                                            data-course-sks="${response.sks}"
+                                            data-lecturer-id="${response.lecturer_id}">
                                             <div class="card-body">
                                                 <h5 class="card-title">${response.name}</h5>
                                                 <div class="d-flex justify-content-between mt-3">
@@ -139,7 +147,7 @@
                 }
             });
         });
-        $('.course-card').click(function(){
+        $(document).on('click', '.course-card', function(){
             let courseId = $(this).data('course-id');
             let courseName = $(this).data('course-name');
             let semester = $(this).data('course-semester');
@@ -175,26 +183,39 @@
             });
         });
 
-        // Handle delete button click
-        $('#deleteCourseBtn').click(function(){
-            if(confirm('Are you sure you want to delete this course?')){
-                $.ajax({
-                    url: "{{ route('deletecourse', '') }}/" + $('#edit_course_id').val(),
-                    type: 'DELETE',
-                    data: {
-                        "_token": "{{ csrf_token() }}"
-                    },
-                    success: function(response){
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        console.log(xhr.responseText);
-                    }
-                });
-            }
+        $('#modal_delete form').on('submit', function(e) {
+            e.preventDefault();
+            let courseId = $('#edit_course_id').val();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#modal_delete').modal('hide');
+                    // Remove the course card from the DOM
+                    $(`.course-card[data-course-id="${courseId}"]`).closest('.col').fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
         });
 
 
+        // Update the delete button click handler
+        $('#deleteCourseBtn').click(function(){
+            let courseId = $('#edit_course_id').val();
+            console.log('Deleting course ID:', courseId);
+            $('#modal_delete form').attr('action', "{{ route('deletecourse', '') }}/" + courseId);
+            $('#modal_delete').modal('show');
+            $('#editCourseModal').modal('hide');
+        });
     });
 </script>
+@include('components.modal.modal-delete')
 @endsection

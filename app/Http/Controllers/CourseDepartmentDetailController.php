@@ -25,6 +25,7 @@ class CourseDepartmentDetailController extends Controller
             })
             ->with('courseDepartmentDetail.course')
             ->get();
+            dd( $data['courseclasses']);
             return view('modules.headofdepartment.schedules', $data);
         } catch (\Exception $e) {
             logError($e, actionMessage("failed", "retrieved"), 'schedule');
@@ -88,7 +89,7 @@ class CourseDepartmentDetailController extends Controller
     public function course_store(Request $request)
     {
         $courseDepartmentDetail = new CourseDepartmentDetail();
-        $courseDepartmentDetail->course_department_id = CourseDepartment::inRandomOrder()->first()->id;
+        $courseDepartmentDetail->course_department_id = CourseDepartment::where('action_name', operator: 'waiting')->first()->id;
         $courseDepartmentDetail->course_id = $request->course_id;
         $courseDepartmentDetail->lecturer_ids = json_encode($request->lecturer_ids);
         $courseDepartmentDetail->status = $request->status;

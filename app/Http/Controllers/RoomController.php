@@ -12,7 +12,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $dataRoom = Room::select('id', 'type', 'name', 'capacity')->get();
+        $dataRoom = Room::get();
         return view('modules/dashboard/academic-division', compact('dataRoom'));
     }
     /**

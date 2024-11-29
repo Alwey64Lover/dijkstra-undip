@@ -72,8 +72,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['roles:superadmin|dean'])->group(function () {
         Route::simpleResource('users', UserController::class);
     });
+
+    Route::middleware(['roles:academic_division'])->group(function () {
+        Route::get('/dashboard/daffawibu', [RoomController::class, 'index']);
+        Route::get('/addrooms', [RoomController::class, 'index'])->name('newroom');
+    });
 });
 
-Route::get('/dashboard/wibu', [RoomController::class, 'index']);
+
 
 require __DIR__.'/auth.php';

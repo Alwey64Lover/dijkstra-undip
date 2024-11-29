@@ -30,3 +30,11 @@
     </li>
 @endif
 
+@if (in_array(user()->role, ['academic_division']))
+    <li class="menu-item {{ routeIsActive('index.*') }}">
+        <a href="{{ route('newroom') }}" class='menu-link'>
+            <span><i class="bi bi-plus-circle"></i> New Room</span>
+        </a>
+    </li>
+@endif
+

@@ -7,6 +7,7 @@ use App\Models\Lecturer;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\Department;
+use App\Models\Room;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -121,18 +122,14 @@ class DashboardController extends Controller
         }
     }
     public function academicDivisionIndex(){
-        // try {
-            $data['courseclasses'] = CourseClass::whereHas('courseDepartmentDetail', function($query) {
-                $query->whereHas('courseDepartment', function($query){
-                });
-            })
-            ->with('courseDepartmentDetail.course')
-            ->get();
-            return view('modules.dashboard.academic-division', $data);
-        // } catch (\Exception $e) {
-        //     logError($e, actionMessage("failed", "retrieved"), 'dashboard');
-        //     abort(500);
-        // }
+        try {
+            $dataRoom = Room::get();
+            // dd($dataRoom);
+            return view('modules/dashboard/academic-division', compact('dataRoom'));
+        } catch (\Exception $e) {
+            logError($e, actionMessage("failed", "retrieved"), 'dashboard');
+            abort(500);
+        }
     }
 }
 

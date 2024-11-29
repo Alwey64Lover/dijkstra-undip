@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\User;
 use App\Models\CourseDepartment;
 use App\Models\CourseDepartmentDetail;
 use App\Models\CourseClass;
+use App\Models\Department;
 use App\Models\Room;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
@@ -58,12 +60,13 @@ class CourseDepartmentDetailController extends Controller
 
     public function new_sched(Request $request){
         try{
+            $data['dept'] = Department::where('id',user()->department_id)->get();
             $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
                 $query->where('department_id', user()->department_id);
             })->with(['course'])
             ->get();
-            $data['roomavailable'] = Room::get();
-            // dd($data['existing_dept_courses']);
+            $data['roomavailable'] = Room::where('department', $data['dept']->select('name'))->get();
+            // dd($data['roomavailable']);
             return view('modules.headofdepartment.newschedules', $data);
         }catch(\Exception $e){
             logError($e, actionMessage("failed", "retrieved"), 'load new schedule form');

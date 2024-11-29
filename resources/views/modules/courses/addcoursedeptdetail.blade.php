@@ -14,7 +14,9 @@
                             <select class="form-select" name="course_id" id="name">
                                 <option value="">Pilih Mata Kuliah yang Tersedia</option>
                                 @foreach ($allcourses as $course)
-                                    <option value="{{$course->id}}">{{$course->code}} - {{$course->name}}</option>
+                                    @if(!$existing_dept_courses->contains('course_id', $course->id))
+                                        <option value="{{$course->id}}">{{$course->code}} - {{$course->name}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

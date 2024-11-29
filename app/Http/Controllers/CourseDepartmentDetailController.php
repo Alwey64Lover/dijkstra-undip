@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\CourseDepartment;
 use App\Models\CourseDepartmentDetail;
 use App\Models\CourseClass;
+use App\Models\Room;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
 
@@ -41,6 +42,10 @@ class CourseDepartmentDetailController extends Controller
             $data['coursestatuses'] = CourseDepartmentDetail::STATUSES;
             $data['lecturers'] = Lecturer::with('user')
             ->get();
+            $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
+                $query->where('department_id', user()->department_id);
+            })->with(['course'])
+            ->get();
             // dd( $data['lecturers']);
             return view('modules.courses.addcoursedeptdetail', $data);
         }catch(\Exception $e){
@@ -50,84 +55,13 @@ class CourseDepartmentDetailController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function action(Request $request, string $action, string $id = null)
-    {
-        // $request->validate([
-        //     'course'
-        // ]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(CourseDepartmentDetail $courseDepartmentDetail)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CourseDepartmentDetail $courseDepartmentDetail)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function course_update(Request $request, $id)
-    {
-        $courseDepartmentDetail = CourseDepartmentDetail::findOrFail($id);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'semester' => 'required|integer|min:1|max:8',
-            'sks' => 'required|integer|min:1|max:6',
-            'lecturer_id' => 'required|exists:users,id'
-        ]);
-
-        $courseDepartmentDetail->course->update([
-            'name' => $validated['name']
-        ]);
-
-        $courseDepartmentDetail->update([
-            'semester' => $validated['semester'],
-            'sks' => $validated['sks'],
-            'lecturer_id' => $validated['lecturer_id']
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Course updated successfully',
-            'data' => $courseDepartmentDetail
-        ]);
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function course_destroy($id)
-    {
-        $courseDepartmentDetail = CourseDepartmentDetail::findOrFail($id);
-        $courseDepartmentDetail->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Course deleted successfully'
-        ]);
-    }
-
     public function new_sched(Request $request){
         try{
             $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
                 $query->where('department_id', user()->department_id);
             })->with(['course'])
             ->get();
+            $data['roomavailable'] = Room::get();
             // dd($data['existing_dept_courses']);
             return view('modules.headofdepartment.newschedules', $data);
         }catch(\Exception $e){
@@ -135,6 +69,7 @@ class CourseDepartmentDetailController extends Controller
             abort(500);
         }
     }
+
     public function display_course(Request $request){
         try{
             $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
@@ -168,6 +103,43 @@ class CourseDepartmentDetailController extends Controller
             'name' => $courseDepartmentDetail->course->name,
             'semester' => $courseDepartmentDetail->semester,
             'sks' => $courseDepartmentDetail->sks
+        ]);
+    }
+    public function course_update(Request $request, $id)
+    {
+        $courseDepartmentDetail = CourseDepartmentDetail::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'semester' => 'required|integer|min:1|max:8',
+            'sks' => 'required|integer|min:1|max:6',
+            'lecturer_id' => 'required|exists:users,id'
+        ]);
+
+        $courseDepartmentDetail->course->update([
+            'name' => $validated['name']
+        ]);
+
+        $courseDepartmentDetail->update([
+            'semester' => $validated['semester'],
+            'sks' => $validated['sks'],
+            'lecturer_id' => $validated['lecturer_id']
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course updated successfully',
+            'data' => $courseDepartmentDetail
+        ]);
+    }
+    public function course_destroy($id)
+    {
+        $courseDepartmentDetail = CourseDepartmentDetail::findOrFail($id);
+        $courseDepartmentDetail->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course deleted successfully'
         ]);
     }
 

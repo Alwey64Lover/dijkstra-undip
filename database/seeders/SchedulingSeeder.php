@@ -80,8 +80,8 @@ class SchedulingSeeder extends DatabaseSeeder
 
             $courseDepartmentDetails = [
                 $this->data([
-                    'course_department_id' => $courseDepartments[2]['id'],
-                    'course_id' => randomArray($courses)['id'],
+                    'course_department_id' => $courseDepartments[4]['id'],
+                    'course_id' => $courses[0]['id'],
                     'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
                     'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
                     'semester' => rand(1, 14),
@@ -89,8 +89,8 @@ class SchedulingSeeder extends DatabaseSeeder
                     'max_student' => rand(40, 60),
                 ]),
                 $this->data([
-                    'course_department_id' => $courseDepartments[2]['id'],
-                    'course_id' => randomArray($courses)['id'],
+                    'course_department_id' => $courseDepartments[4]['id'],
+                    'course_id' => $courses[1]['id'],
                     'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
                     'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
                     'semester' => rand(1, 14),

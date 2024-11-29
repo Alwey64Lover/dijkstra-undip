@@ -25,7 +25,7 @@ class CourseDepartmentDetailController extends Controller
             })
             ->with('courseDepartmentDetail.course')
             ->get();
-            dd( $data['courseclasses']);
+            // dd( $data['courseclasses']);
             return view('modules.headofdepartment.schedules', $data);
         } catch (\Exception $e) {
             logError($e, actionMessage("failed", "retrieved"), 'schedule');

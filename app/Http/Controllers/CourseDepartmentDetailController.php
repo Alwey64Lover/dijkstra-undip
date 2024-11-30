@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AcademicYear;
 use App\Models\Course;
 use App\Models\User;
 use App\Models\CourseDepartment;
@@ -74,6 +75,17 @@ class CourseDepartmentDetailController extends Controller
         }
     }
 
+    public function filter(Request $request)
+    {
+        $academicYearId = $request->academic_year_id;
+        $courses = CourseDepartmentDetail::whereHas('courseDepartment', function($query) use ($academicYearId) {
+            $query->where('academic_year_id', $academicYearId);
+        })->with('course')->get();
+
+        return response()->json(['courses' => $courses]);
+    }
+
+
     public function display_course(Request $request){
         try{
             $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
@@ -82,7 +94,8 @@ class CourseDepartmentDetailController extends Controller
             ->get();
             $data['lecturers'] = Lecturer::with('user')
             ->get();
-            // dd($data['existing_dept_courses']);
+            $data['academic_years'] = AcademicYear::get();
+            // dd($data['academic_years']);
             return view('modules.headofdepartment.displaycourses',$data);
         }catch(\Exception $e){
             logError($e, actionMessage("failed", "retrieved"), 'load add course form');
@@ -92,7 +105,13 @@ class CourseDepartmentDetailController extends Controller
     public function course_store(Request $request)
     {
         $courseDepartmentDetail = new CourseDepartmentDetail();
-        $courseDepartmentDetail->course_department_id = CourseDepartment::where('action_name', operator: 'waiting')->first()->id;
+
+        // Get course department based on selected academic year
+        $courseDepartmentDetail->course_department_id = CourseDepartment::where('academic_year_id', $request->academic_year_id)
+            ->where('action_name', 'waiting')
+            ->first()
+            ->id;
+
         $courseDepartmentDetail->course_id = $request->course_id;
         $courseDepartmentDetail->lecturer_ids = json_encode($request->lecturer_ids);
         $courseDepartmentDetail->status = $request->status;
@@ -100,7 +119,6 @@ class CourseDepartmentDetailController extends Controller
         $courseDepartmentDetail->sks = $request->sks;
         $courseDepartmentDetail->max_student = rand(40, 60);
 
-        // dd($request->all(), $courseDepartmentDetail->toArray());
         $courseDepartmentDetail->save();
 
         return response()->json([
@@ -109,6 +127,7 @@ class CourseDepartmentDetailController extends Controller
             'sks' => $courseDepartmentDetail->sks
         ]);
     }
+
     public function course_update(Request $request, $id)
     {
         $courseDepartmentDetail = CourseDepartmentDetail::findOrFail($id);

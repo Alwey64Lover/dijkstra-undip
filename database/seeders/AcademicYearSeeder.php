@@ -36,6 +36,10 @@ class AcademicYearSeeder extends DatabaseSeeder
                     'name' => '2024/2025 Ganjil',
                     'is_active' => true,
                 ]),
+                $this->data([
+                    'name' => '2024/2025 Genap',
+                    'is_active' => false,
+                ]),
             ];
 
         // Insert

@@ -71,11 +71,12 @@ class SchedulingSeeder extends DatabaseSeeder
                 return $this->data([
                     'department_id' => $informaticsDepartment->id,
                     'academic_year_id' => $year->id,
-                    'action_name' => CourseDepartment::ACTIONS[1],
+                    'action_name' => $year->name === '2024/2025 Genap' ? CourseDepartment::ACTIONS[0] : CourseDepartment::ACTIONS[1],
                     'action_at' => now(),
                     'action_by_id' => $users->random()->id,
                 ]);
             })->toArray();
+
 
 
             $courseDepartmentDetails = [

@@ -42,6 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/coursenew', [CourseDepartmentDetailController::class, 'course_store'])->name('storecourse');
         Route::post('/courseupdate/{id}', [CourseDepartmentDetailController::class, 'course_update'])->name('updatecourse');
         Route::delete('/coursedelete/{id}', [CourseDepartmentDetailController::class, 'course_destroy'])->name('deletecourse');
+        Route::get('/courses/filter', action: [CourseDepartmentDetailController::class, 'filter'])->name('filtercourse');
     });
 
     //END OF PALA DEPT

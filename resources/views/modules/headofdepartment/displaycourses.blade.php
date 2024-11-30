@@ -11,29 +11,20 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="card-title">Available Courses</h4>
-        <button type="submit" class="btn btn-primary" id="addNewCourseBtn">Add New Courses</button>
+        <div class="d-flex gap-2">
+            <select class="form-select" id="academicYearSelect" style="width: auto;">
+                <option value="" selected>Select Academic Year</option>
+                @foreach($academic_years as $year)
+                    <option value="{{ $year->id }}">
+                        {{ $year->name }}
+                    </option>
+                @endforeach
+            </select>
+            <button type="submit" class="btn btn-primary" id="addNewCourseBtn">Add New Courses</button>
+        </div>
     </div>
     <div class="card-body">
         <div class="row row-cols-1 row-cols-md-4 g-4">
-            @foreach($existing_dept_courses as $course)
-                <div class="col">
-                    <div class="card h-100 shadow-sm border border-primary course-card"
-                        style="border-width: 2px !important; transition: all 0.3s ease; cursor: pointer;"
-                        data-course-id="{{ $course->id }}"
-                        data-course-name="{{ $course->course->name }}"
-                        data-course-semester="{{ $course->semester }}"
-                        data-course-sks="{{ $course->sks }}"
-                        data-lecturer-id="{{ $course->lecturer_id }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $course->course->name }}</h5>
-                            <div class="d-flex justify-content-between mt-3">
-                                <span class="badge bg-light-primary">Semester {{ $course->semester }}</span>
-                                <span class="badge bg-light-success">{{ $course->sks }} SKS</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
         </div>
     </div>
 </div>
@@ -112,14 +103,16 @@
                     // Handle form submission
                     $('#addCourseModal form').on('submit', function(e) {
                         e.preventDefault();
+                        const formData = $(this).serialize();
+                        const selectedAcademicYear = $('#academicYearSelect').val();
+
                         $.ajax({
                             url: $(this).attr('action'),
                             type: 'POST',
-                            data: $(this).serialize(),
+                            data: formData + '&academic_year_id=' + selectedAcademicYear,
                             success: function(response) {
                                 console.log('Add course response:', response);
                                 location.reload();
-                                // Add new course card
                                 let newCard = `
                                     <div class="col">
                                         <div class="card h-100 shadow-sm border border-primary course-card"
@@ -143,10 +136,46 @@
                                 $('#addCourseModal').modal('hide');
                             }
                         });
+                     });
+                }
+            });
+        });
+        $('#academicYearSelect').change(function() {
+            const academicYearId = $(this).val();
+            $.ajax({
+                url: '{{ route('filtercourse') }}',
+                type: 'GET',
+                data: { academic_year_id: academicYearId },
+                success: function(response) {
+                    const courseContainer = $('.row-cols-1');
+                    courseContainer.empty();
+
+                    response.courses.forEach(course => {
+                        const courseCard = `
+                            <div class="col">
+                                <div class="card h-100 shadow-sm border border-primary course-card"
+                                    style="border-width: 2px !important; transition: all 0.3s ease; cursor: pointer;"
+                                    data-course-id="${course.id}"
+                                    data-course-name="${course.course.name}"
+                                    data-course-semester="${course.semester}"
+                                    data-course-sks="${course.sks}"
+                                    data-lecturer-id="${course.lecturer_id}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${course.course.name}</h5>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <span class="badge bg-light-primary">Semester ${course.semester}</span>
+                                            <span class="badge bg-light-success">${course.sks} SKS</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        courseContainer.append(courseCard);
                     });
                 }
             });
         });
+
         $(document).on('click', '.course-card', function(){
             let courseId = $(this).data('course-id');
             let courseName = $(this).data('course-name');

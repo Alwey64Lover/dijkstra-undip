@@ -1,5 +1,7 @@
 @extends('layouts.backend.app')
+@include('components.modal.modal-delete')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @section('content')
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
@@ -161,78 +163,88 @@
         }
     }
 
-    function checkExistingCourseClass(courseName, className) {
-        const sessionData = JSON.parse(sessionStorage.getItem('courseSchedules')) || {};
-        let exists = false;
-
-        // Check all days
-        Object.values(sessionData).forEach(daySchedules => {
-            daySchedules.forEach(schedule => {
-                if (schedule.courseName === courseName && schedule.className === className) {
-                    exists = true;
-                }
-            });
-        });
-
-        return exists;
-    }
-
     function addCourse(day) {
         const form = document.getElementById(`courseForm${day}`);
         const validationAlert = document.querySelector(`#validationAlert_${day}`);
 
         // Form validation
         if (!form.course_name.value || !form.class.value || !form.room.value || !form.start_time.value || !form.end_time.value) {
-            if (validationAlert) {
-                validationAlert.style.display = 'block';
-                validationAlert.classList.add('show');
-                validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Please fill in all required fields';
-            }
+            validationAlert.style.display = 'block';
+            validationAlert.classList.add('show');
+            validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Please fill in all required fields';
             return;
         }
 
-        // Prepare data for AJAX request
-        const formData = {
-            room_id: form.room.value,
-            course_department_detail_id: form.course_name.value, // This will now have the correct ID
-            name: form.class.value,
-            day: day.toLowerCase(),
-            start_time: form.start_time.value,
-            end_time: form.end_time.value,
-            _token: '{{ csrf_token() }}'
-        };
+        const courseSelect = form.course_name;
+        const courseName = courseSelect.options[courseSelect.selectedIndex].text.split(' - ')[0];
+        const className = form.class.value;
 
-        // Send AJAX request to store data
+        // Check for existing course-class combination
         $.ajax({
-            url: '/store-schedule', // Create this route in web.php
+            url: '/check-schedule',
             type: 'POST',
-            data: formData,
-            success: function(response) {
-                // Refresh the schedule display
-                loadSchedulesFromDatabase();
-                // Close modal and reset form
-                $(`#addCourseModal${day}`).modal('hide');
-                form.reset();
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function(xhr) {
-                validationAlert.style.display = 'block';
-                validationAlert.classList.add('show');
-                validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> ' + xhr.responseJSON.message;
+            data: {
+                course_name: courseName,
+                class_name: className
+            },
+            success: function(response) {
+                if (response.exists) {
+                    validationAlert.style.display = 'block';
+                    validationAlert.classList.add('show');
+                    validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> This course and class combination already exists';
+                    return;
+                }
+
+                // If no duplicate found, proceed with course addition
+                const formData = {
+                    room_id: form.room.value,
+                    course_department_detail_id: form.course_name.value,
+                    name: form.class.value,
+                    day: day.toLowerCase(),
+                    start_time: form.start_time.value,
+                    end_time: form.end_time.value,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                };
+
+                $.ajax({
+                    url: '/store-schedule',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        loadSchedulesFromDatabase();
+                        $(`#addCourseModal${day}`).modal('hide');
+                        form.reset();
+                    },
+                    error: function(xhr) {
+                        validationAlert.style.display = 'block';
+                        validationAlert.classList.add('show');
+                        validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> ' + xhr.responseJSON.message;
+                    }
+                });
             }
         });
     }
 
+
+
     // New function to load schedules from database
     function loadSchedulesFromDatabase() {
         $.ajax({
-            url: '/get-schedules', // Create this route in web.php
+            url: '/get-schedules',
             type: 'GET',
             success: function(schedules) {
                 ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(day => {
                     const scheduleBody = document.getElementById(`schedule-${day}`);
                     scheduleBody.innerHTML = '';
 
-                    const daySchedules = schedules.filter(schedule => schedule.day === day);
+                    const daySchedules = schedules.filter(schedule =>
+                        schedule.day.toLowerCase() === day.toLowerCase()
+                    );
+                    // console.log(`Schedules for ${day}:`, daySchedules);
+
                     daySchedules.forEach(schedule => {
                         const newRow = `
                             <tr>
@@ -242,7 +254,7 @@
                                 <td>${schedule.name}</td>
                                 <td>${schedule.room_name}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-danger" onclick="removeSchedule(${schedule.id})">
+                                    <button class="btn btn-sm btn-danger" onclick="removeSchedule('${schedule.id}')">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>
@@ -255,64 +267,35 @@
         });
     }
 
+
     // Update page load event
     document.addEventListener('DOMContentLoaded', () => {
         loadSchedulesFromDatabase();
     });
 
-
-    // Function to display schedules from session storage
-    function displayScheduleFromSession() {
-        const sessionData = JSON.parse(sessionStorage.getItem('courseSchedules')) || {};
-
-        // For each day, populate the table
-        ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(day => {
-            const scheduleBody = document.getElementById(`schedule-${day}`);
-            scheduleBody.innerHTML = '';
-
-            if (sessionData[day]) {
-                sessionData[day].sort((a, b) => a.startTime.localeCompare(b.startTime));
-
-                sessionData[day].forEach(schedule => {
-                    const newRow = `
-                        <tr data-time="${schedule.startTime}">
-                            <td>${schedule.startTime}</td>
-                            <td>${schedule.endTime}</td>
-                            <td>${schedule.courseName}</td>
-                            <td>${schedule.className}</td>
-                            <td>${schedule.roomName}</td>
-                            <td>
-                                <button class="btn btn-sm btn-danger" onclick="removeSchedule('${day}', '${schedule.startTime}')">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                    scheduleBody.insertAdjacentHTML('beforeend', newRow);
-                });
-            }
-        });
-    }
-
     // Function to remove schedule
     function removeSchedule(scheduleId) {
+        $('#modal_delete form').attr('action', '/delete-schedule/' + scheduleId);
+        $('#modal_delete').modal('show');
+    }
+    $('#modal_delete form').on('submit', function(e) {
+        e.preventDefault();
+        const action = $(this).attr('action');
+
         $.ajax({
-            url: `/delete-schedule/${scheduleId}`,
+            url: action,
             type: 'DELETE',
-            data: {
-                _token: '{{ csrf_token() }}'
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
+                $('#modal_delete').modal('hide');
                 loadSchedulesFromDatabase();
             }
         });
-    }
-
-
-    // Load schedules when page loads
-    document.addEventListener('DOMContentLoaded', () => {
-        displayScheduleFromSession();
+        return false;
     });
+
 
 </script>
 

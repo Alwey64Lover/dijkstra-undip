@@ -75,6 +75,16 @@ class CourseDepartmentDetailController extends Controller
         }
     }
 
+    public function schedule_check(Request $request)
+    {
+        $exists = CourseClass::whereHas('courseDepartmentDetail.course', function($query) use ($request) {
+            $query->where('name', $request->course_name);
+        })->where('name', $request->class_name)->exists();
+
+        return response()->json(['exists' => $exists]);
+    }
+
+
     public function filter(Request $request)
     {
         $academicYearId = $request->academic_year_id;
@@ -149,16 +159,18 @@ class CourseDepartmentDetailController extends Controller
         ]);
     }
 
-    public function schdule_destroy($id)
+    public function schedule_destroy($id)
     {
-        $schedule = CourseClass::findOrFail($id);
-        $schedule->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Schedule deleted successfully'
-        ]);
+        try {
+            $schedule = CourseClass::findOrFail($id);
+            $schedule->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false], 500);
+        }
     }
+
+
 
 
     public function display_schedules()

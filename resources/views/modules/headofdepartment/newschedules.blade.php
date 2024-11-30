@@ -58,7 +58,7 @@
                                         <option value="">Pilih Mata Kuliah yang Tersedia</option>
                                         @foreach ($existing_dept_courses as $courses)
                                             @if($courses->courseDepartment->action_name === 'waiting')
-                                                <option value="{{$courses->course->id}}">
+                                                <option value="{{$courses->id}}">
                                                     {{$courses->course->name}} - {{$courses->sks}} SKS
                                                 </option>
                                             @endif
@@ -179,7 +179,6 @@
 
     function addCourse(day) {
         const form = document.getElementById(`courseForm${day}`);
-        const scheduleBody = document.getElementById(`schedule-${day}`);
         const validationAlert = document.querySelector(`#validationAlert_${day}`);
 
         // Form validation
@@ -192,61 +191,75 @@
             return;
         }
 
-        const courseSelect = form.course_name;
-        const courseName = courseSelect.options[courseSelect.selectedIndex].text.split(' - ')[0];
-        const className = form.class.value;
-
-        // Check if course with same class already exists
-        if (checkExistingCourseClass(courseName, className)) {
-            if (validationAlert) {
-                validationAlert.style.display = 'block';
-                validationAlert.classList.add('show');
-                validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> This course and class combination already exists';
-            }
-            return;
-        }
-
-        // Rest of your existing addCourse code...
-        // Hide validation alert if all validations pass
-        if (validationAlert) {
-            validationAlert.style.display = 'none';
-            validationAlert.classList.remove('show');
-        }
-
-        const startTime = form.start_time.value;
-        const endTime = form.end_time.value;
-        const roomSelect = form.room;
-        const roomName = roomSelect.options[roomSelect.selectedIndex].text;
-
-
-        // Create schedule data object
-        const scheduleData = {
-            startTime,
-            endTime,
-            courseName,
-            className,
-            roomName
+        // Prepare data for AJAX request
+        const formData = {
+            room_id: form.room.value,
+            course_department_detail_id: form.course_name.value, // This will now have the correct ID
+            name: form.class.value,
+            day: day.toLowerCase(),
+            start_time: form.start_time.value,
+            end_time: form.end_time.value,
+            _token: '{{ csrf_token() }}'
         };
 
-        // Get existing data from session storage or initialize empty object
-        let sessionData = JSON.parse(sessionStorage.getItem('courseSchedules')) || {};
-
-        // Initialize array for specific day if doesn't exist
-        if (!sessionData[day]) {
-            sessionData[day] = [];
-        }
-
-        // Add new schedule data
-        sessionData[day].push(scheduleData);
-
-        // Save to session storage
-        sessionStorage.setItem('courseSchedules', JSON.stringify(sessionData));
-
-        displayScheduleFromSession();
-
-        $(`#addCourseModal${day}`).modal('hide');
-        form.reset();
+        // Send AJAX request to store data
+        $.ajax({
+            url: '/store-schedule', // Create this route in web.php
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Refresh the schedule display
+                loadSchedulesFromDatabase();
+                // Close modal and reset form
+                $(`#addCourseModal${day}`).modal('hide');
+                form.reset();
+            },
+            error: function(xhr) {
+                validationAlert.style.display = 'block';
+                validationAlert.classList.add('show');
+                validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> ' + xhr.responseJSON.message;
+            }
+        });
     }
+
+    // New function to load schedules from database
+    function loadSchedulesFromDatabase() {
+        $.ajax({
+            url: '/get-schedules', // Create this route in web.php
+            type: 'GET',
+            success: function(schedules) {
+                ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(day => {
+                    const scheduleBody = document.getElementById(`schedule-${day}`);
+                    scheduleBody.innerHTML = '';
+
+                    const daySchedules = schedules.filter(schedule => schedule.day === day);
+                    daySchedules.forEach(schedule => {
+                        const newRow = `
+                            <tr>
+                                <td>${schedule.start_time}</td>
+                                <td>${schedule.end_time}</td>
+                                <td>${schedule.course_name}</td>
+                                <td>${schedule.name}</td>
+                                <td>${schedule.room_name}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger" onclick="removeSchedule(${schedule.id})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        scheduleBody.insertAdjacentHTML('beforeend', newRow);
+                    });
+                });
+            }
+        });
+    }
+
+    // Update page load event
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSchedulesFromDatabase();
+    });
+
 
     // Function to display schedules from session storage
     function displayScheduleFromSession() {
@@ -282,12 +295,19 @@
     }
 
     // Function to remove schedule
-    function removeSchedule(day, startTime) {
-        let sessionData = JSON.parse(sessionStorage.getItem('courseSchedules')) || {};
-        sessionData[day] = sessionData[day].filter(schedule => schedule.startTime !== startTime);
-        sessionStorage.setItem('courseSchedules', JSON.stringify(sessionData));
-        displayScheduleFromSession();
+    function removeSchedule(scheduleId) {
+        $.ajax({
+            url: `/delete-schedule/${scheduleId}`,
+            type: 'DELETE',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                loadSchedulesFromDatabase();
+            }
+        });
     }
+
 
     // Load schedules when page loads
     document.addEventListener('DOMContentLoaded', () => {

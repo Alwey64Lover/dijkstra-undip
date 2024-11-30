@@ -129,6 +129,57 @@ class CourseDepartmentDetailController extends Controller
         ]);
     }
 
+    public function schedule_store(Request $request)
+    {
+        $validated = $request->validate([
+            'room_id' => 'required',
+            'course_department_detail_id' => 'required',
+            'name' => 'required',
+            'day' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+        ]);
+
+        $schedule = CourseClass::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Schedule created successfully',
+            'data' => $schedule
+        ]);
+    }
+
+    public function schdule_destroy($id)
+    {
+        $schedule = CourseClass::findOrFail($id);
+        $schedule->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Schedule deleted successfully'
+        ]);
+    }
+
+
+    public function display_schedules()
+    {
+        $schedules = CourseClass::with(['room', 'courseDepartmentDetail.course'])
+            ->get()
+            ->map(function($schedule) {
+                return [
+                    'id' => $schedule->id,
+                    'start_time' => $schedule->start_time,
+                    'end_time' => $schedule->end_time,
+                    'course_name' => $schedule->courseDepartmentDetail->course->name,
+                    'name' => $schedule->name,
+                    'room_name' => $schedule->room->type . $schedule->room->name,
+                    'day' => $schedule->day
+                ];
+            });
+
+        return response()->json($schedules);
+    }
+
     public function course_update(Request $request, $id)
     {
         $courseDepartmentDetail = CourseDepartmentDetail::findOrFail($id);

@@ -52,8 +52,12 @@
                                     <label>Course Name</label>
                                     <select class="form-select" name="course_name" onchange="calculateEndTime('{{$day}}')" required>
                                         <option value="">Pilih Mata Kuliah yang Tersedia</option>
-                                        @foreach ($existing_dept_courses as $courses )
-                                            <option value="{{$courses->course->id}}">{{$courses->course->name}} - {{$courses->sks}} SKS</option>
+                                        @foreach ($existing_dept_courses as $courses)
+                                            @if($courses->courseDepartment->action_name === 'waiting')
+                                                <option value="{{$courses->course->id}}">
+                                                    {{$courses->course->name}} - {{$courses->sks}} SKS
+                                                </option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>

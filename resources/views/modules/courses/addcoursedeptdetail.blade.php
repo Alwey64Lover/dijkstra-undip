@@ -14,12 +14,18 @@
                             <select class="form-select" name="course_id" id="name">
                                 <option value="">Pilih Mata Kuliah yang Tersedia</option>
                                 @foreach ($allcourses as $course)
-                                    @if(!$existing_dept_courses->contains('course_id', $course->id))
+                                    @php
+                                        $isExisting = $existing_dept_courses->contains(function($existingCourse) use ($course) {
+                                            return $existingCourse->course_id == $course->id;
+                                        });
+                                    @endphp
+                                    @if(!$isExisting)
                                         <option value="{{$course->id}}">{{$course->code}} - {{$course->name}}</option>
                                     @endif
                                 @endforeach
                             </select>
                         </div>
+
 
                         <div class="form-group mb-3">
                             <label for="course">Semester</label>

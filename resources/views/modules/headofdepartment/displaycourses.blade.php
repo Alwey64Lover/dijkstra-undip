@@ -13,9 +13,9 @@
         <h4 class="card-title">Available Courses</h4>
         <div class="d-flex gap-2">
             <select class="form-select" id="academicYearSelect" style="width: auto;">
-                <option value="" selected>Select Academic Year</option>
+                <option value="">Select Academic Year</option>
                 @foreach($academic_years as $year)
-                    <option value="{{ $year->id }}">
+                    <option value="{{ $year->id }}" {{ $year->id == $latest_academic_year_id ? 'selected' : '' }}>
                         {{ $year->name }}
                     </option>
                 @endforeach
@@ -73,31 +73,86 @@
 
 <script>
     $(document).ready(function(){
-        $('#addNewCourseBtn').click(function(){
-            $.ajax({
-                url: '{{ route('newcourse', ['action' => 'create']) }}',
-                type: 'GET',
-                success: function(response) {
-                    let modal = `
-                        <div class="modal fade" id="addCourseModal" tabindex="-1">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Add New Course</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        ${response}
+        const academicYearId = $('#academicYearSelect').val();
+        $.ajax({
+            url: '{{ route('filtercourse') }}',
+            type: 'GET',
+            data: { academic_year_id: academicYearId },
+            success: function(response) {
+                const courseContainer = $('.row-cols-1');
+                courseContainer.empty();
+
+                response.courses.forEach(course => {
+                    const courseCard = `
+                        <div class="col">
+                            <div class="card h-100 shadow-sm border border-primary course-card"
+                                style="border-width: 2px !important; transition: all 0.3s ease; cursor: pointer;"
+                                data-course-id="${course.id}"
+                                data-course-name="${course.course.name}"
+                                data-course-semester="${course.semester}"
+                                data-course-sks="${course.sks}"
+                                data-lecturer-id="${course.lecturer_id}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${course.course.name}</h5>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <span class="badge bg-light-primary">Semester ${course.semester}</span>
+                                        <span class="badge bg-light-success">${course.sks} SKS</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     `;
+                    courseContainer.append(courseCard);
+                });
+            }
+        });
+        $(document).on('change', '#academicYearSelect', function() {
+            if($('#addCourseModal').is(':visible')) {
+                const selectedAcademicYear = $(this).val();
+                reloadAddCourseForm(selectedAcademicYear);
+            }
+        });
 
+        function reloadAddCourseForm(academicYearId) {
+            $.ajax({
+                url: '{{ route('newcourse', ['action' => 'create']) }}',
+                type: 'GET',
+                data: { academic_year_id: academicYearId },
+                success: function(response) {
+                    $('#addCourseModal .modal-body').html(response);
+                }
+            });
+        }
+        $('#addNewCourseBtn').click(function(){
+            const selectedAcademicYear = $('#academicYearSelect').val();
+            $.ajax({
+                url: '{{ route('newcourse', ['action' => 'create']) }}',
+                type: 'GET',
+                data: { academic_year_id: selectedAcademicYear },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
                     if(!$('#addCourseModal').length) {
+                        let modal = `
+                            <div class="modal fade" id="addCourseModal" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Add New Course</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ${response}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
                         $('body').append(modal);
+                    } else {
+                        $('#addCourseModal .modal-body').html(response);
                     }
-
                     $('#addCourseModal').modal('show');
 
                     // Handle form submission

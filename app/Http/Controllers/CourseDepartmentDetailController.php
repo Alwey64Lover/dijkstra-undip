@@ -44,19 +44,18 @@ class CourseDepartmentDetailController extends Controller
         try{
             $data['allcourses'] = Course::get();
             $data['coursestatuses'] = CourseDepartmentDetail::STATUSES;
-            $data['lecturers'] = Lecturer::with('user')
-            ->get();
+            $data['lecturers'] = Lecturer::with('user')->get();
             $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
-                $query->where('department_id', user()->department_id);
-            })->with(['course'])
+                $query->where('department_id', user()->department_id)
+                    ->where('academic_year_id', request('academic_year_id')); // Add this line
+            })->with(['course', 'courseDepartment'])
             ->get();
-            // dd( $data['lecturers']);
+
             return view('modules.courses.addcoursedeptdetail', $data);
         }catch(\Exception $e){
             logError($e, actionMessage("failed", "retrieved"), 'load schedule form');
             abort(500);
         }
-
     }
 
     public function new_sched(Request $request){
@@ -88,6 +87,7 @@ class CourseDepartmentDetailController extends Controller
 
     public function display_course(Request $request){
         try{
+            $latest_academic_year = AcademicYear::orderBy('id', 'desc')->first();
             $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
                 $query->where('department_id', user()->department_id);
             })->with(['course'])
@@ -95,6 +95,7 @@ class CourseDepartmentDetailController extends Controller
             $data['lecturers'] = Lecturer::with('user')
             ->get();
             $data['academic_years'] = AcademicYear::get();
+            $data['latest_academic_year_id'] = $latest_academic_year->id;
             // dd($data['academic_years']);
             return view('modules.headofdepartment.displaycourses',$data);
         }catch(\Exception $e){
@@ -108,7 +109,6 @@ class CourseDepartmentDetailController extends Controller
 
         // Get course department based on selected academic year
         $courseDepartmentDetail->course_department_id = CourseDepartment::where('academic_year_id', $request->academic_year_id)
-            ->where('action_name', 'waiting')
             ->first()
             ->id;
 

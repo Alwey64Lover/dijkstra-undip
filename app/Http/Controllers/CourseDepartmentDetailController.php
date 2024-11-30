@@ -60,13 +60,14 @@ class CourseDepartmentDetailController extends Controller
 
     public function new_sched(Request $request){
         try{
+            $data['latest_academic_year'] = AcademicYear::orderBy('id', 'desc')->first();
             $data['dept'] = Department::where('id',user()->department_id)->get();
             $data['existing_dept_courses'] = CourseDepartmentDetail::whereHas('courseDepartment', function($query){
                 $query->where('department_id', user()->department_id);
             })->with(['course'])
             ->get();
             $data['roomavailable'] = Room::where('department', $data['dept']->select('name'))->get();
-            // dd($data['roomavailable']);
+            // dd($data['latest_academic_year']);
             return view('modules.headofdepartment.newschedules', $data);
         }catch(\Exception $e){
             logError($e, actionMessage("failed", "retrieved"), 'load new schedule form');

@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 class="card-title">Course Schedule Genap 2025/2026</h4>
+        <h4 class="card-title">Course Schedule {{$latest_academic_year->name}}</h4>
         <button type="submit" class="btn btn-primary">Submit Schedule</button>
     </div>
     <div class="card-body">

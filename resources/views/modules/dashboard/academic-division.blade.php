@@ -88,8 +88,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Apakah Anda yakin ingin menghapus data ini?</p>
-                    <form id="deleteForm" method="POST">
+                    <p>Apakah Anda yakin ingin menghapus data ini?</b> ?</p>
+                    <form id="deleteForm" method="POST" action="{{ route('room-destroy', ['id' => $data->id]) }}">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Hapus</button>
@@ -99,17 +99,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const deleteModal = document.getElementById('deleteModal');
-            deleteModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget; // Tombol yang diklik
-                const url = button.getAttribute('data-url'); // Ambil URL dari tombol
-                const deleteForm = document.getElementById('deleteForm');
-                deleteForm.action = url; // Atur URL pada form action
-                console.log(url);
-            });
-        });
-    </script>
 @endsection

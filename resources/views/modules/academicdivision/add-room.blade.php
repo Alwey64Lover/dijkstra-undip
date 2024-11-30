@@ -9,15 +9,15 @@
                 @csrf
                 <div class="mb-3">
                   <label for="" class="form-label">Gedung</label>
-                  <input type="text" name="type" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="">
+                  <input type="text" name="type" class="form-control" value="">
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Nama</label>
-                  <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="">
+                  <input type="text" name="name" class="form-control" value="">
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Kapasitas</label>
-                  <input type="number" name="capacity" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="">
+                  <input type="number" name="capacity" class="form-control" value="">
                 </div>
                 <div class="mb-3">
                     <label for="">Pilih Departemen</label>

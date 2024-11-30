@@ -47,6 +47,10 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
+                            <div id="validationAlert_{{$day}}" class="alert alert-danger alert-dismissible fade" role="alert" style="display: none;">
+                                <i class="bi bi-exclamation-triangle"></i> Please fill in all required fields
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                             <form id="courseForm{{ $day }}">
                                 <div class="form-group mb-3">
                                     <label>Course Name</label>
@@ -66,15 +70,6 @@
                                     <input type="text" class="form-control" name="class" required>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label>Room</label>
-                                    <select class="form-select" name="room" required>
-                                        <option value="">Pilih Ruangan yang Tersedia</option>
-                                        @foreach ($roomavailable as $room)
-                                            <option value="{{$room->id}}">{{$room->type}}{{$room->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group mb-3">
                                     <label>Start Time</label>
                                     <select class="form-select" name="start_time" id="start_time_{{$day}}" onchange="calculateEndTime('{{$day}}')" required>
                                         <option value="">Pilih Waktu Mulai</option>
@@ -85,12 +80,21 @@
                                                     echo "<option value='$time'>$time</option>";
                                                 }
                                             }
-                                        @endphp
+                                            @endphp
                                     </select>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label>End Time</label>
                                     <input type="text" class="form-control" name="end_time" id="end_time_{{$day}}" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>Room</label>
+                                    <select class="form-select" name="room" required>
+                                        <option value="">Pilih Ruangan yang Tersedia</option>
+                                        @foreach ($roomavailable as $room)
+                                            <option value="{{$room->id}}">{{$room->type}}{{$room->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </form>
                         </div>
@@ -106,11 +110,28 @@
 </div>
 
 <script>
+    function checkRoomAvailability(day, startTime, endTime) {
+        const sessionData = JSON.parse(sessionStorage.getItem('courseSchedules')) || {};
+        const daySchedules = sessionData[day] || [];
+
+        // Get all rooms that are already booked for the given time slot
+        const bookedRooms = daySchedules.filter(schedule => {
+            return (
+                (startTime >= schedule.startTime && startTime < schedule.endTime) ||
+                (endTime > schedule.startTime && endTime <= schedule.endTime) ||
+                (startTime <= schedule.startTime && endTime >= schedule.endTime)
+            );
+        }).map(schedule => schedule.roomName);
+
+        return bookedRooms;
+    }
+
     function calculateEndTime(day) {
         const form = document.getElementById(`courseForm${day}`);
         const startTimeSelect = document.getElementById(`start_time_${day}`);
         const endTimeInput = document.getElementById(`end_time_${day}`);
         const courseSelect = form.course_name;
+        const roomSelect = form.room;
 
         if (startTimeSelect.value && courseSelect.value) {
             const selectedOption = courseSelect.options[courseSelect.selectedIndex];
@@ -125,15 +146,40 @@
             const endDate = new Date(startDate.getTime() + durationMinutes * 60000);
             const endTime = `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`;
 
-            console.log(endDate);
-            console.log(endTime);
             endTimeInput.value = endTime;
+
+            // Get booked rooms for this time slot
+            const bookedRooms = checkRoomAvailability(day, startTimeSelect.value, endTime);
+
+            // Reset and update room options
+            Array.from(roomSelect.options).forEach(option => {
+                if (option.value !== '') { // Skip the default "Select Room" option
+                    option.disabled = bookedRooms.includes(option.text);
+                    option.style.display = bookedRooms.includes(option.text) ? 'none' : '';
+                }
+            });
         }
     }
+
 
     function addCourse(day) {
         const form = document.getElementById(`courseForm${day}`);
         const scheduleBody = document.getElementById(`schedule-${day}`);
+        const validationAlert = document.getElementById(`validationAlert_${day}`);
+
+        if (!form.course_name.value || !form.class.value || !form.room.value || !form.start_time.value || !form.end_time.value) {
+            if (validationAlert) {
+                validationAlert.style.display = 'block';
+                validationAlert.classList.add('show');
+            }
+            return;
+        }
+
+        // Hide validation alert if form is valid
+        if (validationAlert) {
+            validationAlert.style.display = 'none';
+            validationAlert.classList.remove('show');
+        }
 
         const startTime = form.start_time.value;
         const endTime = form.end_time.value;

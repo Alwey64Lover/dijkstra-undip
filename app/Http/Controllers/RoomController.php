@@ -20,7 +20,8 @@ class RoomController extends Controller
      */
     public function create()
     {
-        //
+        return view('modules/academicdivision/add-room');
+
     }
 
     /**
@@ -28,7 +29,16 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        Room::create([
+            'type' => $request->type,
+            'name' => $request->name,
+            'capacity' => $request->capacity,
+            'department' => $request->departement
+        ]);
+
+        return redirect('addrooms');
+
     }
 
     /**
@@ -58,8 +68,14 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Room $room)
+    public function destroy($id)
     {
-        //
+        // Cari data berdasarkan ID dan hapus
+        $room = Room::findOrFail($id);
+        $room->delete();
+
+        // Redirect atau return response
+        return redirect()->route('room.index')->with('success', 'Data berhasil dihapus');
     }
+
 }

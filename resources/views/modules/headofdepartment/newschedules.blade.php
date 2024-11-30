@@ -161,21 +161,53 @@
         }
     }
 
+    function checkExistingCourseClass(courseName, className) {
+        const sessionData = JSON.parse(sessionStorage.getItem('courseSchedules')) || {};
+        let exists = false;
+
+        // Check all days
+        Object.values(sessionData).forEach(daySchedules => {
+            daySchedules.forEach(schedule => {
+                if (schedule.courseName === courseName && schedule.className === className) {
+                    exists = true;
+                }
+            });
+        });
+
+        return exists;
+    }
 
     function addCourse(day) {
         const form = document.getElementById(`courseForm${day}`);
         const scheduleBody = document.getElementById(`schedule-${day}`);
-        const validationAlert = document.getElementById(`validationAlert_${day}`);
+        const validationAlert = document.querySelector(`#validationAlert_${day}`);
 
+        // Form validation
         if (!form.course_name.value || !form.class.value || !form.room.value || !form.start_time.value || !form.end_time.value) {
             if (validationAlert) {
                 validationAlert.style.display = 'block';
                 validationAlert.classList.add('show');
+                validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Please fill in all required fields';
             }
             return;
         }
 
-        // Hide validation alert if form is valid
+        const courseSelect = form.course_name;
+        const courseName = courseSelect.options[courseSelect.selectedIndex].text.split(' - ')[0];
+        const className = form.class.value;
+
+        // Check if course with same class already exists
+        if (checkExistingCourseClass(courseName, className)) {
+            if (validationAlert) {
+                validationAlert.style.display = 'block';
+                validationAlert.classList.add('show');
+                validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> This course and class combination already exists';
+            }
+            return;
+        }
+
+        // Rest of your existing addCourse code...
+        // Hide validation alert if all validations pass
         if (validationAlert) {
             validationAlert.style.display = 'none';
             validationAlert.classList.remove('show');
@@ -183,11 +215,9 @@
 
         const startTime = form.start_time.value;
         const endTime = form.end_time.value;
-        const courseSelect = form.course_name;
-        const courseName = courseSelect.options[courseSelect.selectedIndex].text.split(' - ')[0];
-        const className = form.class.value;
         const roomSelect = form.room;
         const roomName = roomSelect.options[roomSelect.selectedIndex].text;
+
 
         // Create schedule data object
         const scheduleData = {

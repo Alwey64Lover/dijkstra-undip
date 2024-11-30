@@ -59,7 +59,14 @@
 
                         <div class="form-group mb-3">
                             <label for="course">Dosen Pengampu</label>
-                            <select class="form-select" id="lecturers" name="lecturer_ids[]" required>
+                            {{-- <select class="form-select" >
+                                <option value="">Pilih Dosen Pengampu</option>
+                                @foreach ($lecturers as $lecture)
+                                    <option value="{{ $lecture->user_id }}">{{ $lecture->user->name }}</option>
+                                @endforeach
+                            </select> --}}
+
+                            <select class="form-select choices multiple-remove" multiple="multiple" id="lecturers" name="lecturer_ids[]" required>
                                 <option value="">Pilih Dosen Pengampu</option>
                                 @foreach ($lecturers as $lecture)
                                     <option value="{{ $lecture->user_id }}">{{ $lecture->user->name }}</option>
@@ -76,3 +83,7 @@
         </div>
     </div>
 </div>
+
+<script>
+
+</script>

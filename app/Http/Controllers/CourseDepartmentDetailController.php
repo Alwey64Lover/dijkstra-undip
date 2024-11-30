@@ -137,7 +137,8 @@ class CourseDepartmentDetailController extends Controller
             'name' => 'required|string|max:255',
             'semester' => 'required|integer|min:1|max:8',
             'sks' => 'required|integer|min:1|max:6',
-            'lecturer_id' => 'required|exists:users,id'
+            'lecturer_ids' => 'required|array',
+            'lecturer_ids.*' => 'exists:users,id'
         ]);
 
         $courseDepartmentDetail->course->update([
@@ -147,7 +148,7 @@ class CourseDepartmentDetailController extends Controller
         $courseDepartmentDetail->update([
             'semester' => $validated['semester'],
             'sks' => $validated['sks'],
-            'lecturer_id' => $validated['lecturer_id']
+            'lecturer_ids' => $validated['lecturer_ids']
         ]);
 
         return response()->json([

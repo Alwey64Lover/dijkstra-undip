@@ -137,8 +137,21 @@
                 }
             });
         }
+            // let lecturerChoices = document.querySelectorAll('#lecturers')
+            // var cobaLecturer
+            // for (let i = 0; i < lecturerChoices.length; i++) {
+            //     if (lecturerChoices[i].classList.contains("multiple-remove")) {
+            //         cobaLecturer = new Choices(lecturerChoices[i], {
+            //             delimiter: ",",
+            //             editItems: true,
+            //             maxItemCount: -1,
+            //             removeItemButton: true,
+            //         })
+            //     } else {
+            //         cobaLecturer = new Choices(lecturerChoices[i])
+            //     }
+            // }
         $('#addNewCourseBtn').click(function(){
-
             const selectedAcademicYear = $('#academicYearSelect').val();
             $.ajax({
                 url: '{{ route('newcourse', ['action' => 'create']) }}',
@@ -167,6 +180,22 @@
                         $('body').append(modal);
                     } else {
                         $('#addCourseModal .modal-body').html(response);
+                    }
+
+                    let lecturerChoices = document.querySelectorAll('#lecturers')
+                    var cobaLecturer
+                    for (let i = 0; i < lecturerChoices.length; i++) {
+                        (new Choices(lecturerChoices[i])).destroy()
+                        if (lecturerChoices[i].classList.contains("multiple-remove")) {
+                            cobaLecturer = new Choices(lecturerChoices[i], {
+                                delimiter: ",",
+                                editItems: true,
+                                maxItemCount: -1,
+                                removeItemButton: true,
+                            })
+                        } else {
+                            cobaLecturer = new Choices(lecturerChoices[i])
+                        }
                     }
 
                     $('#addCourseModal').modal('show');
@@ -222,7 +251,6 @@
                 success: function(response) {
                     const courseContainer = $('.row-cols-1');
                     courseContainer.empty();
-                console.log(response, '3aaaa');
 
 
                     response.courses.forEach(course => {
@@ -250,6 +278,8 @@
                 }
             });
         });
+
+
 
         let choices = document.querySelectorAll('#edit_lecturer_id')
         var initChoice
@@ -298,12 +328,17 @@
                 }
             }
 
+            $('#edit_lecturer_id').val(lecturerId).trigger('change');
+
             initChoice.setChoiceByValue(lecturerId);
         });
+
+
 
         // Handle form submission for updating
         $('#editCourseForm').on('submit', function(e){
             e.preventDefault();
+
             $.ajax({
                 url: "{{ route('updatecourse', '') }}/" + $('#edit_course_id').val(),
                 type: 'POST',

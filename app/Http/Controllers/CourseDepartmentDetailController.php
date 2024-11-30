@@ -114,7 +114,7 @@ class CourseDepartmentDetailController extends Controller
             ->id;
 
         $courseDepartmentDetail->course_id = $request->course_id;
-        $courseDepartmentDetail->lecturer_ids = json_encode($request->lecturer_ids);
+        $courseDepartmentDetail->lecturer_ids = $request->lecturer_ids;
         $courseDepartmentDetail->status = $request->status;
         $courseDepartmentDetail->semester = $request->semester;
         $courseDepartmentDetail->sks = $request->sks;

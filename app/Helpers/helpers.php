@@ -1,6 +1,14 @@
 <?php
 
+use App\Models\AcademicYear;
 use Illuminate\Support\Facades\Log;
+
+
+function academicYearId(): mixed
+{
+    $academicYear = AcademicYear::where('is_active', 1)->first();
+    return $academicYear->id;
+}
 
 function routeIsActive($route): string
 {
@@ -45,7 +53,7 @@ function scoreToGrade($score): string
     else if ($score >= 50) $grade = 'D';
     else $grade = 'E';
 
-    return $grade;  
+    return $grade;
 }
 
 function bobot($score): int
@@ -56,5 +64,5 @@ function bobot($score): int
     else if ($score >= 60) $bobot = 2;
     else if ($score >= 50) $bobot = 1;
 
-    return $bobot;  
+    return $bobot;
 }

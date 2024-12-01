@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\CourseDepartmentController;
 use App\Http\Controllers\CourseDepartmentDetailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
@@ -77,8 +78,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/khs/{nim}', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
     });
 
-    Route::middleware(['roles:superadmin|dean'])->group(function () {
-        Route::simpleResource('users', UserController::class);
+    Route::middleware(['roles:dean'])->group(function () {
+        Route::get('department-schedule', [CourseDepartmentController::class, 'index'])->name('department-schedule.index');
+        Route::post('department-schedule/accept-some', [CourseDepartmentController::class, 'acceptSome'])->name('department-schedule.accept-some');
+        Route::get('department-schedule/{id}', [CourseDepartmentController::class, 'show'])->name('department-schedule.show');
     });
 
     Route::middleware(['roles:academic_division'])->group(function () {

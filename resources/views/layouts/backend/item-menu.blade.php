@@ -4,10 +4,15 @@
     </a>
 </li>
 
-@if (in_array(user()->role, ['superadmin', 'dean']))
-    <li class="menu-item {{ routeIsActive('users.*') }}">
+@if (in_array(user()->role, ['dean']))
+    {{-- <li class="menu-item {{ routeIsActive('users.*') }}">
         <a href="{{ route('users.table') }}" class='menu-link'>
             <span><i class="bi bi-person-fill"></i> Users</span>
+        </a>
+    </li> --}}
+    <li class="menu-item {{ routeIsActive('department-schedule.*') }}">
+        <a href="{{ route('department-schedule.index') }}" class='menu-link'>
+            <span><i class="bi bi-person-fill"></i> Department Schedule</span>
         </a>
     </li>
 @endif

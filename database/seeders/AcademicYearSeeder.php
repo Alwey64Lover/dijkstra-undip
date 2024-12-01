@@ -34,11 +34,11 @@ class AcademicYearSeeder extends DatabaseSeeder
                 ]),
                 $this->data([
                     'name' => '2024/2025 Ganjil',
-                    'is_active' => true,
+                    'is_active' => false,
                 ]),
                 $this->data([
                     'name' => '2024/2025 Genap',
-                    'is_active' => false,
+                    'is_active' => true,
                 ]),
             ];
 

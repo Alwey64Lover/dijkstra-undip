@@ -108,6 +108,10 @@ class DashboardController extends Controller
         }
     }
 
+    public function deanIndex(){
+        return view('modules.dashboard.dean');
+    }
+
     public function studentIndex(){
         return view('modules.dashboard.student');
     }

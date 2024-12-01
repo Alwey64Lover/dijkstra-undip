@@ -10,56 +10,39 @@ class CourseDepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $data['filled'] = $request->filled ?? null;
+        $data['countFilled'] = CourseDepartment::where('academic_year_id', academicYearId())
+            ->where('is_submitted', 1)
+            ->count();
+
+        $data['countNotFilled'] = CourseDepartment::where('academic_year_id', academicYearId())
+            ->where('is_submitted', 0)
+            ->count();
+
+        $data['courseDepartments'] = CourseDepartment::where('academic_year_id', academicYearId())
+            ->where(function($q) use($data){
+                if (isset($data['filled']) && in_array($data['filled'], ['filled', 'notFilled'])) {
+                    $q->where('is_submitted', $data['filled'] == 'filled' ? 1 : 0);
+                }
+            })
+            ->with('department')
+            ->get();
+
+        return view('modules.dean.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    public function acceptSome(Request $request){
+        foreach ($request->is_submitted as $irsId => $isSubmitted) {
+            if ($isSubmitted == 'on') {
+                CourseDepartment::find($irsId)->update([
+                    'action_name' => 'accepted',
+                    'action_at' => now()
+                ]);
+            }
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(CourseDepartment $courseDepartment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CourseDepartment $courseDepartment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, CourseDepartment $courseDepartment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(CourseDepartment $courseDepartment)
-    {
-        //
+        return redirect()->back()->with('success', 'Jadwal Department berhasil disetujui!');
     }
 }

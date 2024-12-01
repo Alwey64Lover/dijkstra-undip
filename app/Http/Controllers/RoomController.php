@@ -55,9 +55,7 @@ class RoomController extends Controller
     public function edit(Request $request, $id)
     {
         $data = Room::find($id);
-        // dd($data);
-
-        redirect('add-room');
+        redirect('edit-room');
     }
 
     /**

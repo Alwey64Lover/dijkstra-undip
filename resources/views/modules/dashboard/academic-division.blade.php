@@ -1,4 +1,3 @@
-{{-- @dd($dataRoom);
 @extends('layouts.backend.app')
 @section('title', 'Dashboard')
 @section('content')
@@ -30,7 +29,7 @@
                                     data-bs-target="#deleteModal"
                                     data-id="{{ $data->id }}"
                                 ><i class="bi bi-trash"></i></a>
-                                <a href=""
+                                <a href="{{ route('edit-room', $data->id) }}"
                                     class="btn btn-warning"><i class="bi bi-pen"
                                     data-bs-toggle="modal"
                                     data-bs-target="#editModal"
@@ -68,9 +67,9 @@
             </div>
         </div>
     </div>
-@endsection --}}
+@endsection
 
-@extends('layouts.backend.app')
+{{-- @extends('layouts.backend.app')
 @section('title', 'Dashboard')
 
 @section('content')
@@ -216,4 +215,4 @@
     });
 </script>
 @endpush
-
+ --}}

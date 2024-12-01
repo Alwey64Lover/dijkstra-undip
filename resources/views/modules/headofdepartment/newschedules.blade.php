@@ -130,7 +130,7 @@
                 submitBtn.classList.remove('btn-primary');
                 submitBtn.classList.add('btn-secondary');
 
-                const deleteButtons = document.querySelectorAll('.btn-danger');
+                const deleteButtons = document.querySelectorAll('.table .btn-danger');
                 deleteButtons.forEach(button => {
                     button.disabled = true;
                     button.classList.remove('btn-danger');
@@ -326,12 +326,12 @@
 
                     daySchedules.forEach(schedule => {
                         const deleteButton = `
-                            <button class="btn btn-sm ${schedule.is_submitted ? 'btn-secondary' : 'btn-danger'}"
-                                    ${schedule.is_submitted ? 'disabled' : ''}
+                            <button class="btn btn-sm btn-danger"
                                     onclick="removeSchedule('${schedule.id}')">
                                 <i class="bi bi-trash"></i>
                             </button>
                         `;
+
 
                         const newRow = `
                             <tr>

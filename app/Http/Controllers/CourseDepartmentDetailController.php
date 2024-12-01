@@ -21,20 +21,29 @@ class CourseDepartmentDetailController extends Controller
     public function table(Request $request)
     {
         try {
-            $data['courseclasses'] = CourseClass::whereHas('courseDepartmentDetail', function($query) {
+            $data['courseclasses'] = CourseClass::whereHas('CourseDepartmentDetail', function($query) {
                 $query->whereHas('courseDepartment', function($query){
-                    $query->where('department_id', user()->department_id);
+                    $query->where('department_id', user()->department_id)
+                            ->where('action_name', CourseDepartment::ACTIONS[1]);
                 });
             })
-            ->with('courseDepartmentDetail.course')
+            ->with([
+                'CourseDepartmentDetail.course',
+                'CourseDepartmentDetail.courseDepartment' => function($query) {
+                    $query->join('academic_years', 'course_departments.academic_year_id', '=', 'academic_years.id')
+                        ->select('course_departments.*', 'academic_years.name as academic_year_name');
+                }
+            ])
             ->get();
-            // dd( $data['courseclasses']);
+
             return view('modules.headofdepartment.schedules', $data);
         } catch (\Exception $e) {
             logError($e, actionMessage("failed", "retrieved"), 'schedule');
             abort(500);
         }
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -197,7 +206,12 @@ class CourseDepartmentDetailController extends Controller
 
     public function display_schedules()
     {
+        $currentAcademicYear = AcademicYear::where('name', '2024/2025 Genap')->first();
+
         $schedules = CourseClass::with(['room', 'courseDepartmentDetail.course', 'courseDepartmentDetail.courseDepartment'])
+            ->whereHas('courseDepartmentDetail.courseDepartment', function($query) use ($currentAcademicYear) {
+                $query->where('academic_year_id', $currentAcademicYear->id);
+            })
             ->get()
             ->map(function($schedule) {
                 return [

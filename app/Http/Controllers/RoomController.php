@@ -55,7 +55,7 @@ class RoomController extends Controller
     public function edit(Request $request, $id)
     {
         $data = Room::find($id);
-        redirect('edit-room');
+        return view('modules/academicdivision/edit-room', compact('data'));
     }
 
     /**

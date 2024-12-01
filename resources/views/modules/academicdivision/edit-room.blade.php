@@ -5,19 +5,19 @@
     <section class="section dashboard" id="dashboard-container">
         <!-- Sidebar section -->
         <div class="sidebar">
-            <form action="{{ route('simpan-room') }}" method="POST">
+            <form action="{{ route('edit-room', $data) }}" method="POST">
                 @csrf
                 <div class="mb-3">
                   <label for="" class="form-label">Gedung</label>
-                  <input type="text" name="type" class="form-control" value="">
+                  <input type="text" name="type" class="form-control" value="{{ $data->type }}">
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Nama</label>
-                  <input type="text" name="name" class="form-control" value="">
+                  <input type="text" name="name" class="form-control" value="{{ $data->name }}">
                 </div>
                 <div class="mb-3">
                   <label for="" class="form-label">Kapasitas</label>
-                  <input type="number" name="capacity" class="form-control" value="">
+                  <input type="number" name="capacity" class="form-control" value="{{ $data->capacity }}">
                 </div>
                 <div class="mb-3">
                     <label for="">Pilih Departemen</label>

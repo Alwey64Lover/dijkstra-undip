@@ -119,6 +119,12 @@
             success: function(response) {
                 if (response.isSubmitted) {
                     loadSchedulesFromDatabase(true); // Pass isSubmitted flag
+                    const addCourseButtons = document.querySelectorAll('.btn-light-primary');
+                    addCourseButtons.forEach(button => {
+                        button.disabled = true;
+                        button.classList.remove('btn-light-primary');
+                        button.classList.add('btn-secondary');
+                    });
                 } else {
                     loadSchedulesFromDatabase(false);
                 }
@@ -148,6 +154,13 @@
                 deleteButtons.forEach(button => {
                     button.disabled = true;
                     button.classList.remove('btn-danger');
+                    button.classList.add('btn-secondary');
+                });
+
+                const addCourseButtons = document.querySelectorAll('.btn-light-primary');
+                addCourseButtons.forEach(button => {
+                    button.disabled = true;
+                    button.classList.remove('btn-light-primary');
                     button.classList.add('btn-secondary');
                 });
 

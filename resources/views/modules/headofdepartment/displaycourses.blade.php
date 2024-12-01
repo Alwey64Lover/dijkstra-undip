@@ -85,6 +85,29 @@
 
 <script>
     $(document).ready(function(){
+        function updateAddNewCoursesButton() {
+            const selectedAcademicYear = $('#academicYearSelect').val();
+            const addNewCoursesBtn = $('#addNewCourseBtn');
+
+            if (selectedAcademicYear == '{{ $latest_academic_year_id }}') {
+                addNewCoursesBtn.prop('disabled', false);
+                addNewCoursesBtn.removeClass('btn-secondary').addClass('btn-primary');
+            } else {
+                addNewCoursesBtn.prop('disabled', true);
+                addNewCoursesBtn.removeClass('btn-primary').addClass('btn-secondary');
+            }
+        }
+
+        // Call on page load
+        updateAddNewCoursesButton();
+
+        // Update when academic year selection changes
+        $('#academicYearSelect').change(function() {
+            updateAddNewCoursesButton();
+        });
+    });
+
+    $(document).ready(function(){
         const academicYearId = $('#academicYearSelect').val();
         $.ajax({
             url: '{{ route('filtercourse') }}',

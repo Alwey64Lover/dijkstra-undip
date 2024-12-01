@@ -184,7 +184,12 @@ class CourseDepartmentDetailController extends Controller
 
     public function checkRoomAvailability(Request $request)
     {
+        $currentAcademicYear = AcademicYear::where('name', '2024/2025 Genap')->first();
+
         $isAvailable = !CourseClass::where('room_id', $request->room_id)
+            ->whereHas('courseDepartmentDetail.courseDepartment', function($query) use ($currentAcademicYear) {
+                $query->where('academic_year_id', $currentAcademicYear->id);
+            })
             ->where('day', $request->day)
             ->where(function($query) use ($request) {
                 $query->where(function($q) use ($request) {
@@ -202,6 +207,7 @@ class CourseDepartmentDetailController extends Controller
 
         return response()->json(['isAvailable' => $isAvailable]);
     }
+
 
     public function display_schedules()
     {

@@ -60,9 +60,18 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, $id)
     {
-        //
+        $data = Room::find($id);
+        $data['type'] = $request->type;
+        $data['name'] = $request->name;
+        $data['capacity'] = $request->capacity;
+        $data['department'] = $request->departement;
+        // kembali ke halaman
+        $data->save();
+
+        $dataRoom = Room::get();
+        return view('modules/dashboard/academic-division', compact('dataRoom'));
     }
 
     /**

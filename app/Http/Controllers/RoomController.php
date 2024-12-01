@@ -36,9 +36,8 @@ class RoomController extends Controller
             'capacity' => $request->capacity,
             'department' => $request->departement
         ]);
-
-        return redirect('addrooms');
-
+        $dataRoom = Room::get();
+        return view('modules/dashboard/academic-division', compact('dataRoom'));
     }
 
     /**

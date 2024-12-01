@@ -77,12 +77,15 @@ class CourseDepartmentDetailController extends Controller
 
     public function schedule_check(Request $request)
     {
-        $exists = CourseClass::whereHas('courseDepartmentDetail.course', function($query) use ($request) {
+        $exists = CourseClass::whereHas('courseDepartmentDetail.courseDepartment', function($query) {
+            $query->where('academic_year_id', request('academic_year_id'));
+        })->whereHas('courseDepartmentDetail.course', function($query) use ($request) {
             $query->where('name', $request->course_name);
         })->where('name', $request->class_name)->exists();
 
         return response()->json(['exists' => $exists]);
     }
+
 
 
     public function filter(Request $request)
@@ -192,12 +195,9 @@ class CourseDepartmentDetailController extends Controller
     }
 
 
-
-
-
     public function display_schedules()
     {
-        $schedules = CourseClass::with(['room', 'courseDepartmentDetail.course'])
+        $schedules = CourseClass::with(['room', 'courseDepartmentDetail.course', 'courseDepartmentDetail.courseDepartment'])
             ->get()
             ->map(function($schedule) {
                 return [
@@ -207,12 +207,35 @@ class CourseDepartmentDetailController extends Controller
                     'course_name' => $schedule->courseDepartmentDetail->course->name,
                     'name' => $schedule->name,
                     'room_name' => $schedule->room->type . $schedule->room->name,
-                    'day' => $schedule->day
+                    'day' => $schedule->day,
+                    'is_submitted' => $schedule->courseDepartmentDetail->courseDepartment->is_submitted
                 ];
             });
 
         return response()->json($schedules);
     }
+
+
+    public function submitSchedule()
+    {
+        $currentAcademicYear = AcademicYear::where('name', '2024/2025 Genap')->first();
+
+        CourseDepartment::where('academic_year_id', $currentAcademicYear->id)
+            ->update(['is_submitted' => true]);
+
+        return response()->json(['message' => 'Schedule submitted successfully']);
+    }
+
+    public function checkSubmissionStatus()
+    {
+        $currentAcademicYear = AcademicYear::where('name', '2024/2025 Genap')->first();
+        $isSubmitted = CourseDepartment::where('academic_year_id', $currentAcademicYear->id)
+            ->where('is_submitted', true)
+            ->exists();
+
+        return response()->json(['isSubmitted' => $isSubmitted]);
+    }
+
 
     public function course_update(Request $request, $id)
     {

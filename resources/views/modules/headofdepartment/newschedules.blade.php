@@ -6,7 +6,7 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="card-title">Course Schedule {{$latest_academic_year->name}}</h4>
-        <button type="submit" class="btn btn-primary">Submit Schedule</button>
+        <button type="button" id="submitScheduleBtn" class="btn btn-primary">Submit Schedule</button>
     </div>
     <div class="card-body">
         @php
@@ -112,6 +112,73 @@
 </div>
 
 <script>
+    document.getElementById('submitScheduleBtn').addEventListener('click', function() {
+        // Disable button immediately when clicked
+        const submitBtn = this;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Submitting...';
+
+        $.ajax({
+            url: '/submit-schedule',
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                // Update button state immediately
+                submitBtn.innerHTML = 'Submitted';
+                submitBtn.classList.remove('btn-primary');
+                submitBtn.classList.add('btn-secondary');
+
+                const deleteButtons = document.querySelectorAll('.btn-danger');
+                deleteButtons.forEach(button => {
+                    button.disabled = true;
+                    button.classList.remove('btn-danger');
+                    button.classList.add('btn-secondary');
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Schedule has been submitted successfully!'
+                });
+            },
+            error: function(xhr) {
+                // Re-enable button if there's an error
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit Schedule';
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to submit schedule'
+                });
+            }
+        });
+    });
+
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSchedulesFromDatabase();
+
+        // Check submission status
+        $.ajax({
+            url: '/check-submission-status',
+            type: 'GET',
+            success: function(response) {
+                const submitBtn = document.getElementById('submitScheduleBtn');
+                if (response.isSubmitted) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = 'Submitted';
+                    submitBtn.classList.remove('btn-primary');
+                    submitBtn.classList.add('btn-secondary');
+                }
+            }
+        });
+    });
+
+
     function checkRoomAvailability(day, startTime, endTime, roomId) {
         return new Promise((resolve, reject) => {
             $.ajax({
@@ -200,13 +267,14 @@
             },
             data: {
                 course_name: courseName,
-                class_name: className
+                class_name: className,
+                academic_year_id: '{{$latest_academic_year->id}}' // Add this line
             },
             success: function(response) {
                 if (response.exists) {
                     validationAlert.style.display = 'block';
                     validationAlert.classList.add('show');
-                    validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> This course class already exists';
+                    validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> This course class already exists in current academic year';
                     return;
                 }
 
@@ -255,9 +323,16 @@
                     const daySchedules = schedules.filter(schedule =>
                         schedule.day.toLowerCase() === day.toLowerCase()
                     );
-                    // console.log(`Schedules for ${day}:`, daySchedules);
 
                     daySchedules.forEach(schedule => {
+                        const deleteButton = `
+                            <button class="btn btn-sm ${schedule.is_submitted ? 'btn-secondary' : 'btn-danger'}"
+                                    ${schedule.is_submitted ? 'disabled' : ''}
+                                    onclick="removeSchedule('${schedule.id}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        `;
+
                         const newRow = `
                             <tr>
                                 <td>${schedule.start_time}</td>
@@ -265,11 +340,7 @@
                                 <td>${schedule.course_name}</td>
                                 <td>${schedule.name}</td>
                                 <td>${schedule.room_name}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-danger" onclick="removeSchedule('${schedule.id}')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
+                                <td>${deleteButton}</td>
                             </tr>
                         `;
                         scheduleBody.insertAdjacentHTML('beforeend', newRow);
@@ -278,6 +349,7 @@
             }
         });
     }
+
 
 
     // Update page load event

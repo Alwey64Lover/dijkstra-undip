@@ -48,6 +48,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/get-schedules', [CourseDepartmentDetailController::class, 'display_schedules']);
         Route::delete('/delete-schedule/{id}', [CourseDepartmentDetailController::class, 'schedule_destroy']);
         Route::post('/check-room-availability', [CourseDepartmentDetailController::class, 'checkRoomAvailability']);
+        Route::post('/submit-schedule', [CourseDepartmentDetailController::class, 'submitSchedule']);
+        Route::get('/check-submission-status', [CourseDepartmentDetailController::class, 'checkSubmissionStatus']);
     });
 
     //END OF PALA DEPT

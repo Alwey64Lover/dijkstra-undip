@@ -112,23 +112,32 @@
 </div>
 
 <script>
-    function checkRoomAvailability(day, startTime, endTime) {
-        const sessionData = JSON.parse(sessionStorage.getItem('courseSchedules')) || {};
-        const daySchedules = sessionData[day] || [];
-
-        // Get all rooms that are already booked for the given time slot
-        const bookedRooms = daySchedules.filter(schedule => {
-            return (
-                (startTime >= schedule.startTime && startTime < schedule.endTime) ||
-                (endTime > schedule.startTime && endTime <= schedule.endTime) ||
-                (startTime <= schedule.startTime && endTime >= schedule.endTime)
-            );
-        }).map(schedule => schedule.roomName);
-
-        return bookedRooms;
+    function checkRoomAvailability(day, startTime, endTime, roomId) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: '/check-room-availability',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    day: day,
+                    start_time: startTime,
+                    end_time: endTime,
+                    room_id: roomId
+                },
+                success: function(response) {
+                    resolve(response.isAvailable);
+                },
+                error: function(xhr) {
+                    reject(xhr.responseJSON.message);
+                }
+            });
+        });
     }
 
-    function calculateEndTime(day) {
+
+    async function calculateEndTime(day) {
         const form = document.getElementById(`courseForm${day}`);
         const startTimeSelect = document.getElementById(`start_time_${day}`);
         const endTimeInput = document.getElementById(`end_time_${day}`);
@@ -150,18 +159,21 @@
 
             endTimeInput.value = endTime;
 
-            // Get booked rooms for this time slot
-            const bookedRooms = checkRoomAvailability(day, startTimeSelect.value, endTime);
-
-            // Reset and update room options
-            Array.from(roomSelect.options).forEach(option => {
-                if (option.value !== '') { // Skip the default "Select Room" option
-                    option.disabled = bookedRooms.includes(option.text);
-                    option.style.display = bookedRooms.includes(option.text) ? 'none' : '';
+            // Check availability for each room
+            for (const option of roomSelect.options) {
+                if (option.value !== '') {
+                    try {
+                        const isAvailable = await checkRoomAvailability(day, startTimeSelect.value, endTime, option.value);
+                        option.disabled = !isAvailable;
+                        option.style.display = isAvailable ? '' : 'none';
+                    } catch (error) {
+                        console.error('Error checking room availability:', error);
+                    }
                 }
-            });
+            }
         }
     }
+
 
     function addCourse(day) {
         const form = document.getElementById(`courseForm${day}`);
@@ -194,7 +206,7 @@
                 if (response.exists) {
                     validationAlert.style.display = 'block';
                     validationAlert.classList.add('show');
-                    validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> This course and class combination already exists';
+                    validationAlert.innerHTML = '<i class="bi bi-exclamation-triangle"></i> This course class already exists';
                     return;
                 }
 

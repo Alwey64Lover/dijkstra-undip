@@ -170,6 +170,28 @@ class CourseDepartmentDetailController extends Controller
         }
     }
 
+    public function checkRoomAvailability(Request $request)
+    {
+        $isAvailable = !CourseClass::where('room_id', $request->room_id)
+            ->where('day', $request->day)
+            ->where(function($query) use ($request) {
+                $query->where(function($q) use ($request) {
+                    $q->where('start_time', '<=', $request->start_time)
+                    ->where('end_time', '>', $request->start_time);
+                })->orWhere(function($q) use ($request) {
+                    $q->where('start_time', '<', $request->end_time)
+                    ->where('end_time', '>=', $request->end_time);
+                })->orWhere(function($q) use ($request) {
+                    $q->where('start_time', '>=', $request->start_time)
+                    ->where('end_time', '<=', $request->end_time);
+                });
+            })
+            ->exists();
+
+        return response()->json(['isAvailable' => $isAvailable]);
+    }
+
+
 
 
 

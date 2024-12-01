@@ -1,12 +1,12 @@
-{{-- @dd($dataRoom); --}}
 @extends('layouts.backend.app')
 @section('title', 'Dashboard')
 @section('content')
     <section class="section dashboard" id="dashboard-container">
         <!-- Sidebar section -->
         <div class="sidebar">
-            <form action="{{ route('edit-room', $data) }}" method="POST">
+            <form action="{{ route('update-room', $data->id) }}" method="POST">
                 @csrf
+                @method('PUT')
                 <div class="mb-3">
                   <label for="" class="form-label">Gedung</label>
                   <input type="text" name="type" class="form-control" value="{{ $data->type }}">
@@ -42,7 +42,7 @@
                     <!-- Ikon ceklist dengan tag <i> -->
                     <i class="bi bi-check-circle" style="font-size: 100px; color: green;"></i>
                     <!-- Pesan -->
-                    <h5 class="mt-3">Ruang Ditambahkan</h5>
+                    <h5 class="mt-3">Ruang Diubah</h5>
                 </div>
             </div>
         </div>

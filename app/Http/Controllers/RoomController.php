@@ -52,9 +52,12 @@ class RoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Room $room)
+    public function edit(Request $request, $id)
     {
-        //
+        $data = Room::find($id);
+        // dd($data);
+
+        redirect('add-room');
     }
 
     /**
@@ -71,11 +74,11 @@ class RoomController extends Controller
     public function destroy($id)
     {
         // Cari data berdasarkan ID dan hapus
-        $room = Room::findOrFail($id);
+        $room = Room::find($id);
         $room->delete();
 
         // Redirect atau return response
-        return redirect()->route('room.index')->with('success', 'Data berhasil dihapus');
+        return redirect('addrooms');
     }
 
 }

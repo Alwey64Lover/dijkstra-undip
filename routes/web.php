@@ -80,9 +80,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::middleware(['roles:academic_division'])->group(function () {
+        // view dan add
         Route::get('/addrooms', [RoomController::class, 'index'])->name('newroom');
         Route::get('/create-room', [RoomController::class, 'create'])->name('add-room');
         Route::post('/simpan-room', [RoomController::class, 'store'])->name('simpan-room');
+        // edit
+        Route::get('/edit/{id}', [RoomController::class, 'edit'])->name('edit-room');
         Route::delete('/delete', [RoomController::class, 'destroy'])->name('room-destroy');
     });
 });

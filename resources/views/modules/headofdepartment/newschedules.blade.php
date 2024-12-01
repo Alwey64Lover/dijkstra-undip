@@ -157,6 +157,13 @@
                     button.classList.add('btn-secondary');
                 });
 
+                const addCourseButtons = document.querySelectorAll('.btn-light-primary');
+                addCourseButtons.forEach(button => {
+                    button.disabled = true;
+                    button.classList.remove('btn-light-primary');
+                    button.classList.add('btn-secondary');
+                });
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',

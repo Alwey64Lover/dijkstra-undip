@@ -45,4 +45,18 @@ class CourseDepartmentController extends Controller
 
         return redirect()->back()->with('success', 'Jadwal Department berhasil disetujui!');
     }
+
+    public function show($id) {
+        $data['courseDepartment'] = CourseDepartment::with('department')->find($id);
+        return view('modules.dean.detail', $data);
+    }
+
+    public function acceptOrReject($id, $status) {
+        CourseDepartment::find($id)->update([
+            'action_name' => $status,
+            'action_at' => now()
+        ]);
+
+        return redirect()->back()->with('success', 'Jadwal Department berhasil '. ($status == 'accepted' ? 'disetujui' : 'ditolak') .'!');
+    }
 }

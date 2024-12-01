@@ -81,7 +81,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['roles:dean'])->group(function () {
         Route::get('department-schedule', [CourseDepartmentController::class, 'index'])->name('department-schedule.index');
         Route::post('department-schedule/accept-some', [CourseDepartmentController::class, 'acceptSome'])->name('department-schedule.accept-some');
+        Route::get('department-schedule/accept-or-reject/{id}/{status}', [CourseDepartmentController::class, 'acceptOrReject'])->name('department-schedule.accept-or-reject');
         Route::get('department-schedule/{id}', [CourseDepartmentController::class, 'show'])->name('department-schedule.show');
+
+        Route::get('/get-schedules', [CourseDepartmentDetailController::class, 'display_schedules']);
     });
 
     Route::middleware(['roles:academic_division'])->group(function () {

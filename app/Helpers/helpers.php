@@ -3,11 +3,14 @@
 use App\Models\AcademicYear;
 use Illuminate\Support\Facades\Log;
 
+function academicYear(){
+    $academicYear = AcademicYear::where('is_active', 1)->first();
+    return $academicYear;
+}
 
 function academicYearId(): mixed
 {
-    $academicYear = AcademicYear::where('is_active', 1)->first();
-    return $academicYear->id;
+    return academicYear()->id;
 }
 
 function routeIsActive($route): string

@@ -72,6 +72,7 @@ class SchedulingSeeder extends DatabaseSeeder
                     'department_id' => $informaticsDepartment->id,
                     'academic_year_id' => $year->id,
                     'action_name' => $year->name === '2024/2025 Genap' ? CourseDepartment::ACTIONS[0] : CourseDepartment::ACTIONS[1],
+                    'is_submitted'=> $year->name === '2024/2025 Genap' ? false : true,
                     'action_at' => now(),
                     'action_by_id' => $users->random()->id,
                 ]);

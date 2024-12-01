@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUlid('department_id')->nullable()->constrained('departments')->onDelete('set null');
             $table->foreignUlid('academic_year_id')->nullable()->constrained('academic_years')->onDelete('set null');
             $table->string('action_name')->nullable();
+            $table->string('is_submitted')->nullable();
             $table->timestamp('action_at')->useCurrent();
             $table->foreignUlid('action_by_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();

@@ -203,7 +203,6 @@ class CourseDepartmentDetailController extends Controller
         return response()->json(['isAvailable' => $isAvailable]);
     }
 
-
     public function display_schedules()
     {
         $currentAcademicYear = AcademicYear::where('name', '2024/2025 Genap')->first();

@@ -112,6 +112,20 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        $.ajax({
+            url: '/check-submission-status',
+            type: 'GET',
+            success: function(response) {
+                if (response.isSubmitted) {
+                    loadSchedulesFromDatabase(true); // Pass isSubmitted flag
+                } else {
+                    loadSchedulesFromDatabase(false);
+                }
+            }
+        });
+    });
+
     document.getElementById('submitScheduleBtn').addEventListener('click', function() {
         // Disable button immediately when clicked
         const submitBtn = this;
@@ -311,44 +325,47 @@
 
 
     // New function to load schedules from database
-    function loadSchedulesFromDatabase() {
-        $.ajax({
-            url: '/get-schedules',
-            type: 'GET',
-            success: function(schedules) {
-                ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(day => {
-                    const scheduleBody = document.getElementById(`schedule-${day}`);
-                    scheduleBody.innerHTML = '';
+    function loadSchedulesFromDatabase(isSubmitted = false) {
+    $.ajax({
+        url: '/get-schedules',
+        type: 'GET',
+        success: function(schedules) {
+            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(day => {
+                const scheduleBody = document.getElementById(`schedule-${day}`);
+                scheduleBody.innerHTML = '';
 
-                    const daySchedules = schedules.filter(schedule =>
-                        schedule.day.toLowerCase() === day.toLowerCase()
-                    );
+                const daySchedules = schedules.filter(schedule =>
+                    schedule.day.toLowerCase() === day.toLowerCase()
+                );
 
-                    daySchedules.forEach(schedule => {
-                        const deleteButton = `
-                            <button class="btn btn-sm btn-danger"
-                                    onclick="removeSchedule('${schedule.id}')">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        `;
+                daySchedules.forEach(schedule => {
+                    const deleteButton = `
+                        <button class="btn btn-sm ${isSubmitted ? 'btn-secondary' : 'btn-danger'}"
+                                ${isSubmitted ? 'disabled' : ''}
+                                onclick="removeSchedule('${schedule.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    `;
 
-
-                        const newRow = `
-                            <tr>
-                                <td>${schedule.start_time}</td>
-                                <td>${schedule.end_time}</td>
-                                <td>${schedule.course_name}</td>
-                                <td>${schedule.name}</td>
-                                <td>${schedule.room_name}</td>
-                                <td>${deleteButton}</td>
-                            </tr>
-                        `;
-                        scheduleBody.insertAdjacentHTML('beforeend', newRow);
-                    });
+                    const newRow = `
+                        <tr>
+                            <td>${schedule.start_time}</td>
+                            <td>${schedule.end_time}</td>
+                            <td>${schedule.course_name}</td>
+                            <td>${schedule.name}</td>
+                            <td>${schedule.room_name}</td>
+                            <td>${deleteButton}</td>
+                        </tr>
+                    `;
+                    scheduleBody.insertAdjacentHTML('beforeend', newRow);
                 });
-            }
-        });
-    }
+            });
+        }
+    });
+}
+
+
+
 
 
 

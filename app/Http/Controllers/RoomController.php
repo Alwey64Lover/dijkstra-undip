@@ -80,7 +80,9 @@ class RoomController extends Controller
     public function destroy($id)
     {
         // Cari data berdasarkan ID dan hapus
+        // dd(vars: $id);
         $room = Room::find($id);
+        // dd($room);
         $room->delete();
 
         // Redirect atau return response

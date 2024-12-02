@@ -1,5 +1,6 @@
 @extends('layouts.backend.app')
 @section('title', 'Dashboard')
+@include('components.modal.modal-delete')
 @section('content')
     <section class="section dashboard" id="dashboard-container">
         <h2>Selamat Datang</h2>
@@ -23,12 +24,13 @@
                             <td>{{ $data->capacity }}</td>
                             <td>{{ $data->department }}</td>
                             <td style="text-align:right;">
-                                <a href=""
+                                <button
                                     class="btn btn-danger"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal"
                                     data-id="{{ $data->id }}"
-                                ><i class="bi bi-trash"></i></a>
+                                    onclick="deleteRoom(this)"
+                                >
+                                    <i class="bi bi-trash"></i>
+                                </button>
                                 <a href="{{ route('edit-room', $data->id) }}"
                                     class="btn btn-warning"><i class="bi bi-pen"
                                 ></i></a></td>
@@ -40,4 +42,29 @@
     </section>
     <div id="form-container" style="display:none;"></div>
 
+<script>
+    function deleteRoom(button) {
+        const roomId = $(button).data('id'); // Ambil ID dari atribut data-id
+        console.log("Room ID:", roomId);
+        $('#modal_delete form').attr('action', '/delete/' + roomId);
+        $('#modal_delete').modal('show');
+    }
+    // $('#modal_delete form').on('submit', function(e) {
+    //     e.preventDefault();
+    //     const action = $(this).attr('action');
+
+    //     $.ajax({
+    //         url: action,
+    //         type: 'DELETE',
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         success: function(response) {
+    //             $('#modal_delete').modal('hide');
+    //             ();
+    //         }
+    //     });
+    //     return  false;
+    // });
+</script>
 @endsection

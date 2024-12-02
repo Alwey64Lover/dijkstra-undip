@@ -3,7 +3,16 @@
 @include('components.modal.modal-delete')
 @section('content')
     <section class="section dashboard" id="dashboard-container">
-        <h2>Selamat Datang</h2>
+        <div class="container">
+            <div class="row">
+              <div class="col">
+                <h2>Selamat Datang</h2>
+              </div>
+              <div class="col">
+                <a href="" class="btn btn-primary"><i class="bi bi-check2-circle"></i>  Approve</a>
+              </div>
+            </div>
+          </div>
         <!-- Sidebar section -->
         <div class="sidebar">
             <table class="table table-striped table-hover" style="table-layout: fixed">

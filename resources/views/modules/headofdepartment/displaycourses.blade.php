@@ -89,13 +89,23 @@
             const selectedAcademicYear = $('#academicYearSelect').val();
             const addNewCoursesBtn = $('#addNewCourseBtn');
 
-            if (selectedAcademicYear == '{{ $latest_academic_year_id }}') {
-                addNewCoursesBtn.prop('disabled', false);
-                addNewCoursesBtn.removeClass('btn-secondary').addClass('btn-primary');
-            } else {
-                addNewCoursesBtn.prop('disabled', true);
-                addNewCoursesBtn.removeClass('btn-primary').addClass('btn-secondary');
-            }
+            // Make an AJAX call to check coursedepartment status
+            $.ajax({
+                url: '{{ route('addcoursestatus') }}',
+                type: 'GET',
+                data: { academic_year_id: selectedAcademicYear },
+                success: function(response) {
+                    if (response.is_accepted) {
+                        addNewCoursesBtn.prop('disabled', true);
+                        console.log('Button is disabled.');
+                        addNewCoursesBtn.removeClass('btn-primary').addClass('btn-secondary');
+                    } else {
+                        addNewCoursesBtn.prop('disabled', false);
+                        console.log('Button is enabled.');
+                        addNewCoursesBtn.removeClass('btn-secondary').addClass('btn-primary');
+                    }
+                }
+            });
         }
 
         // Call on page load

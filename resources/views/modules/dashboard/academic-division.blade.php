@@ -8,13 +8,11 @@
               <div class="col">
                 <h2>Selamat Datang</h2>
               </div>
-              <div class="col">
-                <a href="" class="btn btn-primary"><i class="bi bi-check2-circle"></i>  Approve</a>
-              </div>
+
             </div>
           </div>
         <!-- Sidebar section -->
-        <div class="sidebar">
+        {{-- <div class="sidebar">
             <table class="table table-striped table-hover" style="table-layout: fixed">
                 <thead class="bg-primary">
                     <tr>
@@ -47,7 +45,7 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
+        </div> --}}
     </section>
     <div id="form-container" style="display:none;"></div>
 

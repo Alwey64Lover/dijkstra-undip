@@ -42,10 +42,15 @@
 @endif
 
 @if (in_array(user()->role, ['academic_division']))
-    <li class="menu-item {{ routeIsActive('index.*') }}">
+    <li class="menu-item {{ routeIsActive('rooms.*') }}">
+        <a href="{{ route('room.index') }}" class='menu-link'>
+            <span><i class="bi bi-plus-circle"></i> Room</span>
+        </a>
+    </li>
+    {{-- <li class="menu-item {{ routeIsActive('index.*') }}">
         <a href="{{ route('add-room') }}" class='menu-link'>
             <span><i class="bi bi-plus-circle"></i> New Room</span>
         </a>
-    </li>
+    </li> --}}
 @endif
 

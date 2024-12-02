@@ -16,7 +16,4 @@ class Room extends Model
     protected $guarded = [
         'id', 'created_at'
     ];
-    protected $fillable = [
-        'type', 'name', 'capacity', 'department'
-    ];
 }

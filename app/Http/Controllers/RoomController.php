@@ -12,8 +12,8 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $dataRoom = Room::get();
-        return view('modules/dashboard/academic-division', compact('dataRoom'));
+        $data['columns'] = Room::all();
+        return view('modules.academicdivision.table', $data);
     }
     /**
      * Show the form for creating a new resource.
@@ -36,8 +36,8 @@ class RoomController extends Controller
             'capacity' => $request->capacity,
             'department' => $request->departement
         ]);
-        $dataRoom = Room::get();
-        return view('modules/dashboard/academic-division', compact('dataRoom'));
+
+        return redirect('room');
     }
 
     /**
@@ -71,7 +71,9 @@ class RoomController extends Controller
         $data->save();
 
         $dataRoom = Room::get();
-        return view('modules/dashboard/academic-division', compact('dataRoom'));
+        return redirect('room');
+
+        // return view('modules/dashboard/academic-division', compact('dataRoom'));
     }
 
     /**
@@ -87,6 +89,13 @@ class RoomController extends Controller
 
         // Redirect atau return response
         return redirect('addrooms');
+    }
+
+    public function submit($id){
+        $room = Room::find($id)->update([
+            'isSubmitted' => 'sudah'
+        ]);
+        return redirect()->back()->with('success', 'Room berhasil disubmit!');
     }
 
 }

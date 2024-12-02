@@ -52,6 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/check-room-availability', [CourseDepartmentDetailController::class, 'checkRoomAvailability']);
         Route::post('/submit-schedule', [CourseDepartmentDetailController::class, 'submitSchedule']);
         Route::get('/check-submission-status', [CourseDepartmentDetailController::class, 'checkSubmissionStatus']);
+        Route::get('/check-coursedepartment-status', [CourseDepartmentDetailController::class, 'checkCourseDepartmentStatus'])->name('addcoursestatus');
     });
 
     //END OF PALA DEPT

@@ -171,6 +171,22 @@ class CourseDepartmentDetailController extends Controller
         ]);
     }
 
+    public function checkCourseDepartmentStatus(Request $request)
+    {
+        try {
+            $academicYearId = $request->academic_year_id;
+            $isAccepted = CourseDepartment::where('academic_year_id', $academicYearId)
+                ->where('action_name', 'accepted')
+                ->exists();
+
+            return response()->json(['is_accepted' => $isAccepted]);
+        } catch (\Exception $e) {
+            logError($e, actionMessage("failed", "retrieved"), 'schedule');
+            abort(500);
+        }
+    }
+
+
     public function schedule_destroy($id)
     {
         try {

@@ -20,7 +20,7 @@ class IrsController extends Controller
             $studentId = user()->student->id;
             $latestSemester = (int) HerRegistration::where('student_id', $studentId)
                 ->whereHas('irs', function($query){
-                    $query->where('is_submitted', true);
+                    $query->where('action_name', 1);
                 })
                 ->orderBy('semester', 'desc')
                 ->value('semester');
@@ -47,7 +47,7 @@ class IrsController extends Controller
 
             $data['options'] = HerRegistration::where('student_id', user()->student->id)
             ->whereHas('irs', function($query){
-                $query->where('is_submitted', true);
+                $query->where('action_name', 1);
             })
             ->orderBy('semester')
             ->pluck('semester', 'semester')
@@ -122,7 +122,7 @@ class IrsController extends Controller
     public function getCourseClass(Request $request){
         $courseIds = $request->courseIds ?? [];
 
-        $data = CourseClass::whereIn('course_detail_id', $courseIds)
+        $data = CourseClass::whereIn('course_department_detail_id', $courseIds)
             ->with([
                 'CourseDepartmentDetail.course',
                 'room',
@@ -134,14 +134,14 @@ class IrsController extends Controller
             ->map(function ($courseClass) use ($courseIds) {
                 if ($courseClass->irsInfo->isNotEmpty()) {
                     $courseClass->status_color = 'success';
-                } elseif (CourseClass::where('course_detail_id', $courseClass->course_detail_id)
+                } elseif (CourseClass::where('course_department_detail_id', $courseClass->course_department_detail_id)
                         ->get()
                         ->contains(function ($item) {
                             return $item->irsInfo->isNotEmpty();
                         })
                 ) {
                     $courseClass->status_color = 'secondary';
-                } elseif (CourseClass::where('course_detail_id', $courseClass->course_detail_id)
+                } elseif (CourseClass::where('course_department_detail_id', $courseClass->course_department_detail_id)
                         ->get()
                         ->every(function ($item) {
                             return $item->irsInfo->isEmpty();

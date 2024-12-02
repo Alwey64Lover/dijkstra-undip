@@ -91,7 +91,7 @@
                                 $isNotRemoved = \App\Models\IrsDetail::
                                     where(function ($query) use($courseDetail) {
                                         $query->whereHas('courseClass', function($query) use($courseDetail) {
-                                            $query->whereHas('courseDetail', function($query) use($courseDetail) {
+                                            $query->whereHas('courseDepartmentDetail', function($query) use($courseDetail) {
                                                 $query->where('id', $courseDetail->id);
                                             });
                                         });
@@ -263,21 +263,21 @@ function fetchCourseClass() {
                 let html = '';
 
                 courses.forEach(course => {
-                    totalSks += course.status_color == 'success' ? course?.course_detail?.sks : 0;
+                    totalSks += course.status_color == 'success' ? course?.course_department_detail?.sks : 0;
                     let uriForm = ("{{ route('irs.action', ':action') }}").replace(':action', course.status_color == 'success' ? 'delete' : 'add');
                     html += `
                         <div class="course-card bg-${course.status_color}"
                              data-course-id="${course?.id}"
-                             data-course-name="${course?.course_detail?.course?.name}"
-                             data-status="${course?.course_detail?.status}"
-                             data-sks="${course.course_detail?.sks}"
+                             data-course-name="${course?.course_department_detail?.course?.name}"
+                             data-status="${course?.course_department_detail?.status == 'mandatory' ? 'wajib' : 'pilihan'}"
+                             data-sks="${course.course_department_detail?.sks}"
                              data-time="${formatTime(course.start_time)} - ${formatTime(course.end_time)}"
                              data-class="${course.name}"
                              data-status-color="${course.status_color}"
                              data-uri-form="${uriForm}">
-                            <strong>${course?.course_detail?.course?.name}</strong><br>
-                            <span>${course?.course_detail?.status}</span><br>
-                            <span>${course.course_detail?.sks} SKS</span><br>
+                            <strong>${course?.course_department_detail?.course?.name}</strong><br>
+                            <span>${course?.course_department_detail?.status}</span><br>
+                            <span>${course.course_department_detail?.sks} SKS</span><br>
                             <span>${formatTime(course.start_time)} - ${formatTime(course.end_time)} (Kelas ${course.name})</span>
                         </div>
                     `;

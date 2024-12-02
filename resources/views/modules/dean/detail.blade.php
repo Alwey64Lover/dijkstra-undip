@@ -8,14 +8,16 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="card-title">Course Schedule {{academicYear()->name}} - Departemen {{ @$courseDepartment->department->name }}</h4>
 
-            @if($courseDepartment->action_name != 'accepted')
-                <a class="ms-auto" href='{{ route('department-schedule.accept-or-reject', ['status' => 'accepted', 'id' => $courseDepartment->id]) }}'>
-                    <button class="btn btn-success" >Setujui IRS</button>
-                </a>
-            @else
-                <a href='{{ route('department-schedule.accept-or-reject', ['status' => 'waiting', 'id' => $courseDepartment->id]) }}'>
-                    <button class="btn btn-danger">Batalkan IRS</button>
-                </a>
+            @if ($courseDepartment->is_submitted)
+                @if($courseDepartment->action_name != 'accepted')
+                    <a class="ms-auto" href='{{ route('department-schedule.accept-or-reject', ['status' => 'accepted', 'id' => $courseDepartment->id]) }}'>
+                        <button class="btn btn-success" >Setujui IRS</button>
+                    </a>
+                @else
+                    <a href='{{ route('department-schedule.accept-or-reject', ['status' => 'waiting', 'id' => $courseDepartment->id]) }}'>
+                        <button class="btn btn-danger">Batalkan IRS</button>
+                    </a>
+                @endif
             @endif
         </div>
         <div class="card-body">
@@ -206,7 +208,7 @@
     // New function to load schedules from database
     function loadSchedulesFromDatabase() {
         $.ajax({
-            url: '/get-schedules',
+            url: '/get-schedules-dean',
             type: 'GET',
             success: function(schedules) {
                 ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(day => {

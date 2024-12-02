@@ -15,6 +15,12 @@
             <span><i class="bi bi-person-fill"></i> Department Schedule</span>
         </a>
     </li>
+
+    <li class="menu-item {{ routeIsActive('academic-room.*') }}">
+        <a href="{{ route('academic-room.index') }}" class='menu-link'>
+            <span><i class="bi bi-person-fill"></i> Academic Room</span>
+        </a>
+    </li>
 @endif
 
 @if (in_array(user()->role, ['head_of_department']))

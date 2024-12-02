@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('capacity')->default(0);
             $table->string('department')->default(("informatika"));
+            $table->string('status')->default('accepted');
             $table->string('isSubmitted')->default(("belum"));
             $table->timestamps();
             $table->softDeletes();

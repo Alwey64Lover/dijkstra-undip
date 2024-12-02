@@ -9,10 +9,12 @@
     <section class="section">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
+                @if (user()->role == 'academic_division')
                 <a href="{{ route('add-room') }}" class="btn icon icon-left btn-success" data-bs-toggle-tooltip="tooltip" data-bs-placement="right" title="Add">
                     <i class="bi bi-plus-circle"></i>
                     New Room
                 </a>
+                @endif
             </div>
 
             <div class="card-body">
@@ -37,28 +39,39 @@
                                     <td>{{ $column->department }}</td>
                                     <td >
                                         <div>
-                                            @if ($column->isSubmitted == 'sudah')
-                                            <button
-                                            class="btn btn-danger"
-                                            data-id="{{ $column->id }}"
-                                            onclick="deleteRoom(this)"
-                                        >
-                                            <i class="bi bi-trash"></i>
-                                            Hapus
-                                        </button>
+                                            @if (user()->role == 'academic_division')
+                                                @if ($column->isSubmitted == 'belum')
+                                                    <button
+                                                        class="btn btn-danger"
+                                                        data-id="{{ $column->id }}"
+                                                        onclick="deleteRoom(this)"
+                                                    >
+                                                        <i class="bi bi-trash"></i>
+                                                        Hapus
+                                                    </button>
 
-                                        <a href="{{ route('edit-room', $column->id) }}"
-                                                class="btn btn-warning"><i class="bi bi-pen"
-                                            ></i>
-                                            Edit
-                                        </a>
+                                                    <a href="{{ route('edit-room', $column->id) }}"
+                                                            class="btn btn-warning"><i class="bi bi-pen"
+                                                        ></i>
+                                                        Edit
+                                                    </a>
 
-                                        <a href="{{ route('room.submit', $column->id) }}" class="btn icon icon-left btn-primary" data-bs-toggle-tooltip="tooltip" data-bs-placement="bottom" title="Submit">
-                                            <i class="bi bi-check2-circle"></i>
-                                            Submit Ruang
-                                        </a>
+                                                    <a href="{{ route('room.submit', $column->id) }}" class="btn icon icon-left btn-primary" data-bs-toggle-tooltip="tooltip" data-bs-placement="bottom" title="Submit">
+                                                        <i class="bi bi-check2-circle"></i>
+                                                        Submit Ruang
+                                                    </a>
+                                                @else
+                                                    Sudah Submit
+                                                @endif
                                             @else
-                                                Sudah Submit
+                                                @if ($column->status == 'accepted')
+                                                    Sudah Di Setujui
+                                                @else
+                                                    <a href="{{ route('academic-room.accept', $column->id) }}" class="btn icon icon-left btn-success" data-bs-toggle-tooltip="tooltip" data-bs-placement="bottom" title="Setujui">
+                                                        <i class="bi bi-check2-circle"></i>
+                                                        Setujui Ruang
+                                                    </a>
+                                                @endif
                                             @endif
 
                                         </div>

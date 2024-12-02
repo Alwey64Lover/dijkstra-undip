@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcademicRoomController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CourseDepartmentController;
 use App\Http\Controllers\CourseDepartmentDetailController;
@@ -84,7 +85,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('department-schedule/accept-or-reject/{id}/{status}', [CourseDepartmentController::class, 'acceptOrReject'])->name('department-schedule.accept-or-reject');
         Route::get('department-schedule/{id}', [CourseDepartmentController::class, 'show'])->name('department-schedule.show');
         Route::get('/get-schedules-dean', [CourseDepartmentDetailController::class, 'display_schedules']);
-        Route::get('academic-room', [CourseDepartmentController::class, 'show'])->name('academic-room.index');
+
+        Route::get('academic-room', [RoomController::class, 'index'])->name('academic-room.index');
+        Route::get('academic-room/{id}/accept', [RoomController::class, 'accept'])->name('academic-room.accept');
     });
 
     Route::middleware(['roles:academic_division'])->group(function () {

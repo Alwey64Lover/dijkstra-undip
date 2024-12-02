@@ -7,6 +7,8 @@ use App\Models\Lecturer;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\Department;
+use App\Models\Room;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -107,6 +109,10 @@ class DashboardController extends Controller
         }
     }
 
+    public function deanIndex(){
+        return view('modules.dashboard.dean');
+    }
+
     public function studentIndex(){
         return view('modules.dashboard.student');
     }
@@ -114,7 +120,9 @@ class DashboardController extends Controller
 
     public function headOfDepartmentIndex(){
         try {
-            return view('modules.dashboard.headofdepartment');
+            $data['username'] = User::where('role', 'head_of_department')->get()->first();
+            // dd($data['username']);
+            return view('modules.dashboard.headofdepartment', $data);
         } catch (\Exception $e) {
             logError($e, actionMessage("failed", "retrieved"), 'dashboard');
             abort(500);
@@ -122,13 +130,9 @@ class DashboardController extends Controller
     }
     public function academicDivisionIndex(){
         try {
-            $data['courseclasses'] = CourseClass::whereHas('courseDepartmentDetail', function($query) {
-                $query->whereHas('courseDepartment', function($query){
-                });
-            })
-            ->with('courseDepartmentDetail.course')
-            ->get();
-            return view('modules.dashboard.academic-division', $data);
+            $dataRoom = Room::get();
+            // dd($dataRoom);
+            return view('modules/dashboard/academic-division', compact('dataRoom'));
         } catch (\Exception $e) {
             logError($e, actionMessage("failed", "retrieved"), 'dashboard');
             abort(500);

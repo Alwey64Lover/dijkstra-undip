@@ -12,15 +12,16 @@ class RoomController extends Controller
      */
     public function index()
     {
-        //
+        $data['columns'] = Room::all();
+        return view('modules.academicdivision.table', $data);
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return view('modules/academicdivision/add-room');
+
     }
 
     /**
@@ -28,7 +29,15 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        Room::create([
+            'type' => $request->type,
+            'name' => $request->name,
+            'capacity' => $request->capacity,
+            'department' => $request->departement
+        ]);
+
+        return redirect('room');
     }
 
     /**
@@ -42,24 +51,51 @@ class RoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Room $room)
+    public function edit(Request $request, $id)
     {
-        //
+        $data = Room::find($id);
+        return view('modules/academicdivision/edit-room', compact('data'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, $id)
     {
-        //
+        $data = Room::find($id);
+        $data['type'] = $request->type;
+        $data['name'] = $request->name;
+        $data['capacity'] = $request->capacity;
+        $data['department'] = $request->departement;
+        // kembali ke halaman
+        $data->save();
+
+        $dataRoom = Room::get();
+        return redirect('room');
+
+        // return view('modules/dashboard/academic-division', compact('dataRoom'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Room $room)
+    public function destroy($id)
     {
-        //
+        // Cari data berdasarkan ID dan hapus
+        // dd(vars: $id);
+        $room = Room::find($id);
+        // dd($room);
+        $room->delete();
+
+        // Redirect atau return response
+        return redirect('addrooms');
     }
+
+    public function submit($id){
+        $room = Room::find($id)->update([
+            'isSubmitted' => 'sudah'
+        ]);
+        return redirect()->back()->with('success', 'Room berhasil disubmit!');
+    }
+
 }

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->boolean('is_type_front')->default(true);
             $table->string('name');
             $table->integer('capacity')->default(0);
+            $table->string('department')->default(("informatika"));
+            $table->string('isSubmitted')->default(("belum"));
             $table->timestamps();
             $table->softDeletes();
         });

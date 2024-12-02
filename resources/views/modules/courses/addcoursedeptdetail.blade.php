@@ -6,25 +6,32 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="">
-                        {{-- {{ route('CourseDepartmentDetail.store') }} --}}
+                    <form method="POST" action="{{ route('storecourse') }}">
                     @csrf
 
                         <div class="form-group mb-3">
-                            <label for="course">Pilih Mata Kuliah</label>
-                            <select class="form-select" id="course" name="course_id" required>
-                                <option value="">Pilih mata kuliah</option>
-                                @foreach($allcourses as $course)
-                                    <option value="{{ $course->id }}">{{ $course->code }} - {{ $course->name }}</option>
+                            <label for="course">Nama Mata Kuliah</label>
+                            <select class="form-select" name="course_id" id="name">
+                                <option value="">Pilih Mata Kuliah yang Tersedia</option>
+                                @foreach ($allcourses as $course)
+                                    @php
+                                        $isExisting = $existing_dept_courses->contains(function($existingCourse) use ($course) {
+                                            return $existingCourse->course_id == $course->id;
+                                        });
+                                    @endphp
+                                    @if(!$isExisting)
+                                        <option value="{{$course->id}}">{{$course->code}} - {{$course->name}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
 
+
                         <div class="form-group mb-3">
-                            <label for="course">Pilih Semester</label>
-                            <select class="form-select" id="semester" name="semester_id" required>
+                            <label for="course">Semester</label>
+                            <select class="form-select" id="semester" name="semester" required>
                                 <option value="">Pilih Semester</option>
-                                @for ($i = 1; $i <= 7; $i++)
+                                @for ($i = 1; $i <= 8; $i++)
                                     <option value="{{ $i }}">Semester {{ $i }}</option>
                                 @endfor
                             </select>
@@ -32,7 +39,7 @@
 
                         <div class="form-group mb-3">
                             <label for="course">Status Mata Kuliah</label>
-                            <select class="form-select" id="semester" name="semester_id" required>
+                            <select class="form-select" id="status" name="status" required>
                                 <option value="">Pilih Status Mata Kuliah</option>
                                 @foreach ($coursestatuses as $key => $value)
                                     <option value="{{ $key }}">{{ $value }}</option>
@@ -41,25 +48,42 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="class_name">Nama Kelas</label>
-                            <input type="text" class="form-control" id="class_name" name="class_name" required placeholder="Masukkan nama kelas">
+                            <label for="course">SKS</label>
+                            <select class="form-select" name="sks">
+                                <option value="">Pilih Besaran SKS</option>
+                                @for ($i = 1; $i <= 6; $i++)
+                                    <option value="{{ $i }}">{{ $i }} SKS</option>
+                                @endfor
+                            </select>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="start_time">Waktu Mulai</label>
-                            <input type="time" class="form-control" id="start_time" name="start_time" required>
+                            <label for="course">Dosen Pengampu</label>
+                            {{-- <select class="form-select" >
+                                <option value="">Pilih Dosen Pengampu</option>
+                                @foreach ($lecturers as $lecture)
+                                    <option value="{{ $lecture->user_id }}">{{ $lecture->user->name }}</option>
+                                @endforeach
+                            </select> --}}
+
+                            <select class="form-select choices multiple-remove" multiple="multiple" id="lecturers" name="lecturer_ids[]" required>
+                                <option value="">Pilih Dosen Pengampu</option>
+                                @foreach ($lecturers as $lecture)
+                                    <option value="{{ $lecture->user_id }}">{{ $lecture->user->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label for="end_time">Waktu Selesai</label>
-                            <input type="time" class="form-control" id="end_time" name="end_time" required>
-                        </div>
 
                         <button type="submit" class="btn btn-primary">Tambah Mata Kuliah</button>
-                        <button type="button" class="btn btn-secondary" id="cancel-button">Batal</button>
+                        <button type="button" class="btn btn-secondary" id="cancel-button" data-bs-dismiss="modal">Batal</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+
+</script>

@@ -102,33 +102,112 @@
                 }
             });
         }
+        function getAcademicYearDates(academicYear) {
+            const [startYear, endYearFull] = academicYear.split('/');
+            const endYear = endYearFull.split(' ')[0]; // This will get only the year part
+            const semester = academicYear.includes('Ganjil') ? 'Ganjil' : 'Genap';
 
-        function generateRepeatingEvents(course_name, name_class, start_time, end_time, start_date = '2024-08-21', end_date = '2024-12-21', interval_days = 7, count = 10) {
-            let events = [];
-            let currentstart_date = new Date(`${start_date}T${start_time}`);
-            let currentend_date = new Date(`${start_date}T${end_time}`);
-            let lastend_date = new Date(end_date);
+            let startDate, endDate;
 
-
-            while (currentstart_date <= lastend_date) {
-                events.push({
-                    title: `${course_name} - Kelas${name_class}`,
-                    start: currentstart_date.toISOString(),
-                    end: currentend_date.toISOString()
-                });
-
-                currentstart_date.setDate(currentstart_date.getDate() + interval_days);
-                currentend_date.setDate(currentend_date.getDate() + interval_days);
+            if (semester === 'Ganjil') {
+                startDate = `${startYear}-08-19`;
+                endDate = `${startYear}-12-06`;
+            } else {
+                startDate = `${endYear}-02-21`;
+                endDate = `${endYear}-06-19`;
             }
 
+            return { startDate, endDate };
+        }
+
+
+        function generateRepeatingEvents(course_name, name_class, start_time, end_time, day, academicYear) {
+            const { startDate, endDate } = getAcademicYearDates(academicYear);
+            console.log('Processing dates:', { startDate, endDate });
+
+            let events = [];
+            let currentDate = new Date(`${startDate}T00:00:00`);
+            const lastDate = new Date(`${endDate}T23:59:59`);
+
+            const dayMapping = {
+                'sunday': 0,
+                'monday': 1,
+                'tuesday': 2,
+                'wednesday': 3,
+                'thursday': 4,
+                'friday': 5,
+                'saturday': 6
+            };
+
+            const targetDay = dayMapping[day.toLowerCase()];
+
+            // Find first occurrence of target day
+            while (currentDate.getDay() !== targetDay && currentDate <= lastDate) {
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // Generate weekly events
+            while (currentDate <= lastDate) {
+                let eventStart = new Date(currentDate);
+                let eventEnd = new Date(currentDate);
+
+                const [startHour, startMinute] = start_time.split(':');
+                const [endHour, endMinute] = end_time.split(':');
+
+                eventStart.setHours(parseInt(startHour), parseInt(startMinute));
+                eventEnd.setHours(parseInt(endHour), parseInt(endMinute));
+
+                events.push({
+                    title: `${course_name} - Kelas ${name_class}`,
+                    start: eventStart,
+                    end: eventEnd,
+                    allDay: false
+                });
+
+                // Move to next week
+                currentDate.setDate(currentDate.getDate() + 7);
+            }
+
+            console.log(`Generated ${events.length} events for ${course_name}`);
             return events;
         }
 
+
+
+
+
+
+        var coursesData = @json($courseclasses);
+        console.log('Course Data:', coursesData);
+
         var events = [];
         coursesData.forEach(function(courseClass) {
+            console.log('Processing course:', courseClass);
             var course = courseClass.course_department_detail.course;
-            var repeatingEvents = generateRepeatingEvents(course.name, courseClass.name, courseClass.start_time, courseClass.end_time);
-            events.push(...repeatingEvents);
+            var academicYear = courseClass.course_department_detail.course_department.academic_year_name;
+
+            // Log the exact values being passed
+            console.log('Course details:', {
+                name: course.name,
+                class: courseClass.name,
+                startTime: courseClass.start_time,
+                endTime: courseClass.end_time,
+                day: courseClass.day,
+                academicYear: academicYear
+            });
+
+            var repeatingEvents = generateRepeatingEvents(
+                course.name,
+                courseClass.name,
+                courseClass.start_time,
+                courseClass.end_time,
+                courseClass.day,
+                academicYear
+            );
+
+            if (repeatingEvents.length > 0) {
+                events.push(...repeatingEvents);
+            }
         });
 
 
@@ -147,12 +226,12 @@
 
         var mainCalendar = new FullCalendar.Calendar(mainCalendarEl, {
             initialView: 'listDay',
+            events: events,
             headerToolbar: {
                 left: 'today',
                 center: 'title',
                 right: ''
             },
-            events: events,
             eventDidMount: function(info) {
                 console.log('Event mounted:', info.event.title);
             },
@@ -172,32 +251,6 @@
         console.log('Mini Calendar rendered.');
         mainCalendar.render();
         console.log('Main Calendar rendered.');
-
-        //INI BAGIAN FORM YA LE
-        var addCourseButton = document.getElementById('add-course-button');
-        var formContainer = document.getElementById('form-container');
-        var dashboardBodyContainer = document.getElementById('dashboard-container');
-
-        addCourseButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            fetch('{{ route('schedule.form', ['action' => 'create']) }}', {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.text())
-            .then(html => {
-                dashboardBodyContainer.style.display = 'none';
-                formContainer.innerHTML = html;
-                formContainer.style.display = 'block';
-
-                document.getElementById('cancel-button').addEventListener('click', function(event) {
-                    formContainer.style.display = 'none';
-                    dashboardBodyContainer.style.display = 'flex';
-                });
-            })
-            .catch(error => console.log('Error loading form: ', error));
-        });
     });
 </script>
 
@@ -215,7 +268,6 @@
 
                 </ul>
             </div>
-        <a href="#" id="add-course-button" style="color: green;">+ Tambahkan Mata Kuliah</a></li>
         </div>
 
         <!-- Calendar section -->

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\CourseDepartmentController;
 use App\Http\Controllers\CourseDepartmentDetailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\IrsController;
+use App\Http\Controllers\RoomController;
 use App\Models\HerRegistration;
 use App\Models\Khs;
 use App\Models\Student;
@@ -36,7 +38,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['roles:head_of_department'])->group(function () {
         Route::simpleResource('schedule', CourseDepartmentDetailController::class);
         Route::get('/newschedule', [CourseDepartmentDetailController::class, 'new_sched'])->name('newschedule');
-        Route::get('/addcourses', [CourseDepartmentDetailController::class, 'add_course'])->name('newcourses');
+        Route::get('/courses', [CourseDepartmentDetailController::class, 'display_course'])->name('courses');
+        Route::get('/course/{action}', [CourseDepartmentDetailController::class, 'form'])->name('newcourse');
+        Route::post('/coursenew', [CourseDepartmentDetailController::class, 'course_store'])->name('storecourse');
+        Route::post('/courseupdate/{id}', [CourseDepartmentDetailController::class, 'course_update'])->name('updatecourse');
+        Route::delete('/coursedelete/{id}', [CourseDepartmentDetailController::class, 'course_destroy'])->name('deletecourse');
+        Route::get('/courses/filter', action: [CourseDepartmentDetailController::class, 'filter'])->name('filtercourse');
+        Route::post('/check-schedule', [CourseDepartmentDetailController::class,'schedule_check']);
+        Route::post('/store-schedule', [CourseDepartmentDetailController::class, 'schedule_store']);
+        Route::get('/get-schedules', [CourseDepartmentDetailController::class, 'display_schedules']);
+        Route::delete('/delete-schedule/{id}', [CourseDepartmentDetailController::class, 'schedule_destroy']);
+        Route::post('/check-room-availability', [CourseDepartmentDetailController::class, 'checkRoomAvailability']);
+        Route::post('/submit-schedule', [CourseDepartmentDetailController::class, 'submitSchedule']);
+        Route::get('/check-submission-status', [CourseDepartmentDetailController::class, 'checkSubmissionStatus']);
     });
 
     //END OF PALA DEPT
@@ -64,10 +78,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/khs/{nim}', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
     });
 
-    Route::middleware(['roles:superadmin|dean'])->group(function () {
+    Route::middleware(['roles:dean'])->group(function () {
+        Route::get('department-schedule', [CourseDepartmentController::class, 'index'])->name('department-schedule.index');
+        Route::post('department-schedule/accept-some', [CourseDepartmentController::class, 'acceptSome'])->name('department-schedule.accept-some');
+        Route::get('department-schedule/accept-or-reject/{id}/{status}', [CourseDepartmentController::class, 'acceptOrReject'])->name('department-schedule.accept-or-reject');
+        Route::get('department-schedule/{id}', [CourseDepartmentController::class, 'show'])->name('department-schedule.show');
+        Route::get('/get-schedules-dean', [CourseDepartmentDetailController::class, 'display_schedules']);
+        Route::get('academic-room', [CourseDepartmentController::class, 'show'])->name('academic-room.index');
+    });
+
+    Route::middleware(['roles:academic_division'])->group(function () {
+        // view dan add
+        // Route::get('/addrooms', [RoomController::class, 'index'])->name('newroom');
+        Route::get('/room', [RoomController::class, 'index'])->name('room.index');
+        Route::get('/room/create-room', [RoomController::class, 'create'])->name('add-room');
+        Route::post('/simpan-room', [RoomController::class, 'store'])->name('simpan-room');
+        // edit
+        Route::get('/edit/{id}', [RoomController::class, 'edit'])->name('edit-room');
+        Route::get('/room/{id}/submit', [RoomController::class, 'submit'])->name('room.submit');
+        Route::put('/update/{id}', [RoomController::class, 'update'])->name('update-room');
+
+        Route::delete('/delete/{id}', [RoomController::class, 'destroy'])->name('room-destroy');
+
         Route::simpleResource('users', UserController::class);
+
     });
 });
-
 
 require __DIR__.'/auth.php';

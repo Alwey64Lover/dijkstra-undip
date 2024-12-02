@@ -22,7 +22,7 @@
                         </thead>
 
                         <tbody>
-                            @forelse ($departments as $department)
+                            {{-- @forelse ($departments as $department)
                                 <tr>
                                     <td>{{ $department->name }}</td>
                                     <td>
@@ -43,7 +43,7 @@
                                 <tr>
                                     <td colspan="5" class="text-center">Data tidak ada</td>
                                 </tr>
-                            @endforelse
+                            @endforelse --}}
                         </tbody>
                     </table>
                 </div>

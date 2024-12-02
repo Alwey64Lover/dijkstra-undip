@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\Department;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -119,7 +120,9 @@ class DashboardController extends Controller
 
     public function headOfDepartmentIndex(){
         try {
-            return view('modules.dashboard.headofdepartment');
+            $data['username'] = User::where('role', 'head_of_department')->get()->first();
+            // dd($data['username']);
+            return view('modules.dashboard.headofdepartment', $data);
         } catch (\Exception $e) {
             logError($e, actionMessage("failed", "retrieved"), 'dashboard');
             abort(500);

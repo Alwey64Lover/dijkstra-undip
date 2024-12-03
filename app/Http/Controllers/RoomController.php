@@ -13,6 +13,7 @@ class RoomController extends Controller
     public function index()
     {
         $data['columns'] = Room::all();
+
         return view('modules.academicdivision.table', $data);
     }
     /**
@@ -34,7 +35,8 @@ class RoomController extends Controller
             'type' => $request->type,
             'name' => $request->name,
             'capacity' => $request->capacity,
-            'department' => $request->departement
+            'department' => $request->departement,
+            'status' => 'waiting',
         ]);
 
         return redirect('room');
@@ -96,6 +98,15 @@ class RoomController extends Controller
             'isSubmitted' => 'sudah'
         ]);
         return redirect()->back()->with('success', 'Room berhasil disubmit!');
+    }
+
+    public function accept(Request $request, $id){
+        $room = Room::find($id);
+        $room->update([
+            'status' => 'accepted'
+        ]);
+
+        return redirect()->back()->with('success', 'Ruangan berhasil disetujui!');
     }
 
 }

@@ -42,7 +42,7 @@
 @endif
 
 @if (in_array(user()->role, ['academic_division']))
-    <li class="menu-item {{ routeIsActive('rooms.*') }}">
+    <li class="menu-item {{ routeIsActive('room.*') }}">
         <a href="{{ route('room.index') }}" class='menu-link'>
             <span><i class="bi bi-plus-circle"></i> Room</span>
         </a>
@@ -52,5 +52,18 @@
             <span><i class="bi bi-plus-circle"></i> New Room</span>
         </a>
     </li> --}}
+@endif
+
+@if (in_array(user()->role, ['student']))
+    <li class="menu-item {{ routeIsActive('irs.*') }}">
+        <a href="{{ route('irs.form','pengisianirs') }}" class='menu-link'>
+            <span><i class="bi bi-pencil-square"></i> Buat IRS</span>
+        </a>
+    </li>
+    <li class="menu-item {{ routeIsActive('irs.*') }}">
+        <a href="{{ route('irs.table') }}" class='menu-link'>
+            <span><i class="bi bi-book-fill"></i> IRS</span>
+        </a>
+    </li>
 @endif
 

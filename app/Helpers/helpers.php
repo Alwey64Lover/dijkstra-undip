@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\AcademicYear;
+use App\Models\HerRegistration;
+use App\Models\Irs;
 use Illuminate\Support\Facades\Log;
 
 function academicYear(){
@@ -11,6 +13,47 @@ function academicYear(){
 function academicYearId(): mixed
 {
     return academicYear()->id;
+}
+
+function activeHerRegistration($studentId = null){
+    $studentId = $studentId ?? @user()->student->id;
+
+    $herRegistration = HerRegistration::with('irs')->firstOrCreate(
+        [
+            'student_id' => $studentId,
+            'academic_year_id' => academicYearId(),
+        ],
+        [
+            'semester' => HerRegistration::where('student_id', $studentId)->max('semester') + 1,
+        ]
+        );
+
+    return @$herRegistration;
+}
+
+function activeIrs($studentId = null)
+{
+    $studentId = $studentId ?? @user()->student->id;
+
+    $herRegistration = activeHerRegistration();
+
+    $irs = Irs::firstOrCreate(
+        [
+            'her_registration_id' => $herRegistration->id,
+        ],
+        [
+            'status_name' => 'opened',
+            'status_at' => now(),
+            'status_by_id' => null,
+            'action_name' => 0,
+            'action_at' => now(),
+            'action_by_id' => null,
+            'semester' => $herRegistration->semester,
+            'is_submitted' => false,
+        ]
+    );
+
+    return $irs;
 }
 
 function routeIsActive($route): string

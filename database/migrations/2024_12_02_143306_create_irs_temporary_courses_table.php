@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('irs_temporary_courses', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('her_registration_id')->nullable()->constrained('her_registrations')->onDelete('set null');
+            $table->foreignUlid('irs_id')->nullable()->constrained('irs')->onDelete('set null');
             $table->json('course_ids')->nullable();
             $table->timestamps();
             $table->softDeletes();

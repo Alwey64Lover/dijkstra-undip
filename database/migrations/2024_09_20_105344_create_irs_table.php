@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignUlid('status_by_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('action_name')->default('rejected');
             $table->string('action_at')->useCurrent();
+            $table->integer('semester')->default(1);
             $table->foreignUlid('action_by_id')->nullable()->constrained('users')->onDelete('set null');
             $table->boolean('is_submitted')->default(false);
             $table->timestamps();

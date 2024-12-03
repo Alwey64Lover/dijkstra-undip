@@ -17,6 +17,12 @@ class IrsDetail extends Model
         'id', 'created_at'
     ];
 
+    const RETRIEVAL_STATUS = [
+        0 => 'Baru',
+        1 => 'Perbaikan',
+        2 => 'Pengulangan'
+    ];
+
 
     public function khss(){
         return $this->hasMany(khs::class);

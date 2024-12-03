@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcademicRoomController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CourseDepartmentController;
 use App\Http\Controllers\CourseDepartmentDetailController;
@@ -51,6 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/check-room-availability', [CourseDepartmentDetailController::class, 'checkRoomAvailability']);
         Route::post('/submit-schedule', [CourseDepartmentDetailController::class, 'submitSchedule']);
         Route::get('/check-submission-status', [CourseDepartmentDetailController::class, 'checkSubmissionStatus']);
+        Route::get('/check-coursedepartment-status', [CourseDepartmentDetailController::class, 'checkCourseDepartmentStatus'])->name('addcoursestatus');
     });
 
     //END OF PALA DEPT
@@ -84,7 +86,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('department-schedule/accept-or-reject/{id}/{status}', [CourseDepartmentController::class, 'acceptOrReject'])->name('department-schedule.accept-or-reject');
         Route::get('department-schedule/{id}', [CourseDepartmentController::class, 'show'])->name('department-schedule.show');
         Route::get('/get-schedules-dean', [CourseDepartmentDetailController::class, 'display_schedules']);
-        Route::get('academic-room', [CourseDepartmentController::class, 'show'])->name('academic-room.index');
+
+        Route::get('academic-room', [RoomController::class, 'index'])->name('academic-room.index');
+        Route::get('academic-room/{id}/accept', [RoomController::class, 'accept'])->name('academic-room.accept');
     });
 
     Route::middleware(['roles:academic_division'])->group(function () {
@@ -102,6 +106,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::simpleResource('users', UserController::class);
 
+    });
+
+    Route::middleware(['roles:student'])->group(function () {
+        Route::get('get-course-class', [IrsController::class, 'getCourseClass'])->name('irs.get-course-class');
+        Route::post('submit-irs', [IrsController::class, 'submitIrs'])->name('irs.submit-irs');
+        Route::get('/export-pdf', [IrsController::class, 'exportPdf']);
+        Route::simpleResource('irs', IrsController::class);
     });
 });
 

@@ -38,6 +38,7 @@
                                             <i class="bi bi-person-video3"></i>
                                         </div>
                                     </div>
+
                                     <div class="col-9">
                                         <h6 class="text-muted font-semibold">Belum mengisi IRS</h6>
                                         <h4 class="font-semibold mb-0 value">{{ $countNotFilled }}</h4>
@@ -92,7 +93,7 @@
                     </div>
                 </div>
             @endif
-        
+
     </section>
 
     @push('js')

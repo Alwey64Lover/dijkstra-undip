@@ -62,8 +62,10 @@ class AcademicSeeder extends DatabaseSeeder
             $irss = [
                 $this->data([
                     'her_registration_id' => $herRegistrations[0]['id'],
+                    'semester' => $herRegistrations[0]['semester'],
                     'status_name' => array_keys(Irs::STATUSES)[1],
                     'status_at' => now(),
+                    'is_submitted' => true,
                     'status_by_id' => $student->lecturer->user->id,
                     'action_name' => array_keys(Irs::ACTIONS)[1],
                     'action_at' => now(),
@@ -71,6 +73,8 @@ class AcademicSeeder extends DatabaseSeeder
                 ]),
                 $this->data([
                     'her_registration_id' => $herRegistrations[1]['id'],
+                    'semester' => $herRegistrations[1]['semester'],
+                    'is_submitted' => true,
                     'status_name' => array_keys(Irs::STATUSES)[1],
                     'status_at' => now(),
                     'status_by_id' => $student->lecturer->user->id,
@@ -80,6 +84,8 @@ class AcademicSeeder extends DatabaseSeeder
                 ]),
                 $this->data([
                     'her_registration_id' => $herRegistrations[2]['id'],
+                    'semester' => $herRegistrations[2]['semester'],
+                    'is_submitted' => true,
                     'status_name' => array_keys(Irs::STATUSES)[1],
                     'status_at' => now(),
                     'status_by_id' => $student->lecturer->user->id,
@@ -89,6 +95,8 @@ class AcademicSeeder extends DatabaseSeeder
                 ]),
                 $this->data([
                     'her_registration_id' => $herRegistrations[3]['id'],
+                    'is_submitted' => true,
+                    'semester' => $herRegistrations[3]['semester'],
                     'status_name' => array_keys(Irs::STATUSES)[1],
                     'status_at' => now(),
                     'status_by_id' => $student->lecturer->user->id,
@@ -98,7 +106,9 @@ class AcademicSeeder extends DatabaseSeeder
                 ]),
                 $this->data([
                     'her_registration_id' => $herRegistrations[4]['id'],
+                    'semester' => $herRegistrations[4]['semester'],
                     'status_name' => array_keys(Irs::STATUSES)[1],
+                    'is_submitted' => true,
                     'status_at' => now(),
                     'status_by_id' => $student->lecturer->user->id,
                     'action_name' => array_keys(Irs::ACTIONS)[1],
@@ -114,7 +124,7 @@ class AcademicSeeder extends DatabaseSeeder
                     'irs_id' => $irss[0]['id'],
                     'course_class_id' => $courseClasses[0]['id'],
                     'sks' => 4,
-                    'retrieval_status' => $student->lecturer->user->id,
+                    'retrieval_status' => 0,
                 ]),
 
                 // Semester 2

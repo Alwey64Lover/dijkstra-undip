@@ -5,32 +5,33 @@
 @section('content')
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 class="card-title">Course Schedule {{$latest_academic_year->name}}</h4>
-        <button type="button" id="submitScheduleBtn" class="btn btn-primary">Submit Schedule</button>
+        <h4 class="card-title">Jadwal Mata Kuliah Tahun Ajaran {{$latest_academic_year->name}}</h4>
+        <button type="button" id="submitScheduleBtn" class="btn btn-primary">Submit Jadwal</button>
     </div>
     <div class="card-body">
         @php
             $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            $hari = ['Monday'=>'Senin', 'Tuesday'=>'Selasa', 'Wednesday'=>'Rabu', 'Thursday'=>'Kamis', 'Friday'=>'Jumat'];
         @endphp
 
         @foreach($days as $day)
             <div class="day-section mb-4">
                 <div class="d-flex align-items-center mb-2">
-                    <h5 class="text-primary mb-0 me-2">{{ $day }}</h5>
+                    <h5 class="text-primary mb-0 me-2">{{ $hari[$day] }}</h5>
                     <button type="button" class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal{{ $day }}">
-                        <i class="bi bi-plus"></i> Add Course
+                        <i class="bi bi-plus"></i> Tambahkan Mata Kuliah
                     </button>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th>Course</th>
-                                <th>Class</th>
-                                <th>Room</th>
-                                <th>Actions</th>
+                                <th>Waktu Mulai</th>
+                                <th>Waktu Selesai</th>
+                                <th>Mata Kuliah</th>
+                                <th>Kelas</th>
+                                <th>Ruangan</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="schedule-{{ $day }}">
@@ -45,17 +46,17 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Add Course for {{ $day }}</h5>
+                            <h5 class="modal-title">Tambahkan Mata Kuliah Untuk Hari {{ $hari[$day] }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
                             <div id="validationAlert_{{$day}}" class="alert alert-danger alert-dismissible fade" role="alert" style="display: none;">
-                                <i class="bi bi-exclamation-triangle"></i> Please fill in all required fields
+                                <i class="bi bi-exclamation-triangle"></i> Tolong isi form di bawah secara lengkap
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                             <form id="courseForm{{ $day }}">
                                 <div class="form-group mb-3">
-                                    <label>Course Name</label>
+                                    <label>Nama Mata Kuliah</label>
                                     <select class="form-select" name="course_name" onchange="calculateEndTime('{{$day}}')" required>
                                         <option value="">Pilih Mata Kuliah yang Tersedia</option>
                                         @foreach ($existing_dept_courses as $courses)
@@ -68,11 +69,11 @@
                                     </select>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label>Class</label>
+                                    <label>Kelas</label>
                                     <input type="text" class="form-control" name="class" required>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label>Start Time</label>
+                                    <label>Waktu Mulai</label>
                                     <select class="form-select" name="start_time" id="start_time_{{$day}}" onchange="calculateEndTime('{{$day}}')" required>
                                         <option value="">Pilih Waktu Mulai</option>
                                         @php
@@ -86,11 +87,11 @@
                                     </select>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label>End Time</label>
+                                    <label>Waktu Selesai</label>
                                     <input type="text" class="form-control" name="end_time" id="end_time_{{$day}}" readonly>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label>Room</label>
+                                    <label>Ruangan</label>
                                     <select class="form-select" name="room" required>
                                         <option value="">Pilih Ruangan yang Tersedia</option>
                                         @foreach ($roomavailable as $room)
@@ -101,8 +102,8 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="addCourse('{{ $day }}')">Add Course</button>
+                            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-primary" onclick="addCourse('{{ $day }}')">Tambahkan Mata Kuliah</button>
                         </div>
                     </div>
                 </div>

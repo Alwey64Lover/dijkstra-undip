@@ -69,38 +69,42 @@ class DashboardController extends Controller
             ->count();
 
             $data['countNotFilled'] = Student::where('academic_advisor_id', user()->lecturer->id)
-            ->whereHas('herRegistrations', function($query){
+            ->whereDoesntHave('herRegistrations', function($query){
                 $query->whereHas('academicYear', function($query){
                     $query->where('is_active', 1);
                 })
                 ->whereHas('irs', function($query){
-                    $query->where('is_submitted', 0);
+                    $query->where('is_submitted', 1);
                 });
             })
-            ->with(['lecturer', 'user', 'herRegistrations.irs', 'herRegistrations.academicYear'])
             ->count();
 
             $data["students"] = Student::where('academic_advisor_id', user()->lecturer->id)
-                ->where(function ($query) use($filled) {
-                    $query->whereHas('herRegistrations', function($query) use($filled){
-                        $query->whereHas('academicYear', function($query){
-                            $query->where('is_active', 1);
-                        });
-                        if (filled($filled)) {
-                            $query->whereHas('irs', function($query) use ($filled){
-                                if ($filled === 'filled'){
-                                    $query->where('is_submitted', 1);
-                                }
-                                else{
-                                    $query->where('is_submitted', 0);
-                                }
-                            });
-                        }
+            ->orderBy('nim')
+            ->with(['lecturer', 'user', 'herRegistrations.irs.irsDetails', 'herRegistrations.academicYear']);
+
+            if ($filled === 'filled'){
+                $data["students"] = $data["students"]->whereHas('herRegistrations', function($query){
+                    $query->whereHas('academicYear', function($query){
+                        $query->where('is_active', 1);
+                    })
+                    ->whereHas('irs', function($query){
+                        $query->where('is_submitted', 1);
                     });
-                })
-                ->orderBy('nim')
-                ->with(['lecturer', 'user', 'herRegistrations.irs.irsDetails', 'herRegistrations.academicYear'])
-                ->get();
+                });
+            }
+            else{
+                $data["students"] = $data["students"]->whereDoesntHave('herRegistrations', function($query){
+                    $query->whereHas('academicYear', function($query){
+                        $query->where('is_active', 1);
+                    })
+                    ->whereHas('irs', function($query){
+                        $query->where('is_submitted', 1);
+                    });
+                });
+            }
+            
+            $data["students"] = $data["students"]->get();
 
             return view("modules.dashboard.lecturer", $data);
         } catch (\Exception $e) {

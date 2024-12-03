@@ -37,7 +37,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">Simpan Data</button>
-                        <a type="button" class="btn btn-outline-dark menu-link" href="{{ route('dashboard') }}">Cancel</a>
+                        <a type="button" class="btn btn-outline-dark menu-link" href="{{ route('dashboard') }}">Batal</a>
                       </form>
                 </div>
             </div>

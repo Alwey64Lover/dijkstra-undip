@@ -19,7 +19,7 @@
                                     </div>
                                 </div>
                                 <div class="col-9">
-                                    <h6 class="text-muted font-semibold">Sudah submit schedule</h6>
+                                    <h6 class="text-muted font-semibold">Sudah submit Jadwal</h6>
                                     <h4 class="font-semibold mb-0 value">{{ $countFilled }}</h4>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                                 <div class="col-9">
-                                    <h6 class="text-muted font-semibold">Belum submit schedule</h6>
+                                    <h6 class="text-muted font-semibold">Belum submit Jadwal</h6>
                                     <h4 class="font-semibold mb-0 value">{{ $countNotFilled }}</h4>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                                     <th>
                                         <input type="checkbox" name="allChecked" class="form-check-input">
                                     </th>
-                                    <th>Department</th>
+                                    <th>Departemen</th>
                                     @if ($filled === 'filled')
                                         <th>Status Jadwal</th>
                                     @endif

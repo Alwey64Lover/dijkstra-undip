@@ -6,7 +6,7 @@
 @section('content')
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h4 class="card-title">Course Schedule {{academicYear()->name}} - Departemen {{ @$courseDepartment->department->name }}</h4>
+            <h4 class="card-title">Jadwal Mata Kuliah Tahun Ajaran {{academicYear()->name}} - Departemen {{ @$courseDepartment->department->name }}</h4>
 
             @if ($courseDepartment->is_submitted)
                 @if($courseDepartment->action_name != 'accepted')
@@ -23,22 +23,23 @@
         <div class="card-body">
             @php
                 $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                $hari = ['Monday'=>'Senin', 'Tuesday'=>'Selasa', 'Wednesday'=>'Rabu', 'Thursday'=>'Kamis', 'Friday'=>'Jumat'];
             @endphp
 
             @foreach($days as $day)
                 <div class="day-section mb-4">
                     <div class="d-flex align-items-center mb-2">
-                        <h5 class="text-primary mb-0 me-2">{{ $day }}</h5>
+                        <h5 class="text-primary mb-0 me-2">{{ $hari[$day] }}</h5>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
-                                    <th>Course</th>
-                                    <th>Class</th>
-                                    <th>Room</th>
+                                    <th>Waktu Mulai</th>
+                                    <th>Waktu Selesai</th>
+                                    <th>Mata Kuliah</th>
+                                    <th>Kelas</th>
+                                    <th>Ruangan</th>
                                 </tr>
                             </thead>
                             <tbody id="schedule-{{ $day }}">

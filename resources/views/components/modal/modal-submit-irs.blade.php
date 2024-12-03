@@ -20,7 +20,7 @@
                 <button type="button" class="btn btn-light-secondary"
                     data-bs-dismiss="modal">
                     <i class="bx bx-x d-block d-sm-none"></i>
-                    <span class="d-none d-sm-block">No</span>
+                    <span class="d-none d-sm-block">Tidak</span>
                 </button>
 
                 <form method="POST" action="{{ route('irs.submit-irs') }}">
@@ -28,7 +28,7 @@
 
                     <button type="submit" class="btn btn-primary ms-1" data-bs-dismiss="modal">
                         <i class="bx bx-check d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Yes</span>
+                        <span class="d-none d-sm-block">Ya</span>
                     </button>
                 </form>
             </div>

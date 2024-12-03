@@ -12,7 +12,7 @@
                 @if (user()->role == 'academic_division')
                 <a href="{{ route('add-room') }}" class="btn icon icon-left btn-success" data-bs-toggle-tooltip="tooltip" data-bs-placement="right" title="Add">
                     <i class="bi bi-plus-circle"></i>
-                    New Room
+                    Ruangan Baru
                 </a>
                 @endif
             </div>

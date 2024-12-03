@@ -14,11 +14,11 @@
                     <img src="{{ asset('storage/static/pipe.svg') }} ">
                     <h6 style="margin: 0">{{ $student->user->name }}</h6>
                     @if (isset($irsDetails->first()->irs))
-                        @if ($irsDetails->first()->irs->status_name === 'accepted')
+                        @if ($irsDetails->first()->irs->action_name === '1')
                             <button class="ms-auto btn btn-primary">Cetak IRS</button>
                         @endif
                         {{-- @dd($irsDetails->first()->irs->status_name) --}}
-                        @if ($irsDetails->first()->irs->academicYear->is_active ==1)
+                        @if ($irsDetails->first()->irs->herRegistration->academicYear->is_active ==1)
                             @if($irsDetails->first()->irs->status_name != 'accepted')
                                 <a class="ms-auto" href='/irs/{{ $irsDetails->first()->irs->id }}/accept'>
                                     <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui IRS</button>
@@ -55,7 +55,7 @@
                                 <th>SKS</th>
                                 <th>Ruang</th>
                                 <th>Status</th>
-                                <th>Nama Dosen</th>
+                                <th>Dosen Pengampu</th>
                             </tr>
                         </thead>
                         <tbody>

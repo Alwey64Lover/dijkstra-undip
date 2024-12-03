@@ -1,6 +1,6 @@
 <li class="menu-item {{ routeIsActive('dashboard') }}">
     <a href="{{ route('dashboard') }}" class='menu-link'>
-        <span><i class="bi bi-grid-fill"></i> Dashboard</span>
+        <span><i class="bi bi-grid-fill"></i> Dasbor</span>
     </a>
 </li>
 
@@ -12,13 +12,13 @@
     </li> --}}
     <li class="menu-item {{ routeIsActive('department-schedule.*') }}">
         <a href="{{ route('department-schedule.index') }}" class='menu-link'>
-            <span><i class="bi bi-person-fill"></i> Department Schedule</span>
+            <span><i class="bi bi-person-fill"></i> Jadwal Departemen</span>
         </a>
     </li>
 
     <li class="menu-item {{ routeIsActive('academic-room.*') }}">
         <a href="{{ route('academic-room.index') }}" class='menu-link'>
-            <span><i class="bi bi-person-fill"></i> Academic Room</span>
+            <span><i class="bi bi-person-fill"></i> Ruangan Akademik</span>
         </a>
     </li>
 @endif
@@ -26,17 +26,17 @@
 @if (in_array(user()->role, ['head_of_department']))
     <li class="menu-item {{ routeIsActive('schedule.*') }}">
         <a href="{{ route('schedule.table') }}" class='menu-link'>
-            <span><i class="bi bi-journals"></i> Schedule</span>
+            <span><i class="bi bi-journals"></i> Jadwal</span>
         </a>
     </li>
     <li class="menu-item {{ routeIsActive('newsched.*') }}">
         <a href="{{ route('newschedule') }}" class='menu-link'>
-            <span><i class="bi bi-journal-plus"></i> New Schedule</span>
+            <span><i class="bi bi-journal-plus"></i> Jadwal Baru</span>
         </a>
     </li>
     <li class="menu-item {{ routeIsActive('courses.*') }}">
         <a href="{{ route('courses') }}" class='menu-link'>
-            <span><i class="bi bi-plus-square"></i> Courses</span>
+            <span><i class="bi bi-plus-square"></i> Mata Kuliah</span>
         </a>
     </li>
 @endif
@@ -44,7 +44,7 @@
 @if (in_array(user()->role, ['academic_division']))
     <li class="menu-item {{ routeIsActive('room.*') }}">
         <a href="{{ route('room.index') }}" class='menu-link'>
-            <span><i class="bi bi-plus-circle"></i> Room</span>
+            <span><i class="bi bi-plus-circle"></i> Ruangan</span>
         </a>
     </li>
     {{-- <li class="menu-item {{ routeIsActive('index.*') }}">

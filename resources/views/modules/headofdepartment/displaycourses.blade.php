@@ -12,17 +12,17 @@
 @section('content')
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 class="card-title">Available Courses</h4>
+        <h4 class="card-title">Mata Kuliah Yang Tersedia</h4>
         <div class="d-flex gap-2">
             <select class="form-select" id="academicYearSelect" style="width: auto;">
-                <option value="">Select Academic Year</option>
+                <option value="">Pilih Tahun Ajaran</option>
                 @foreach($academic_years as $year)
                     <option value="{{ $year->id }}" {{ $year->id == $latest_academic_year_id ? 'selected' : '' }}>
                         {{ $year->name }}
                     </option>
                 @endforeach
             </select>
-            <button type="submit" class="btn btn-primary" id="addNewCourseBtn">Add New Courses</button>
+            <button type="submit" class="btn btn-primary" id="addNewCourseBtn">Tambahkan Mata Kuliah Baru</button>
         </div>
     </div>
     <div class="card-body">
@@ -35,7 +35,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit Course</h5>
+                <h5 class="modal-title">Edit Mata Kuliah</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -43,7 +43,7 @@
                     @csrf
                     <input type="hidden" id="edit_course_id" name="course_id">
                     <div class="mb-3">
-                        <label class="form-label">Course Name</label>
+                        <label class="form-label">Nama Mata Kuliah</label>
                         <input type="text" class="form-control" id="edit_course_name" name="name">
                     </div>
                     <div class="mb-3">
@@ -55,7 +55,7 @@
                         <input type="number" class="form-control" id="edit_sks" name="sks" min="1" max="6" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Lecturer</label>
+                        <label class="form-label">Dosen Pengampu</label>
                         {{-- <select class="form-select" id="edit_lecturer_id" name="lecturer_id">
                             <option value="">Pilih Dosen Pengampu</option>
                             @foreach($lecturers as $lecturer)
@@ -71,8 +71,8 @@
                         </select>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-danger" id="deleteCourseBtn">Delete Course</button>
-                        <button type="submit" class="btn btn-primary">Update Course</button>
+                        <button type="button" class="btn btn-danger" id="deleteCourseBtn">Hapus Mata Kuliah</button>
+                        <button type="submit" class="btn btn-primary">Perbarui Mata Kuliah</button>
                     </div>
                 </form>
             </div>

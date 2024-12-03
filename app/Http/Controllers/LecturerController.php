@@ -60,7 +60,7 @@ class LecturerController extends Controller
     {
         //
     }
-    
+
     /**
      * Remove the specified resource from storage.
      */

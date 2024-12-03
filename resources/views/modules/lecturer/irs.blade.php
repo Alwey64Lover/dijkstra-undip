@@ -18,8 +18,8 @@
                             <button class="ms-auto btn btn-primary">Cetak IRS</button>
                         @endif
                         {{-- @dd($irsDetails->first()->irs->status_name) --}}
-                        @if ($irsDetails->first()->irs->herRegistration->academicYear->is_active ==1)
-                            @if($irsDetails->first()->irs->status_name != 'accepted')
+                        {{-- @if ($irsDetails->first()->irs->herRegistration->acadmicYear->is_active == 1) --}}
+                            @if($irsDetails->first()->irs->action_name != 1)
                                 <a class="ms-auto" href='/irs/{{ $irsDetails->first()->irs->id }}/accept'>
                                     <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui IRS</button>
                                 </a>
@@ -28,7 +28,7 @@
                                     <button class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Batalkan IRS</button>
                                 </a>
                             @endif
-                        @endif
+                        {{-- @endif --}}
                     @endif
                 </div>
                 <div class="card-header col-12">
@@ -71,6 +71,7 @@
                                     <td>{{ \App\Models\IrsDetail::RETRIEVAL_STATUS[$mk->retrieval_status] }}</td>
                                     <td>
                                         <ul>
+                                            @dd($mk->courseClass->courseDepartmentDetail->lecturers)
                                             @foreach($mk->courseClass->courseDepartmentDetail->lecturers as $lecturer)
                                                 <li>{{ $lecturer->user->name }}</li>
                                             @endforeach

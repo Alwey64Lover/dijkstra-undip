@@ -281,7 +281,7 @@ class CourseDepartmentDetailController extends Controller
             'semester' => 'required|integer|min:1|max:8',
             'sks' => 'required|integer|min:1|max:6',
             'lecturer_ids' => 'required|array',
-            'lecturer_ids.*' => 'exists:users,id'
+            'lecturer_ids.*' => 'exists:lecturers,id'
         ]);
 
         $courseDepartmentDetail->course->update([

@@ -66,7 +66,7 @@
                         <select class="form-select choices multiple-remove" multiple="multiple" id="edit_lecturer_id" name="lecturer_ids[]" required>
                             <option value="">Pilih Dosen Pengampu</option>
                             @foreach ($lecturers as $lecture)
-                                <option value="{{ $lecture->user_id }}">{{ $lecture->user->name }}</option>
+                                <option value="{{ $lecture->id }}">{{ $lecture->user->name }}</option>
                             @endforeach
                         </select>
                     </div>

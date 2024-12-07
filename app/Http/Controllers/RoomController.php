@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
+
 class RoomController extends Controller
 {
     /**
@@ -90,7 +91,7 @@ class RoomController extends Controller
         $room->delete();
 
         // Redirect atau return response
-        return redirect('addrooms');
+        return redirect('room');
     }
 
     public function submit($id){

@@ -55,11 +55,10 @@
                     <form action="{{ route('irs.accept-some') }}" method="post">
                         @csrf
                         <div class="d-flex justify-content-end">
-                            <a class="ms-auto text-end accept-irs d-none" href='#'>
-                                <button id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui IRS</button>
-                            </a>
+                            @if ($filled === "filled")
+                                <button disabled id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui IRS</button>
+                            @endif
                         </div>
-
                         <div class="table-responsive">
                             <table id="datatable" class="table">
                                 <thead>
@@ -135,7 +134,7 @@
                     $(this).prop('checked', isChecked);
                 });
                 selectedStudents = new Set(isChecked ? allStudents : []);
-                isChecked ? $('.accept-irs').removeClass('d-none') : $('.accept-irs').addClass('d-none');
+                $('#select-button').prop('disabled', !isChecked);
             });
 
             $('#datatable').on('change', '.select-row', function () {
@@ -144,7 +143,7 @@
                 $(this).is(':checked') ? selectedStudents.add(studentId) : selectedStudents.delete(studentId);
                 
                 $('#select-all').prop('checked', selectedStudents.size === allStudents.size);
-                selectedStudents.size > 0 ? $('.accept-irs').removeClass('d-none') : $('.accept-irs').addClass('d-none');
+                $('#select-button').prop('disabled', selectedStudents.size == 0);
             })
 
             $('#datatable').on('draw.dt', function () {

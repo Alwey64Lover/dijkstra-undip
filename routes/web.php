@@ -75,7 +75,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/irs/{irs:id}/open', [IrsController::class, 'open'])->name('irs.open');
         Route::get('/irs/{irs:id}/close', [IrsController::class, 'close'])->name('irs.close');
 
-        Route::get('/irs/{nim}', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
+        Route::get('/irs/{studentId}', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
 
         Route::get('/khs/{nim}', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
         Route::post('/irs-accept-some', [IrsController::class, 'acceptSome'])->name('irs.accept-some');

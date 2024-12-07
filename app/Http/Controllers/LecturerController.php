@@ -69,8 +69,8 @@ class LecturerController extends Controller
         //
     }
 
-    function showStudentIrs(string $nim, Request $request) {
-        $data['student'] = Student::where('nim', $nim)->first();
+    function showStudentIrs(string $studentId, Request $request) {
+        $data['student'] = Student::find($studentId);
 
         try{
             if ($data['student']->lecturer != user()->lecturer)

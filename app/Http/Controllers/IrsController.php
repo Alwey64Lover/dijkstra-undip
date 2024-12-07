@@ -191,6 +191,7 @@ class IrsController extends Controller
 
     public function acceptSome (Request $request){
         foreach (explode(',', $request->input('selectedStudents', '')) as $i => $studentId) {
+            // dd(($studentId));
             activeIrs($studentId)->update([
                 'action_name' => '1',
                 'action_by' => user()->lecturer->id,
@@ -202,7 +203,11 @@ class IrsController extends Controller
     }
 
     public function accept(Irs $irs){
-        $irs->update(['action_name' => 1]);
+        $irs->update([
+            'action_name' => '1',
+            'action_by' => user()->lecturer->id,
+            'action_at' => now()
+        ]);
 
         return redirect()->back()->with('success', 'IRS berhasil disetujui!');
     }

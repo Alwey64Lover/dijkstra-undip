@@ -96,7 +96,7 @@
                                             <td>{{ $student->user->email }}</td>
                                             @if ($filled === 'filled')
                                             <td>
-                                                @if (activeIrs($student->id)->action_name == 1)
+                                                @if (activeIrs($student->id)->action_name === '1')
                                                     <p class="text-success">Sudah disetujui</p>
                                                 @else
                                                 <p class="text-danger">Belum disetujui</p>
@@ -104,7 +104,7 @@
                                             </td>
                                             @endif
                                             <td>
-                                                <a href="irs/{{ $student->nim }}"><button class="btn btn-primary" type="button">Detail</button></a>
+                                                <a href="irs/{{ $student->id }}"><button class="btn btn-primary" type="button">Detail</button></a>
                                             </td>
                                         </tr>
                                     @endforeach

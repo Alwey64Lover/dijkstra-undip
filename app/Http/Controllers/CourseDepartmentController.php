@@ -34,13 +34,12 @@ class CourseDepartmentController extends Controller
     }
 
     public function acceptSome(Request $request){
-        foreach ($request->is_submitted as $irsId => $isSubmitted) {
-            if ($isSubmitted == 'on') {
-                CourseDepartment::find($irsId)->update([
-                    'action_name' => 'accepted',
-                    'action_at' => now()
-                ]);
-            }
+        foreach (explode(',', $request->input('selectedDepartments', '')) as $i => $departmentId) {
+            CourseDepartment::find($departmentId)
+            ->update([
+                'action_name' => 'accepted',
+                'action_at' => now()
+            ]);
         }
 
         return redirect()->back()->with('success', 'Jadwal Department berhasil disetujui!');

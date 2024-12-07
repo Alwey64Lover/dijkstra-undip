@@ -190,10 +190,12 @@ class IrsController extends Controller
     }
 
     public function acceptSome (Request $request){
-        foreach ($request->is_submitted as $irsId => $isSubmitted) {
-            if ($isSubmitted == 'on') {
-                Irs::find($irsId)->update(['action_name' => 1]);
-            }
+        foreach (explode(',', $request->input('selectedStudents', '')) as $i => $studentId) {
+            activeIrs($studentId)->update([
+                'action_name' => '1',
+                'action_by' => user()->lecturer->id,
+                'action_at' => now()
+            ]);
         }
 
         return redirect()->back()->with('success', 'IRS berhasil disetujui!');

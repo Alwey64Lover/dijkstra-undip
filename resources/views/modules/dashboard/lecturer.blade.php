@@ -56,17 +56,19 @@
                         @csrf
                         <div class="d-flex justify-content-end">
                             <a class="ms-auto text-end accept-irs d-none" href='#'>
-                                <button class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui Jadwal</button>
+                                <button id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui IRS</button>
                             </a>
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table datatable">
+                            <table id="datatable" class="table">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <input type="checkbox" name="allChecked" class="form-check-input">
-                                        </th>
+                                        @if($filled === 'filled')
+                                            <th>
+                                                <input type="checkbox" id="select-all" class="form-check-input">
+                                            </th>
+                                        @endif
                                         <th>NIM</th>
                                         <th>Nama</th>
                                         <th>Angkatan</th>
@@ -81,11 +83,13 @@
                                 <tbody>
                                     @foreach ($students as $student)
                                         <tr>
-                                            <td>
-                                                @if (activeIrs($student->id)->action_name != 1)
-                                                    <input type="checkbox" name="is_submitted[{{ activeIrs($student->id)->id }}]" class="form-check-input is-submitted">
-                                                @endif
-                                            </td>
+                                            @if($filled === 'filled')
+                                                <td>
+                                                    @if (activeIrs($student->id)->status_name !== 'accepted')
+                                                        <input type="checkbox" data-student-id={{ $student->id }} class="form-check-input select-row">
+                                                    @endif
+                                                </td>
+                                            @endif
                                             <td>{{ $student->nim }}</td>
                                             <td>{{ $student->user->name }}</td>
                                             <td>{{ $student->year }}</td>
@@ -115,36 +119,46 @@
 
     @push('js')
         <script>
-            $('#filled').on('change', function(){
-                const filled = $('#filled').val();
-                // console.log(filled);
+            $('#datatable').DataTable({
+                    columnDefs: [{
+                        orderable: false,
+                        targets: 0
+                    }],
+                    responsive: false
+                });
 
-                window.location.href = (`{{ route('dashboard', ['filled' => 'FILLED']) }}`).replace('FILLED', filled)
+            let selectedStudents = new Set(), allStudents = new Set(@json($students->pluck('id')));
+
+            $('#select-all').on('change', function () {
+                const isChecked = $(this).is(':checked');
+                $('.select-row').each(function () {
+                    $(this).prop('checked', isChecked);
+                });
+                selectedStudents = new Set(isChecked ? allStudents : []);
+                isChecked ? $('.accept-irs').removeClass('d-none') : $('.accept-irs').addClass('d-none');
             });
 
-            setTimeout(() => {
-                if ($('.is-submitted').length == 0) {
-                    $('th[aria-controls="DataTables_Table_0"]').eq(0).removeClass('sorting').removeClass('sorting_asc');
-                    $('input[name="allChecked"]').addClass('d-none');
-                }
-            }, 200);
+            $('#datatable').on('change', '.select-row', function () {
+                const studentId = $(this).data('student-id');
 
-            $('input[name="allChecked"]').on('change', function(){
-                const isChecked = $(this).prop('checked');
-                $('input[name^="is_submitted"]').prop('checked', isChecked).trigger('change');
+                $(this).is(':checked') ? selectedStudents.add(studentId) : selectedStudents.delete(studentId);
+                
+                $('#select-all').prop('checked', selectedStudents.size === allStudents.size);
+                selectedStudents.size > 0 ? $('.accept-irs').removeClass('d-none') : $('.accept-irs').addClass('d-none');
+            })
+
+            $('#datatable').on('draw.dt', function () {
+                $('.select-row').each(function(){
+                    $(this).prop('checked', selectedStudents.has($(this).data('student-id')));
+                });
             });
 
-            $('.is-submitted').on('change', function () {
-                if ($('.is-submitted:checked').length > 0) {
-                    $('.accept-irs').removeClass('d-none');
-                } else {
-                    $('.accept-irs').addClass('d-none');
-                    $('input[name="allChecked"]').prop('checked', false);
-                }
-
-                if ($(this).prop('checked') === false) {
-                    $('input[name="allChecked"]').prop('checked', false);
-                }
+            $('form').on('submit', function () {
+                $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'selectedStudents')
+                    .val(Array.from(selectedStudents).join(','))
+                    .appendTo($(this));
             });
         </script>
     @endpush

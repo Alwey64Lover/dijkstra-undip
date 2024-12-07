@@ -1,4 +1,4 @@
-{{-- @dd($students) --}}
+{{-- @dd($departments) --}}
 @extends('layouts.backend.app')
 
 @section('title', 'Jadwal Department')
@@ -50,23 +50,25 @@
 
         @if (isset($filled))
             <div class="card card-body">
-                {{-- @dd($filled) --}}
                 <form action="{{ route('department-schedule.accept-some') }}" method="post">
                     @csrf
                     <div class="d-flex justify-content-end">
-                        <a class="ms-auto text-end accept-irs d-none" href='#'>
-                            <button class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui Jadwal</button>
+                        <a class="ms-auto text-end accept-schedule d-none" href='#'>
+                            <button id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui Jadwal</button>
                         </a>
                     </div>
                     <div class="table-responsive">
-
-                        <table class="table datatable">
+                        <table id="datatable" class="table">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <input type="checkbox" name="allChecked" class="form-check-input">
-                                    </th>
+                                    @if ($filled === 'filled')
+                                        <th>
+                                            <input type="checkbox" id="select-all" class="form-check-input">
+                                        </th>
+                                    @endif
                                     <th>Departemen</th>
+                                    <th>Kepala Departemen</th>
+                                    <th>Email</th>
                                     @if ($filled === 'filled')
                                         <th>Status Jadwal</th>
                                     @endif
@@ -77,20 +79,24 @@
                             <tbody>
                                 @foreach ($courseDepartments as $courseDepartment)
                                     <tr>
-                                        <td>
-                                            @if ($courseDepartment->action_name !== 'accepted')
-                                                <input type="checkbox" name="is_submitted[{{ $courseDepartment->id }}]" class="form-check-input is-submitted">
-                                            @endif
-                                        </td>
-                                        <td>{{ @$courseDepartment->department->name }}</td>
-                                            @if ($filled === 'filled')
+                                        @if ($filled === 'filled')
                                             <td>
-                                                @if ($courseDepartment->action_name === 'accepted')
-                                                    <p class="text-success">Sudah disetujui</p>
-                                                @else
-                                                    <p class="text-danger">Belum disetujui</p>
+                                                @if ($courseDepartment->action_name !== 'accepted')
+                                                    <input type="checkbox" data-department-id={{ $courseDepartment->id }} class="form-check-input select-row">
                                                 @endif
                                             </td>
+                                        @endif
+                                        <td>{{ @$courseDepartment->department->name }}</td>
+                                        <td>{{ @$courseDepartment->department->users->where('role', 'head_of_department')->first()->name }}</td>
+                                        <td>{{ @$courseDepartment->department->users->where('role', 'head_of_department')->first()->email }}</td>
+                                            @if ($filled === 'filled')
+                                                <td>
+                                                    @if ($courseDepartment->action_name === 'accepted')
+                                                        <p class="text-success">Sudah disetujui</p>
+                                                    @else
+                                                        <p class="text-danger">Belum disetujui</p>
+                                                    @endif
+                                                </td>
                                             @endif
                                         <td>
                                             <a href="{{ route('department-schedule.show', $courseDepartment->id) }}"><button class="btn btn-primary" type="button">Detail</button></a>
@@ -108,36 +114,46 @@
 
     @push('js')
         <script>
-            $('#filled').on('change', function(){
-                const filled = $('#filled').val();
-                // console.log(filled);
+            $('#datatable').DataTable({
+                    columnDefs: [{
+                        orderable: false,
+                        targets: 0
+                    }],
+                    responsive: false
+                });
 
-                window.location.href = (`{{ route('department-schedule.index', ['filled' => 'FILLED']) }}`).replace('FILLED', filled)
+            let selectedDepartments = new Set(), allDepartments = new Set(@json($courseDepartments->pluck('id')));
+
+            $('#select-all').on('change', function () {
+                const isChecked = $(this).is(':checked');
+                $('.select-row').each(function () {
+                    $(this).prop('checked', isChecked);
+                });
+                selectedDepartments = new Set(isChecked ? allDepartments : []);
+                isChecked ? $('.accept-schedule').removeClass('d-none') : $('.accept-schedule').addClass('d-none');
             });
 
-            setTimeout(() => {
-                if ($('.is-submitted').length == 0) {
-                    $('th[aria-controls="DataTables_Table_0"]').eq(0).removeClass('sorting').removeClass('sorting_asc');
-                    $('input[name="allChecked"]').addClass('d-none');
-                }
-            }, 200);
+            $('#datatable').on('change', '.select-row', function () {
+                const departmentId = $(this).data('department-id');
 
-            $('input[name="allChecked"]').on('change', function(){
-                const isChecked = $(this).prop('checked');
-                $('input[name^="is_submitted"]').prop('checked', isChecked).trigger('change');
+                $(this).is(':checked') ? selectedDepartments.add(departmentId) : selectedDepartments.delete(departmentId);
+                
+                $('#select-all').prop('checked', selectedDepartments.size === allDepartments.size);
+                selectedDepartments.size > 0 ? $('.accept-schedule').removeClass('d-none') : $('.accept-schedule').addClass('d-none');
+            })
+
+            $('#datatable').on('draw.dt', function () {
+                $('.select-row').each(function(){
+                    $(this).prop('checked', selectedDepartments.has($(this).data('department-id')));
+                });
             });
 
-            $('.is-submitted').on('change', function () {
-                if ($('.is-submitted:checked').length > 0) {
-                    $('.accept-irs').removeClass('d-none');
-                } else {
-                    $('.accept-irs').addClass('d-none');
-                    $('input[name="allChecked"]').prop('checked', false);
-                }
-
-                if ($(this).prop('checked') === false) {
-                    $('input[name="allChecked"]').prop('checked', false);
-                }
+            $('form').on('submit', function () {
+                $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'selectedDepartments')
+                    .val(Array.from(selectedDepartments).join(','))
+                    .appendTo($(this));
             });
 
         </script>

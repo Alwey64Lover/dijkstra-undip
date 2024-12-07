@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('name');
             $table->boolean('is_active')->default(true);
+            $table->json('schedules')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

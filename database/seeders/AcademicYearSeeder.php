@@ -19,26 +19,49 @@ class AcademicYearSeeder extends DatabaseSeeder
                 $this->data([
                     'name' => '2022/2023 Ganjil',
                     'is_active' => false,
+                    'schedules' => json_encode([]),
                 ]),
                 $this->data([
                     'name' => '2022/2023 Genap',
                     'is_active' => false,
+                    'schedules' => json_encode([]),
                 ]),
                 $this->data([
                     'name' => '2023/2024 Ganjil',
                     'is_active' => false,
+                    'schedules' => json_encode([]),
                 ]),
                 $this->data([
                     'name' => '2023/2024 Genap',
                     'is_active' => false,
+                    'schedules' => json_encode([]),
                 ]),
                 $this->data([
                     'name' => '2024/2025 Ganjil',
                     'is_active' => false,
+                    'schedules' => json_encode([]),
                 ]),
                 $this->data([
                     'name' => '2024/2025 Genap',
                     'is_active' => true,
+                    'schedules' => json_encode([
+                        'irs_filling_priority' => [
+                            'start' => '2024-12-10 00:00:00',
+                            'end' => '2024-12-11 00:00:00',
+                        ],
+                        'irs_filling_general' => [
+                            'start' => '2024-12-12 00:00:00',
+                            'end' => '2024-12-13 00:00:00',
+                        ],
+                        'irs_changes' => [
+                            'start' => '2024-12-14 00:00:00',
+                            'end' => '2024-12-15 00:00:00',
+                        ],
+                        'irs_cancellation' => [
+                            'start' => '2024-12-16 00:00:00',
+                            'end' => '2024-12-17 00:00:00',
+                        ],
+                    ])
                 ]),
             ];
 

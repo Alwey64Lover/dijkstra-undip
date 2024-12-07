@@ -53,9 +53,9 @@
                 <form action="{{ route('department-schedule.accept-some') }}" method="post">
                     @csrf
                     <div class="d-flex justify-content-end">
-                        <a class="ms-auto text-end accept-schedule d-none" href='#'>
-                            <button id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui Jadwal</button>
-                        </a>
+                        @if ($filled === "filled")
+                            <button disabled id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui Jadwal</button>
+                        @endif
                     </div>
                     <div class="table-responsive">
                         <table id="datatable" class="table">
@@ -130,7 +130,7 @@
                     $(this).prop('checked', isChecked);
                 });
                 selectedDepartments = new Set(isChecked ? allDepartments : []);
-                isChecked ? $('.accept-schedule').removeClass('d-none') : $('.accept-schedule').addClass('d-none');
+                $('#select-button').prop('disabled', !isChecked);
             });
 
             $('#datatable').on('change', '.select-row', function () {
@@ -139,7 +139,7 @@
                 $(this).is(':checked') ? selectedDepartments.add(departmentId) : selectedDepartments.delete(departmentId);
                 
                 $('#select-all').prop('checked', selectedDepartments.size === allDepartments.size);
-                selectedDepartments.size > 0 ? $('.accept-schedule').removeClass('d-none') : $('.accept-schedule').addClass('d-none');
+                $('#select-button').prop('disabled', selectedStudents.size == 0);
             })
 
             $('#datatable').on('draw.dt', function () {

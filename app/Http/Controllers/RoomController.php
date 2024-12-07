@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
+
 class RoomController extends Controller
 {
     /**
@@ -12,7 +13,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $data['columns'] = Room::all();
+        $data['columns'] = Room::orderBy('status', 'desc')->get();
 
         return view('modules.academicdivision.table', $data);
     }
@@ -90,7 +91,7 @@ class RoomController extends Controller
         $room->delete();
 
         // Redirect atau return response
-        return redirect('addrooms');
+        return redirect('room');
     }
 
     public function submit($id){
@@ -98,6 +99,12 @@ class RoomController extends Controller
             'isSubmitted' => 'sudah'
         ]);
         return redirect()->back()->with('success', 'Room berhasil disubmit!');
+    }
+    public function cancelsubmit($id){
+        $room = Room::find($id)->update([
+            'isSubmitted' => 'belum'
+        ]);
+        return redirect()->back()->with('success', 'Submit berhasil dibatalkan!');
     }
 
     public function accept(Request $request, $id){
@@ -107,6 +114,15 @@ class RoomController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Ruangan berhasil disetujui!');
+    }
+
+    public function acceptSome (Request $request){
+        foreach (explode(',', $request->input('selectedRooms', '')) as $i => $roomId) {
+            Room::find($roomId)
+            ->update(['status' => 'accepted']);
+        }
+
+        return redirect()->back()->with('success', 'Ruangan terpilih berhasil disetujui!');
     }
 
 }

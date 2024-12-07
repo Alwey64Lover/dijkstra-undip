@@ -75,7 +75,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/irs/{irs:id}/open', [IrsController::class, 'open'])->name('irs.open');
         Route::get('/irs/{irs:id}/close', [IrsController::class, 'close'])->name('irs.close');
 
-        Route::get('/irs/{nim}', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
+        Route::get('/irs/{studentId}', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
 
         Route::get('/khs/{nim}', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
         Route::post('/irs-accept-some', [IrsController::class, 'acceptSome'])->name('irs.accept-some');
@@ -91,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('academic-room', [RoomController::class, 'index'])->name('academic-room.index');
         Route::get('academic-room/{id}/accept', [RoomController::class, 'accept'])->name('academic-room.accept');
+        Route::post('academic-room/accept-some', [RoomController::class, 'acceptSome'])->name('academic-room.accept-some');
     });
 
     Route::middleware(['roles:academic_division'])->group(function () {
@@ -103,9 +104,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/edit/{id}', [RoomController::class, 'edit'])->name('edit-room');
         Route::get('/room/{id}/submit', [RoomController::class, 'submit'])->name('room.submit');
         Route::put('/update/{id}', [RoomController::class, 'update'])->name('update-room');
-
+        // cancel submit
+        Route::get('/cancel/{id}', [RoomController::class, 'cancelsubmit'])->name('cancel-room');
+        // delete
         Route::delete('/delete/{id}', [RoomController::class, 'destroy'])->name('room-destroy');
-
+        // -----
         Route::simpleResource('users', UserController::class);
 
     });

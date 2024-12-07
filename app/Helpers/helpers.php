@@ -17,6 +17,7 @@ function academicYearId(): mixed
 
 function activeHerRegistration($studentId = null){
     $studentId = $studentId ?? @user()->student->id;
+    // dd($studentId, 'cekekek');
 
     $herRegistration = HerRegistration::with('irs')->firstOrCreate(
         [
@@ -35,9 +36,9 @@ function activeIrs($studentId = null)
 {
     $studentId = $studentId ?? @user()->student->id;
 
-    $herRegistration = activeHerRegistration();
+    $herRegistration = activeHerRegistration($studentId);
 
-    $irs = Irs::firstOrCreate(
+    $irs = Irs::firstOrCreate(  
         [
             'her_registration_id' => $herRegistration->id,
         ],

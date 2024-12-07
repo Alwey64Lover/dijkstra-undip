@@ -93,9 +93,9 @@
             $('#semester').on('change', function(){
                 const semester = $('#semester').val();
 
-                window.location.href = (`{{ route('lecturer.irs', ['semester' => 'SEM', 'nim' => 'NIM']) }}`)
+                window.location.href = (`{{ route('lecturer.irs', ['semester' => 'SEM', 'studentId' => 'ID']) }}`)
                 .replace('SEM', semester)
-                .replace('NIM', '{{ $student->nim }}');
+                .replace('ID', '{{ $student->id }}');
             });
         </script>
     @endpush

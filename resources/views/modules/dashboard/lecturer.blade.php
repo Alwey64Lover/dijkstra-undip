@@ -84,7 +84,7 @@
                                         <tr>
                                             @if($filled === 'filled')
                                                 <td>
-                                                    @if (activeIrs($student->id)->status_name !== 'accepted')
+                                                    @if (activeIrs($student->id)->action_name != '1')
                                                         <input type="checkbox" data-student-id={{ $student->id }} class="form-check-input select-row">
                                                     @endif
                                                 </td>
@@ -116,15 +116,21 @@
 
     </section>
 
+    @php
+         $filled = isset($filled) ? $filled : null;
+    @endphp
+
     @push('js')
         <script>
             $('#datatable').DataTable({
-                    columnDefs: [{
-                        orderable: false,
-                        targets: 0
-                    }],
-                    responsive: false
-                });
+                order: [[(@json($filled) == "filled") ? 1 : 0, 'asc']],
+                columnDefs: [{
+                    orderable: false,
+                    targets: (@json($filled) == "filled") ? 0 : null
+                }],
+                responsive: false
+            });
+            
 
             let selectedStudents = new Set(), allStudents = new Set(@json($students->pluck('id')));
 

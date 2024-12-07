@@ -12,7 +12,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $data['columns'] = Room::orderBy('status', 'desc')->get();
+        $data['columns'] = Room::orderBy('status', 'desc')->orderBy('department')->get();
 
         return view('modules.academicdivision.table', $data);
     }

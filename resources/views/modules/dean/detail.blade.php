@@ -11,11 +11,11 @@
             @if ($courseDepartment->is_submitted)
                 @if($courseDepartment->action_name != 'accepted')
                     <a class="ms-auto" href='{{ route('department-schedule.accept-or-reject', ['status' => 'accepted', 'id' => $courseDepartment->id]) }}'>
-                        <button class="btn btn-success" >Setujui IRS</button>
+                        <button class="btn btn-success" >Setujui Jadwal</button>
                     </a>
                 @else
                     <a href='{{ route('department-schedule.accept-or-reject', ['status' => 'waiting', 'id' => $courseDepartment->id]) }}'>
-                        <button class="btn btn-danger">Batalkan IRS</button>
+                        <button class="btn btn-danger">Batalkan Jadwal</button>
                     </a>
                 @endif
             @endif

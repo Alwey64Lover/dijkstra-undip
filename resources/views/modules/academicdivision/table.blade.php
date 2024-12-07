@@ -61,7 +61,7 @@
                                         <td style="width: 75px">{{ $loop->iteration }}</td>
                                         <td>{{ $column->type }}{{ $column->name }}</td>
                                         <td>{{ $column->capacity }}</td>
-                                        <td>{{ $column->room }}</td>
+                                        <td>{{ $column->department }}</td>
                                         <td >
                                             <div>
                                                 @if (user()->role == 'academic_division')

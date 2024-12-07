@@ -53,19 +53,19 @@
                 <form action="{{ route('department-schedule.accept-some') }}" method="post">
                     @csrf
                     <div class="d-flex justify-content-end">
-                        @if ($filled === "filled")
+                        {{-- @if ($filled === "filled")
                             <button disabled id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui Jadwal</button>
-                        @endif
+                        @endif --}}
                     </div>
                     <div class="table-responsive">
-                        <table id="datatable" class="table">
+                        <table class="table datatable">
                             <thead>
                                 <tr>
-                                    @if ($filled === 'filled')
+                                    {{-- @if ($filled === 'filled')
                                         <th>
                                             <input type="checkbox" id="select-all" class="form-check-input">
                                         </th>
-                                    @endif
+                                    @endif --}}
                                     <th>Departemen</th>
                                     <th>Kepala Departemen</th>
                                     <th>Email</th>
@@ -79,13 +79,13 @@
                             <tbody>
                                 @foreach ($courseDepartments as $courseDepartment)
                                     <tr>
-                                        @if ($filled === 'filled')
+                                        {{-- @if ($filled === 'filled')
                                             <td>
                                                 @if ($courseDepartment->action_name !== 'accepted')
                                                     <input type="checkbox" data-department-id={{ $courseDepartment->id }} class="form-check-input select-row">
                                                 @endif
                                             </td>
-                                        @endif
+                                        @endif --}}
                                         <td>{{ @$courseDepartment->department->name }}</td>
                                         <td>{{ @$courseDepartment->department->users->where('role', 'head_of_department')->first()->name }}</td>
                                         <td>{{ @$courseDepartment->department->users->where('role', 'head_of_department')->first()->email }}</td>
@@ -112,49 +112,53 @@
 
     </section>
 
+    @php
+         $filled = isset($filled) ? $filled : null;
+    @endphp
+
     @push('js')
         <script>
-            $('#datatable').DataTable({
-                    columnDefs: [{
-                        orderable: false,
-                        targets: 0
-                    }],
-                    responsive: false
-                });
+            // $('#datatable').DataTable({
+            //         columnDefs: [{
+            //             orderable: false,
+            //             targets: (@json($filled) == "filled") ? 0 : null
+            //         }],
+            //         responsive: false
+            //     });
 
-            let selectedDepartments = new Set(), allDepartments = new Set(@json($courseDepartments->pluck('id')));
+            // let selectedDepartments = new Set(), allDepartments = new Set(@json($courseDepartments->pluck('id')));
 
-            $('#select-all').on('change', function () {
-                const isChecked = $(this).is(':checked');
-                $('.select-row').each(function () {
-                    $(this).prop('checked', isChecked);
-                });
-                selectedDepartments = new Set(isChecked ? allDepartments : []);
-                $('#select-button').prop('disabled', !isChecked);
-            });
+            // $('#select-all').on('change', function () {
+            //     const isChecked = $(this).is(':checked');
+            //     $('.select-row').each(function () {
+            //         $(this).prop('checked', isChecked);
+            //     });
+            //     selectedDepartments = new Set(isChecked ? allDepartments : []);
+            //     $('#select-button').prop('disabled', !isChecked);
+            // });
 
-            $('#datatable').on('change', '.select-row', function () {
-                const departmentId = $(this).data('department-id');
+            // $('#datatable').on('change', '.select-row', function () {
+            //     const departmentId = $(this).data('department-id');
 
-                $(this).is(':checked') ? selectedDepartments.add(departmentId) : selectedDepartments.delete(departmentId);
+            //     $(this).is(':checked') ? selectedDepartments.add(departmentId) : selectedDepartments.delete(departmentId);
                 
-                $('#select-all').prop('checked', selectedDepartments.size === allDepartments.size);
-                $('#select-button').prop('disabled', selectedStudents.size == 0);
-            })
+            //     $('#select-all').prop('checked', selectedDepartments.size === allDepartments.size);
+            //     $('#select-button').prop('disabled', selectedStudents.size == 0);
+            // })
 
-            $('#datatable').on('draw.dt', function () {
-                $('.select-row').each(function(){
-                    $(this).prop('checked', selectedDepartments.has($(this).data('department-id')));
-                });
-            });
+            // $('#datatable').on('draw.dt', function () {
+            //     $('.select-row').each(function(){
+            //         $(this).prop('checked', selectedDepartments.has($(this).data('department-id')));
+            //     });
+            // });
 
-            $('form').on('submit', function () {
-                $('<input>')
-                    .attr('type', 'hidden')
-                    .attr('name', 'selectedDepartments')
-                    .val(Array.from(selectedDepartments).join(','))
-                    .appendTo($(this));
-            });
+            // $('form').on('submit', function () {
+            //     $('<input>')
+            //         .attr('type', 'hidden')
+            //         .attr('name', 'selectedDepartments')
+            //         .val(Array.from(selectedDepartments).join(','))
+            //         .appendTo($(this));
+            // });
 
         </script>
     @endpush

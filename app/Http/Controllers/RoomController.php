@@ -12,7 +12,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $data['columns'] = Room::all();
+        $data['columns'] = Room::orderBy('status', 'desc')->get();
 
         return view('modules.academicdivision.table', $data);
     }
@@ -113,6 +113,15 @@ class RoomController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Ruangan berhasil disetujui!');
+    }
+
+    public function acceptSome (Request $request){
+        foreach (explode(',', $request->input('selectedRooms', '')) as $i => $roomId) {
+            Room::find($roomId)
+            ->update(['status' => 'accepted']);
+        }
+
+        return redirect()->back()->with('success', 'Ruangan terpilih berhasil disetujui!');
     }
 
 }

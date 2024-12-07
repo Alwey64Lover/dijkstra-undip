@@ -91,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('academic-room', [RoomController::class, 'index'])->name('academic-room.index');
         Route::get('academic-room/{id}/accept', [RoomController::class, 'accept'])->name('academic-room.accept');
+        Route::post('academic-room/accept-some', [RoomController::class, 'acceptSome'])->name('academic-room.accept-some');
     });
 
     Route::middleware(['roles:academic_division'])->group(function () {

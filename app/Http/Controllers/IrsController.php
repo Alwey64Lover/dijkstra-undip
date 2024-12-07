@@ -103,9 +103,19 @@ class IrsController extends Controller
             // 'courseClass.CourseDetail.lecturers.user', 'courseClass.room'])
             // ->get();
 
+
+            $schedules = json_decode(academicYear()->schedules);
+            $latestSemester = activeIrs()->semester;
+
             $data['availablecourses'] = CourseDepartmentDetail::
                 whereHas('courseDepartment', function($query){
                     $query->where('academic_year_id', academicYearId());
+                })
+                ->where(function($query) use($schedules, $latestSemester){
+                    // dd(strtotime(date('Y-m-d H:i:s')), strtotime(date('Y-m-d H:i:s', strtotime($schedules->irs_filling_priority->start))));
+                    if (strtotime(date('Y-m-d H:i:s')) < strtotime(date('Y-m-d H:i:s', strtotime($schedules->irs_filling_general->start)))) {
+                        $query->where('semester', $latestSemester);
+                    }
                 })
                 ->with('course')
                 ->get()
@@ -176,15 +186,16 @@ class IrsController extends Controller
 
                 return $group;
             });
-
-        IrsTemporaryCourse::updateOrCreate(
-            [
-                'irs_id' => activeIrs()->id,
-            ],
-            [
-                'course_ids' => json_encode($courseIds),
-            ]
-        );
+        if (!activeIrs()->is_submitted) {
+            IrsTemporaryCourse::updateOrCreate(
+                [
+                    'irs_id' => activeIrs()->id,
+                ],
+                [
+                    'course_ids' => json_encode($courseIds),
+                ]
+            );
+        }
 
         return response($data);
     }
@@ -220,12 +231,14 @@ class IrsController extends Controller
 
     public function submitIrs(){
         activeIrs()->update([
-            'is_submitted' => true,
+            'is_submitted' => !activeIrs()->is_submitted,
             'action_name' => 0,
             'action_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'IRS berhasil disubmit!');
+        $message = activeIrs()->is_submitted ? 'unsubmit' : 'submit';
+
+        return redirect()->back()->with('success', 'IRS berhasil di'.$message.'!');
     }
 
     public function exportPdf()

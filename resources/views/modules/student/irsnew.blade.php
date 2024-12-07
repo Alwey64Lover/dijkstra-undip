@@ -69,117 +69,162 @@
                 </optgroup>
             @endforeach
         </select> --}}
-    @if (activeIrs()->is_submitted)
-        <div class="alert alert-info bg-secondary2">
-            <h3>
-                <i class="bi bi-info-circle"></i>
-                Info
-            </h3>
-            <p class="lead">
-                IRS sudah disubmit. Apabila ingin merubah IRS, silahkan hubungi dosen wali.
-            </p>
-        </div>
-    @else
-        <div class="form-group choices-container">
-            <select class="form-select choices multiple-remove" multiple="multiple" onchange="fetchCourseClass()" name="course_ids">
-                <option value="" disabled>Pilih Mata Kuliah</option>
-                @foreach ($availablecourses as $semester => $courseDetails)
-                    <optgroup label="Semester {{ $semester }}">
-                        @foreach ($courseDetails as $courseDetail)
-                            @php
-                                // Tentukan apakah course ini memiliki relasi di IrsDetail
-                                $isNotRemoved = \App\Models\IrsDetail::
-                                    where(function ($query) use($courseDetail) {
-                                        $query->whereHas('courseClass', function($query) use($courseDetail) {
-                                            $query->whereHas('courseDetail', function($query) use($courseDetail) {
-                                                $query->where('id', $courseDetail->id);
-                                            });
-                                        });
-                                    })
-                                    ->where('irs_id', activeIrs()->id)
-                                    ->with('courseClass.courseDetail.course')
-                                    ->first();
-                            @endphp
-                            <option value="{{ $courseDetail->id }}"
-                                {{ in_array($courseDetail->id, json_decode($irsTemporaries->course_ids ?? '') ?? []) ? 'selected' : '' }}
-                                data-custom-properties = '{"removed": {{ $isNotRemoved ? "false" : "true" }}}'
-                            >
-                                {{ $courseDetail->course->name }} - {{ $courseDetail->sks }} SKS
-                            </option>
-                        @endforeach
-                    </optgroup>
-                @endforeach
-            </select>
-        </div>
 
+    {{-- @if ()
 
+    @endif --}}
+        @php
+            $schedules = json_decode(academicYear()->schedules);
+        @endphp
+
+    @if (
+        (
+            strtotime(now()) >= strtotime($schedules->irs_filling_priority->start) &&
+            strtotime(now()) <= strtotime($schedules->irs_cancellation->end)
+        )
+    )
         <div class="alert alert-info bg-secondary2">
-            <h3>
-                <i class="bi bi-info-circle"></i>
-                Info
-            </h3>
-            <p class="lead">
-                Mata Kuliah selain semester saat ini akan dibuka pada 8 Agustus 2024.
-            </p>
-        </div>
-        <div class="col-12 d-flex align-items-center mb-3">
-            <div class="col-10 d-flex gap-2">
-                <span class="badge bg-success" style="width: 25px">  </span>Diambil
-                <span class="badge bg-danger" style="width: 25px">  </span>Tidak bisa diambil, karena tabrakan
-                <span class="badge bg-warning" style="width: 25px">  </span>Belum diambil
-                <span class="badge bg-secondary" style="width: 25px">  </span>Tidak bisa diambil, karena sudah diambil di jadwal lain
-            </div>
-            <div class="col-2">
-                <button type="button" class="btn btn-primary float-end submitIrs" data-bs-toggle="modal" data-bs-target="#submitIrs">
-                    Submit IRS
+            @if (activeIrs()->is_submitted)
+                <button type="button" class="mt-2 btn btn-primary float-end unsubmitIrs" data-bs-toggle="modal" data-bs-target="#submitIrs" data-type="unsubmit">
+                    Unsubmit IRS
                 </button>
-            </div>
-        </div>
-        <!-- Existing Timetable Table -->
-        <div class="table-responsive">
-            <table class="table table-bordered text-center">
-                <thead>
-                    <tr>
-                        <th>WAKTU</th>
-                        <th>SENIN</th>
-                        <th>SELASA</th>
-                        <th>RABU</th>
-                        <th>KAMIS</th>
-                        <th>JUM'AT</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($timeSlots as $time)
-                        <tr>
-                            <td>{{ $time }}:00</td>
-                            @foreach ($days as $keyDay => $day)
-                                <td data-date="{{ $keyDay }} - {{$time}}" class="time-slot">
-                                    {{-- @if (isset($schedule[$day][$time]))
-                                        <div class="course-card bg-{{ $schedule[$day][$time]['color'] }}"
-                                            data-name="{{ $schedule[$day][$time]['name'] }}"
-                                            data-status="{{ $schedule[$day][$time]['status'] }}"
-                                            data-sks="{{ $schedule[$day][$time]['sks'] }}"
-                                            data-time="{{ $schedule[$day][$time]['time'] }}"
-                                            data-class="{{ $schedule[$day][$time]['class'] }}">
-                                            <strong>{{ $schedule[$day][$time]['name'] }}</strong><br>
-                                            <span>{{ $schedule[$day][$time]['status'] }}</span><br>
-                                            <span>{{ $schedule[$day][$time]['sks'] }} SKS</span><br>
-                                            <span>{{ $schedule[$day][$time]['time'] }} (Kelas {{ $schedule[$day][$time]['class'] }})</span>
-                                        </div>
-                                    @endif --}}
-                                </td>
-                            @endforeach
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="floating-button rounded-circle">
-            <a href="#" class="btn btn-success rounded-circle">
-                <div id="sks-counter" data-total-sks="0">
-                    0/24
+            @endif
+            <h3>
+                <i class="bi bi-info-circle"></i>
+                Info
+            </h3>
+            <p class="lead">
+                @if(
+                    activeIrs()->is_submitted
+                )
+                    IRS sudah disubmit. Apabila ingin merubah IRS, silahkan hubungi dosen wali.
                 </div>
-            </a>
+                @elseif(
+                    strtotime(now()) >= strtotime($schedules->irs_filling_priority->start) &&
+                    strtotime(now()) <= strtotime($schedules->irs_filling_priority->end)
+                )
+                    Mata Kuliah selain semester saat ini akan dibuka pada {{ date('d-m-Y, H:i', strtotime($schedules->irs_filling_general->start)) }}.
+                @elseif(
+                    strtotime(now()) >= strtotime($schedules->irs_filling_general->start) &&
+                    strtotime(now()) <= strtotime($schedules->irs_filling_general->end)
+                )
+                    Pengisian IRS akan ditutup pada {{ date('d-m-Y H:i', strtotime($schedules->irs_filling_general->end)) }}.
+                @elseif(
+                    strtotime(now()) >= strtotime($schedules->irs_changes->start) &&
+                    strtotime(now()) <= strtotime($schedules->irs_changes->end)
+                )
+                    Perubahan IRS akan ditutup pada {{ date('d-m-Y H:i', strtotime($schedules->irs_changes->end)) }}.
+                @elseif(
+                    strtotime(now()) >= strtotime($schedules->irs_cancellation->start) &&
+                    strtotime(now()) <= strtotime($schedules->irs_cancellation->end)
+                )
+                    Pembatalan IRS akan ditutup pada {{ date('d-m-Y H:i', strtotime($schedules->irs_cancellation->end)) }}.
+                @endif
+            </p>
+        </div>
+
+        @if (!activeIrs()->is_submitted)
+            <div class="form-group choices-container">
+                <select class="form-select choices multiple-remove" multiple="multiple" onchange="fetchCourseClass()" name="course_ids">
+                    <option value="" disabled>Pilih Mata Kuliah</option>
+                    @foreach ($availablecourses as $semester => $courseDetails)
+                        <optgroup label="Semester {{ $semester }}">
+                            @foreach ($courseDetails as $courseDetail)
+                                @php
+                                    // Tentukan apakah course ini memiliki relasi di IrsDetail
+                                    $isNotRemoved = \App\Models\IrsDetail::
+                                        where(function ($query) use($courseDetail) {
+                                            $query->whereHas('courseClass', function($query) use($courseDetail) {
+                                                $query->whereHas('courseDepartmentDetail', function($query) use($courseDetail) {
+                                                    $query->where('id', $courseDetail->id);
+                                                });
+                                            });
+                                        })
+                                        ->where('irs_id', activeIrs()->id)
+                                        ->with('courseClass.courseDepartmentDetail.course')
+                                        ->first();
+                                @endphp
+                                <option value="{{ $courseDetail->id }}"
+                                    {{ in_array($courseDetail->id, json_decode($irsTemporaries->course_ids ?? '') ?? []) ? 'selected' : '' }}
+                                    data-custom-properties = '{"removed": {{ $isNotRemoved ? "false" : "true" }}}'
+                                >
+                                    {{ $courseDetail->course->name }} - {{ $courseDetail->sks }} SKS
+                                </option>
+                            @endforeach
+                        </optgroup>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-12 d-flex align-items-center mb-3">
+                <div class="col-10 d-flex gap-2">
+                    <span class="badge bg-success" style="width: 25px">  </span>Diambil
+                    <span class="badge bg-danger" style="width: 25px">  </span>Tidak bisa diambil, karena tabrakan
+                    <span class="badge bg-warning" style="width: 25px">  </span>Belum diambil
+                    <span class="badge bg-secondary" style="width: 25px">  </span>Tidak bisa diambil, karena sudah diambil di jadwal lain
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary float-end submitIrs" data-bs-toggle="modal" data-bs-target="#submitIrs" data-type="submit">
+                        Submit IRS
+                    </button>
+                </div>
+            </div>
+            <!-- Existing Timetable Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>WAKTU</th>
+                            <th>SENIN</th>
+                            <th>SELASA</th>
+                            <th>RABU</th>
+                            <th>KAMIS</th>
+                            <th>JUM'AT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($timeSlots as $time)
+                            <tr>
+                                <td>{{ $time }}:00</td>
+                                @foreach ($days as $keyDay => $day)
+                                    <td data-date="{{ $keyDay }} - {{$time}}" class="time-slot">
+                                        {{-- @if (isset($schedule[$day][$time]))
+                                            <div class="course-card bg-{{ $schedule[$day][$time]['color'] }}"
+                                                data-name="{{ $schedule[$day][$time]['name'] }}"
+                                                data-status="{{ $schedule[$day][$time]['status'] }}"
+                                                data-sks="{{ $schedule[$day][$time]['sks'] }}"
+                                                data-time="{{ $schedule[$day][$time]['time'] }}"
+                                                data-class="{{ $schedule[$day][$time]['class'] }}">
+                                                <strong>{{ $schedule[$day][$time]['name'] }}</strong><br>
+                                                <span>{{ $schedule[$day][$time]['status'] }}</span><br>
+                                                <span>{{ $schedule[$day][$time]['sks'] }} SKS</span><br>
+                                                <span>{{ $schedule[$day][$time]['time'] }} (Kelas {{ $schedule[$day][$time]['class'] }})</span>
+                                            </div>
+                                        @endif --}}
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="floating-button rounded-circle">
+                <a href="#" class="btn btn-success rounded-circle">
+                    <div id="sks-counter" data-total-sks="0">
+                        0/24
+                    </div>
+                </a>
+            </div>
+        @endif
+    @else
+        <div class="alert alert-info bg-secondary2">
+            <h3>
+                <i class="bi bi-info-circle"></i>
+                Info
+            </h3>
+            <p class="lead">
+                IRS ditutup
+            </p>
         </div>
     @endif
 
@@ -193,6 +238,19 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
 <script>
 $(document).ready(function() {
+    $('button[data-bs-target="#submitIrs"]').on('click', function() {
+        let modalTitle = 'Submit IRS'
+        let modalBody = 'Apakah anda yakin untuk submit IRS?'
+
+        if ($(this).data('type') == 'unsubmit') {
+            modalTitle = 'Unsubmit IRS'
+            modalBody = 'Apakah anda yakin untuk unsubmit IRS?'
+        }
+        console.log('haha')
+        $('#submitIrs .modal-title').text(modalTitle)
+        $('#submitIrs .modal-body').text(modalBody)
+    })
+
     // Gunakan event delegation untuk menangani klik pada course-card
     $(document).on('click', '.course-card', function() {
         const totalSks = $('#sks-counter').data('total-sks');

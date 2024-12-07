@@ -1,4 +1,5 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     .card .card:hover {
@@ -44,7 +45,7 @@
                     <input type="hidden" id="edit_course_id" name="course_id">
                     <div class="mb-3">
                         <label class="form-label">Nama Mata Kuliah</label>
-                        <input type="text" class="form-control" id="edit_course_name" name="name">
+                        <input type="text" class="form-control" id="edit_course_name" name="name" disabled>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Semester</label>

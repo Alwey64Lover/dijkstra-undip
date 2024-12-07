@@ -3954,20 +3954,53 @@ var templates = {
         div.classList.remove(itemSelectable);
       }
 
-      if ('removed' in JSON.parse(customProperties)) {
-        if (JSON.parse(customProperties).removed) {
-            div.dataset.deletable = ''
-            /** @todo This MUST be localizable, not hardcoded! */
-            var REMOVE_ITEM_TEXT = 'Remove item';
-            var removeButton = Object.assign(document.createElement('button'), (_d = {
-                type: 'button',
-                className: button
-            }, _d[allowHTML ? 'innerHTML' : 'innerText'] = REMOVE_ITEM_TEXT, _d));
-            removeButton.setAttribute('aria-label', "".concat(REMOVE_ITEM_TEXT, ": '").concat(value, "'"));
-            removeButton.dataset.button = '';
-            div.appendChild(removeButton);
+    function isValidJSON(string) {
+        return typeof string === "string" &&
+               string.trim().startsWith("{") &&
+               string.trim().endsWith("}");
+    }
+
+    if (isValidJSON(customProperties)) {
+        const parsed = JSON.parse(customProperties);
+        if ('removed' in parsed) {
+            if (JSON.parse(customProperties).removed) {
+                div.dataset.deletable = ''
+                /** @todo This MUST be localizable, not hardcoded! */
+                var REMOVE_ITEM_TEXT = 'Remove item';
+                var removeButton = Object.assign(document.createElement('button'), (_d = {
+                    type: 'button',
+                    className: button
+                }, _d[allowHTML ? 'innerHTML' : 'innerText'] = REMOVE_ITEM_TEXT, _d));
+                removeButton.setAttribute('aria-label', "".concat(REMOVE_ITEM_TEXT, ": '").concat(value, "'"));
+                removeButton.dataset.button = '';
+                div.appendChild(removeButton);
+            }else{
+                div.dataset.deletable = '';
+        /** @todo This MUST be localizable, not hardcoded! */
+        var REMOVE_ITEM_TEXT = 'Remove item';
+        var removeButton = Object.assign(document.createElement('button'), (_d = {
+            type: 'button',
+            className: button
+        }, _d[allowHTML ? 'innerHTML' : 'innerText'] = REMOVE_ITEM_TEXT, _d));
+        removeButton.setAttribute('aria-label', "".concat(REMOVE_ITEM_TEXT, ": '").concat(value, "'"));
+        removeButton.dataset.button = '';
+        div.appendChild(removeButton);
+            }
+        }else{
+            div.dataset.deletable = '';
+        /** @todo This MUST be localizable, not hardcoded! */
+        var REMOVE_ITEM_TEXT = 'Remove item';
+        var removeButton = Object.assign(document.createElement('button'), (_d = {
+            type: 'button',
+            className: button
+        }, _d[allowHTML ? 'innerHTML' : 'innerText'] = REMOVE_ITEM_TEXT, _d));
+        removeButton.setAttribute('aria-label', "".concat(REMOVE_ITEM_TEXT, ": '").concat(value, "'"));
+        removeButton.dataset.button = '';
+        div.appendChild(removeButton);
         }
-      }else{
+      }
+    else{
+        console.log('hadeh')
         div.dataset.deletable = '';
         /** @todo This MUST be localizable, not hardcoded! */
         var REMOVE_ITEM_TEXT = 'Remove item';

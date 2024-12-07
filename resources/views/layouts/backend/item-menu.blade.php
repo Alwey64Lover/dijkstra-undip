@@ -1,6 +1,6 @@
 <li class="menu-item {{ routeIsActive('dashboard') }}">
     <a href="{{ route('dashboard') }}" class='menu-link'>
-        <span><i class="bi bi-grid-fill"></i> Dasbor</span>
+        <span><i class="bi bi-grid-fill"></i> Dashboard</span>
     </a>
 </li>
 

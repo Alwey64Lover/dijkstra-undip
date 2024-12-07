@@ -99,6 +99,12 @@ class RoomController extends Controller
         ]);
         return redirect()->back()->with('success', 'Room berhasil disubmit!');
     }
+    public function cancelsubmit($id){
+        $room = Room::find($id)->update([
+            'isSubmitted' => 'belum'
+        ]);
+        return redirect()->back()->with('success', 'Submit berhasil dibatalkan!');
+    }
 
     public function accept(Request $request, $id){
         $room = Room::find($id);

@@ -103,9 +103,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/edit/{id}', [RoomController::class, 'edit'])->name('edit-room');
         Route::get('/room/{id}/submit', [RoomController::class, 'submit'])->name('room.submit');
         Route::put('/update/{id}', [RoomController::class, 'update'])->name('update-room');
-
+        // cancel submit
+        Route::get('/cancel/{id}', [RoomController::class, 'cancelsubmit'])->name('cancel-room');
+        // delete
         Route::delete('/delete/{id}', [RoomController::class, 'destroy'])->name('room-destroy');
-
+        // -----
         Route::simpleResource('users', UserController::class);
 
     });

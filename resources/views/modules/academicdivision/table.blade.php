@@ -61,7 +61,7 @@
                                                         Submit Ruang
                                                     </a>
                                                 @else
-                                                    Sudah Submit
+                                                     <a href="{{ route('cancel-room', $column->id) }}" class="btn btn-danger"><i class="bi bi-x-circle"></i> Batalkan</a> Sudah submit
                                                 @endif
                                             @else
                                                 @if ($column->status == 'accepted')

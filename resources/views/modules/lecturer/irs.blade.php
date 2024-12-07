@@ -37,11 +37,11 @@
                     </div>
                 </div>
                 <button id="irs-button" class="ms-auto btn btn-primary rounded-pill me-2" style="width: 230.38px">IRS</button>
-                <form action="/khs/{{ $student->nim }}"method="GET" style="display: inline;">
+                {{-- <form action="/khs/{{ $student->nim }}"method="GET" style="display: inline;">
                     @csrf
                     <input type="hidden" name="nim" value="{{ $student->nim }}">
                     <button type="submit" class="ms-auto btn btn-outline-primary rounded-pill" style="width: 230.38px">KHS</button>
-                </form>
+                </form> --}}
             </div>
             <div class="card-body">
                 <div class="table-responsive">

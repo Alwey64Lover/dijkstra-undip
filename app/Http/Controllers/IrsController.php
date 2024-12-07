@@ -25,14 +25,16 @@ class IrsController extends Controller
                 ->orderBy('semester', 'desc')
                 ->value('semester');
 
-            $selectedSemester = $request->semester ?? $latestSemester;
+                $selectedSemester = $request->semester ?? $latestSemester;
+            // $selectedSemester = $request->semester ?? $latestSemester;
 
-            // @dd($studentId);
+            // dd($selectedSemester);
 
             $data['irsmhs'] = IrsDetail::whereHas('irs', function($query) use ($selectedSemester,$studentId){
                 $query->whereHas('herRegistration', function($query) use($studentId, $selectedSemester){
                     $query->where([
-                        ['student_id', $studentId]
+                        ['student_id', $studentId],
+                        ['semester', $selectedSemester]
                     ]);
                 });
             })
@@ -190,7 +192,7 @@ class IrsController extends Controller
     public function acceptSome (Request $request){
         foreach ($request->is_submitted as $irsId => $isSubmitted) {
             if ($isSubmitted == 'on') {
-                Irs::find($irsId)->update(['status_name' => 'accepted']);
+                Irs::find($irsId)->update(['action_name' => 1]);
             }
         }
 
@@ -198,19 +200,23 @@ class IrsController extends Controller
     }
 
     public function accept(Irs $irs){
-        $irs->update(['status_name' => 'accepted']);
+        $irs->update(['action_name' => 1]);
 
         return redirect()->back()->with('success', 'IRS berhasil disetujui!');
     }
 
     public function reject(Irs $irs){
-        $irs->update(['status_name' => 'rejected']);
+        $irs->update(['action_name' => 0]);
 
         return redirect()->back()->with('error', 'IRS berhasil dibatalkan!');
     }
 
     public function submitIrs(){
-        activeIrs()->update(['is_submitted' => true]);
+        activeIrs()->update([
+            'is_submitted' => true,
+            'action_name' => 0,
+            'action_at' => now(),
+        ]);
 
         return redirect()->back()->with('success', 'IRS berhasil disubmit!');
     }

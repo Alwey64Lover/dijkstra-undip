@@ -78,6 +78,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/irs/{nim}', [LecturerController::class, 'showStudentIrs'])->name('lecturer.irs');
 
         Route::get('/khs/{nim}', [LecturerController::class, 'showStudentKhs'])->name('lecturer.khs');
+        Route::post('/irs-accept-some', [IrsController::class, 'acceptSome'])->name('irs.accept-some');
+
     });
 
     Route::middleware(['roles:dean'])->group(function () {

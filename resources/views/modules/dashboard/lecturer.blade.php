@@ -52,45 +52,62 @@
 
             @if (isset($filled))
                 <div class="card card-body">
-                    <div class="table-responsive">
-                        <table class="table datatable">
-                            <thead>
-                                <tr>
-                                    <th>NIM</th>
-                                    <th>Nama</th>
-                                    <th>Angkatan</th>
-                                    <th>Email</th>
-                                    @if ($filled === 'filled')
-                                        <th>Status IRS</th>
-                                    @endif
-                                    <th></th>
-                                </tr>
-                            </thead>
+                    <form action="{{ route('irs.accept-some') }}" method="post">
+                        @csrf
+                        <div class="d-flex justify-content-end">
+                            <a class="ms-auto text-end accept-irs d-none" href='#'>
+                                <button class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui Jadwal</button>
+                            </a>
+                        </div>
 
-                            <tbody>
-                                @foreach ($students as $student)
+                        <div class="table-responsive">
+                            <table class="table datatable">
+                                <thead>
                                     <tr>
-                                        <td>{{ $student->nim }}</td>
-                                        <td>{{ $student->user->name }}</td>
-                                        <td>{{ $student->year }}</td>
-                                        <td>{{ $student->user->email }}</td>
+                                        <th>
+                                            <input type="checkbox" name="allChecked" class="form-check-input">
+                                        </th>
+                                        <th>NIM</th>
+                                        <th>Nama</th>
+                                        <th>Angkatan</th>
+                                        <th>Email</th>
                                         @if ($filled === 'filled')
-                                        <td>
-                                            @if ($student->herRegistrations->where('academicYear.is_active', 1)->first()->irs->action_name === 1)
-                                                <p class="text-success">Sudah disetujui</p>
-                                            @else
-                                            <p class="text-danger">Belum disetujui</p>
-                                            @endif
-                                        </td>
+                                            <th>Status IRS</th>
                                         @endif
-                                        <td>
-                                            <a href="irs/{{ $student->nim }}"><button class="btn btn-primary">Detail</button></a>
-                                        </td>
+                                        <th></th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+
+                                <tbody>
+                                    @foreach ($students as $student)
+                                        <tr>
+                                            <td>
+                                                @if (activeIrs($student->id)->action_name != 1)
+                                                    <input type="checkbox" name="is_submitted[{{ activeIrs($student->id)->id }}]" class="form-check-input is-submitted">
+                                                @endif
+                                            </td>
+                                            <td>{{ $student->nim }}</td>
+                                            <td>{{ $student->user->name }}</td>
+                                            <td>{{ $student->year }}</td>
+                                            <td>{{ $student->user->email }}</td>
+                                            @if ($filled === 'filled')
+                                            <td>
+                                                @if (activeIrs($student->id)->action_name == 1)
+                                                    <p class="text-success">Sudah disetujui</p>
+                                                @else
+                                                <p class="text-danger">Belum disetujui</p>
+                                                @endif
+                                            </td>
+                                            @endif
+                                            <td>
+                                                <a href="irs/{{ $student->nim }}"><button class="btn btn-primary" type="button">Detail</button></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
                 </div>
             @endif
 
@@ -103,6 +120,31 @@
                 // console.log(filled);
 
                 window.location.href = (`{{ route('dashboard', ['filled' => 'FILLED']) }}`).replace('FILLED', filled)
+            });
+
+            setTimeout(() => {
+                if ($('.is-submitted').length == 0) {
+                    $('th[aria-controls="DataTables_Table_0"]').eq(0).removeClass('sorting').removeClass('sorting_asc');
+                    $('input[name="allChecked"]').addClass('d-none');
+                }
+            }, 200);
+
+            $('input[name="allChecked"]').on('change', function(){
+                const isChecked = $(this).prop('checked');
+                $('input[name^="is_submitted"]').prop('checked', isChecked).trigger('change');
+            });
+
+            $('.is-submitted').on('change', function () {
+                if ($('.is-submitted:checked').length > 0) {
+                    $('.accept-irs').removeClass('d-none');
+                } else {
+                    $('.accept-irs').addClass('d-none');
+                    $('input[name="allChecked"]').prop('checked', false);
+                }
+
+                if ($(this).prop('checked') === false) {
+                    $('input[name="allChecked"]').prop('checked', false);
+                }
             });
         </script>
     @endpush

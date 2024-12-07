@@ -91,16 +91,15 @@
                                 $isNotRemoved = \App\Models\IrsDetail::
                                     where(function ($query) use($courseDetail) {
                                         $query->whereHas('courseClass', function($query) use($courseDetail) {
-                                            $query->whereHas('courseDepartmentDetail', function($query) use($courseDetail) {
+                                            $query->whereHas('courseDetail', function($query) use($courseDetail) {
                                                 $query->where('id', $courseDetail->id);
                                             });
                                         });
                                     })
                                     ->where('irs_id', activeIrs()->id)
-                                    ->with('courseClass.CourseDepartmentDetail.course')
+                                    ->with('courseClass.courseDetail.course')
                                     ->first();
                             @endphp
-
                             <option value="{{ $courseDetail->id }}"
                                 {{ in_array($courseDetail->id, json_decode($irsTemporaries->course_ids ?? '') ?? []) ? 'selected' : '' }}
                                 data-custom-properties = '{"removed": {{ $isNotRemoved ? "false" : "true" }}}'
@@ -131,7 +130,7 @@
                 <span class="badge bg-secondary" style="width: 25px">  </span>Tidak bisa diambil, karena sudah diambil di jadwal lain
             </div>
             <div class="col-2">
-                <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#submitIrs">
+                <button type="button" class="btn btn-primary float-end submitIrs" data-bs-toggle="modal" data-bs-target="#submitIrs">
                     Submit IRS
                 </button>
             </div>
@@ -177,7 +176,7 @@
         </div>
         <div class="floating-button rounded-circle">
             <a href="#" class="btn btn-success rounded-circle">
-                <div id="sks-counter">
+                <div id="sks-counter" data-total-sks="0">
                     0/24
                 </div>
             </a>
@@ -196,10 +195,12 @@
 $(document).ready(function() {
     // Gunakan event delegation untuk menangani klik pada course-card
     $(document).on('click', '.course-card', function() {
-        console.log($(this).data('status-color'));
-        if ($(this).data('status-color') == 'success' || $(this).data('status-color') == 'warning') {
+        const totalSks = $('#sks-counter').data('total-sks');
+        const sks = $(this).data('sks');
+
+        if ($(this).data('status-color') == 'success' || ($(this).data('status-color') == 'warning'  && totalSks + sks <= 24)) {
             const courseName = $(this).data('course-name');
-            const sks = $(this).data('sks');
+            // const sks = $(this).data('sks');
             const status = $(this).data('status');
             const time = $(this).data('time');
             const classCode = $(this).data('class');
@@ -215,6 +216,14 @@ $(document).ready(function() {
             $('#formHandleCourse').attr('action', uriForm);
 
             $('#courseModal').modal('show');
+
+            $('#takeCourseBtn').text('Take');
+            $('#takeCourseBtn').removeClass('btn-danger').addClass('btn-primary');
+            if ($(this).data('status-color') == 'success') {
+                $('#takeCourseBtn').text('Untake')
+                $('#takeCourseBtn').text('Untake')
+                $('#takeCourseBtn').removeClass('btn-primary').addClass('btn-danger')
+            }
         }
     });
 
@@ -276,7 +285,7 @@ function fetchCourseClass() {
                              data-status-color="${course.status_color}"
                              data-uri-form="${uriForm}">
                             <strong>${course?.course_department_detail?.course?.name}</strong><br>
-                            <span>${course?.course_department_detail?.status}</span><br>
+                            <span>${course?.course_department_detail?.status == 'mandatory' ? 'wajib' : 'pilihan'}</span><br>
                             <span>${course.course_department_detail?.sks} SKS</span><br>
                             <span>${formatTime(course.start_time)} - ${formatTime(course.end_time)} (Kelas ${course.name})</span>
                         </div>
@@ -286,8 +295,10 @@ function fetchCourseClass() {
                 $('td[data-date="' + date + '"]').html(html);
             });
 
+            $('.submitIrs').attr('disabled', totalSks == 0);
 
             $('#sks-counter').text(totalSks + '/24');
+            $('#sks-counter').data('total-sks', totalSks);
         },
         error: function(xhr) {
             console.error('Error fetching data:', xhr);

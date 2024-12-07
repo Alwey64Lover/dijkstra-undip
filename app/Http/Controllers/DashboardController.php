@@ -7,6 +7,8 @@ use App\Models\Lecturer;
 use App\Models\Course;
 use App\Models\CourseClass;
 use App\Models\Department;
+use App\Models\HerRegistration;
+use App\Models\IrsDetail;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -103,7 +105,7 @@ class DashboardController extends Controller
                     });
                 });
             }
-            
+
             $data["students"] = $data["students"]->get();
 
             return view("modules.dashboard.lecturer", $data);
@@ -118,7 +120,19 @@ class DashboardController extends Controller
     }
 
     public function studentIndex(){
-        return view('modules.dashboard.student');
+
+        $studentId = user()->student->id;
+
+        $data['total_sks'] = IrsDetail::whereHas('irs', function ($query) use ($studentId) {
+            $query->whereHas('herRegistration', function ($query) use ($studentId) {
+                $query->where('student_id', $studentId);
+            });})->sum('sks');
+
+        $data['academic_advisor'] =  @user()->student->lecturer->user->name;
+
+        $data['academic_year'] = academicYear()->name;
+
+        return view('modules.dashboard.student', $data);
     }
 
 

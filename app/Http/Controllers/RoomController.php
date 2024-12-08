@@ -35,7 +35,7 @@ class RoomController extends Controller
         // dd($request->all());
         $data = Room::where('name', $request->name)->where('type', $request->type)->first();
         if($data){
-            return redirect('room');
+            return redirect('room')->with('error', 'Ruangan sudah ada!');
         }
 
         Room::create([
@@ -46,7 +46,7 @@ class RoomController extends Controller
             'status' => 'waiting',
         ]);
 
-        return redirect('room');
+        return redirect('room')->with('success', 'Ruangan berhasil ditambahkan!');
     }
 
     /**
@@ -71,7 +71,13 @@ class RoomController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $exsitingRoom = Room::where('name', $request->name)->where('type', $request->type)->whereNot('id', $id)->get();
+        if(count($exsitingRoom) > 0){
+            return redirect('room')->with('error', 'Ruangan sudah ada!');
+        }
+
         $data = Room::find($id);
+
         $data['type'] = $request->type;
         $data['name'] = $request->name;
         $data['capacity'] = $request->capacity;
@@ -79,8 +85,7 @@ class RoomController extends Controller
         // kembali ke halaman
         $data->save();
 
-        $dataRoom = Room::get();
-        return redirect('room');
+        return redirect('room')->with('success', 'Ruangan berhasil diubah!');
 
         // return view('modules/dashboard/academic-division', compact('dataRoom'));
     }

@@ -30,13 +30,13 @@
                         <option value="Matematika">Matematika</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">Simpan Data</button>
+                <button type="submit" class="btn btn-primary">Simpan Data</button>
                 <a type="button" class="btn btn-outline-dark menu-link" href="{{ route('dashboard') }}">Batal</a>
               </form>
         </div>
     </section>
     <!-- Modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <div class="modal-body">
@@ -47,6 +47,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @endsection

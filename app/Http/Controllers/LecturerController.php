@@ -86,6 +86,9 @@ class LecturerController extends Controller
             ->toArray();
 
             $data['semester_request'] = $request->semester ?? collect(array_keys($data['options']))->last();
+            $irs = HerRegistration::where('student_id', $data['student']->id)
+                ->where('semester', $data['semester_request'])
+            ->get();
 
             $data['irsDetails'] = IrsDetail::whereHas('irs.herRegistration', function ($query) use ($data){
                 $query->where('student_id', $data['student']->id)

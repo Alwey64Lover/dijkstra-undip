@@ -65,7 +65,7 @@ class SchedulingSeeder extends DatabaseSeeder
                     'name' => 'Rekayasa Perangkat Lunak',
                 ]),
                 $this->data([
-                    'code' => 'PAIK6406',
+                    'code' => 'PAIK6511',
                     'name' => 'Pembelajaran Mesin',
                 ]),
                 $this->data([
@@ -110,173 +110,48 @@ class SchedulingSeeder extends DatabaseSeeder
                 ]);
             })->toArray();
 
+            $courseDepartmentDetails = [];
 
+            for ($i=0; $i <= 5; $i++) {
+                foreach ($courses as $key => $c) {
+                    // dd($courseDepartments[4]['id'],$courseDepartments[3]['id'],$courseDepartments[2]['id'],$courseDepartments[1]['id'], $courseDepartments[0]['id']);
+                    $courseDepartmentDetails[] =
+                        $this->data([
+                            'course_department_id' => $courseDepartments[$i]['id'],
+                            'course_id' => $c['id'],
+                            'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(1, count($lecturers)))->toArray()),
+                            'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
+                            'semester' => rand(1, 8),
+                            'sks' => rand(1, 4),
+                            'max_student' => rand(40, 60),
+                        ]);
 
-            $courseDepartmentDetails = [
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[0]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[1]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[2]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[3]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[4]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[5]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[6]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[7]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[8]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[9]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[10]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[11]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[12]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[13]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[14]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-                $this->data([
-                    'course_department_id' => $courseDepartments[4]['id'],
-                    'course_id' => $courses[15]['id'],
-                    'lecturer_ids' => json_encode(collect($lecturers)->pluck('id')->take(rand(0, count($lecturers)))->toArray()),
-                    'status' => randomArray(array_keys(CourseDepartmentDetail::STATUSES)),
-                    'semester' => rand(1, 8),
-                    'sks' => rand(1, 4),
-                    'max_student' => rand(40, 60),
-                ]),
-            ];
+                }
+            }
 
-            $courseClasses = [
-                $this->data([
-                    'room_id' => $rooms[3]['id'],
-                    'course_department_detail_id' =>$courseDepartmentDetails[0]['id'],
-                    'name' => 'A',
-                    'day' => array_keys(CourseClass::DAYS)[0],
-                    'start_time' => '07:00',
-                    'end_time' => '09:30',
-                ]),
-                $this->data([
-                    'room_id' => $rooms[4]['id'],
-                    'course_department_detail_id' => $courseDepartmentDetails[1]['id'],
-                    'name' => 'D',
-                    'day' => array_keys(CourseClass::DAYS)[3],
-                    'start_time' => '13:00',
-                    'end_time' => '15:30',
-                ]),
-            ];
+            $courseClasses = [];
+
+            $times = [];
+            for ($hour = 7; $hour <= 18; $hour++) {
+                for ($minute = 0; $minute < 60; $minute += 10) {
+                    $times[] = sprintf("%02d:%02d", $hour, $minute);
+                }
+            }
+
+            foreach ($courseDepartmentDetails as $key => $courseDepartmentDetail) {
+                $start = $times[rand(0, count($times) - 1)];
+                $end = date('H:i', strtotime($times[rand(0, count($times) - 1)]) + 60 * 60);
+                // dd($courseDepartmentDetail);
+                $courseClasses[] =
+                    $this->data([
+                        'room_id' => $rooms[rand(0, count($rooms) - 1)]['id'],
+                        'course_department_detail_id' => $courseDepartmentDetail['id'],
+                        'name' => 'A',
+                        'day' => array_keys(CourseClass::DAYS)[rand(0, count(CourseClass::DAYS) - 1)],
+                        'start_time' => $start,
+                        'end_time' => $end,
+                    ]);
+            }
 
         // Insert data
             Course::insert($courses);

@@ -42,6 +42,7 @@ class IrsController extends Controller
             ->with(['courseClass', 'courseClass.CourseDepartmentDetail.course',
             'courseClass.CourseDepartmentDetail.lecturers.user', 'courseClass.room'])
             ->get();
+            // dd($data['irs']);
 
             if($request->ajax()){
                 $html = view('modules.student.irstable', ['irsmhs' => $data['irsmhs']])->render();
@@ -257,7 +258,6 @@ class IrsController extends Controller
             })
             ->orderBy('semester', 'desc')
             ->value('semester');
-
             $selectedSemester = $request->semester ?? $latestSemester;
             // dd($selectedSemester, $studentId);
             $irsmhs= IrsDetail::
@@ -265,7 +265,7 @@ class IrsController extends Controller
                 $query->whereHas('herRegistration', function($query) use($studentId, $selectedSemester){
                     $query->where([
                         ['student_id', $studentId],
-                        ['semester', 6]
+                        ['semester', $selectedSemester]
                     ]);
                 });
             })

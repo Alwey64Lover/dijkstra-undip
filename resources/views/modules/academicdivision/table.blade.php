@@ -28,9 +28,11 @@
             <div class="card-body">
                 <form action="{{ route('academic-room.accept-some') }}" method="post">
                     @csrf
-                    <div class="d-flex justify-content-end">
-                        <button disabled id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui Ruangan Terpilih</button>
-                    </div>
+                    @if (user()->role === 'dean')
+                        <div class="d-flex justify-content-end">
+                            <button disabled id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom">Setujui Ruangan Terpilih</button>
+                        </div>
+                    @endif
                     <div class="table-responsive">
                         <table id="datatable" class="table">
                             <thead>
@@ -67,6 +69,7 @@
                                                 @if (user()->role == 'academic_division')
                                                     @if ($column->isSubmitted == 'belum')
                                                         <button
+                                                            type="button"
                                                             class="btn btn-danger"
                                                             data-id="{{ $column->id }}"
                                                             onclick="deleteRoom(this)"
@@ -120,6 +123,9 @@
             $('#modal_delete').modal('show');
         }
 
+        @if (
+            user()->role === "dean"
+        )
         $('#datatable').DataTable({
             order: [[1, 'asc']],
             columnDefs: [{
@@ -128,6 +134,11 @@
             }],
             responsive: false
         });
+        @else
+        $('#datatable').DataTable({
+            responsive: false
+        });
+        @endif
 
         let selectedRooms = new Set(), allRooms = new Set(@json($columns->where('status','!=', 'accepted')->pluck('id')));
 
@@ -144,7 +155,7 @@
             const roomId = $(this).data('room-id');
 
             $(this).is(':checked') ? selectedRooms.add(roomId) : selectedRooms.delete(roomId);
-            
+
             console.log(selectedRooms,allRooms)
             $('#select-all').prop('checked', selectedRooms.size === allRooms.size);
             $('#select-button').prop('disabled', selectedRooms.size == 0);

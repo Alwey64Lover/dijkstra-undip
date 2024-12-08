@@ -13,7 +13,8 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $data['columns'] = Room::orderBy('status', 'desc')->orderBy('department')->get();
+        // $data['columns'] = Room::orderBy('type', 'desc')->orderBy('department')->get();
+        $data['columns'] = Room::all();
 
         return view('modules.academicdivision.table', $data);
     }
@@ -32,6 +33,11 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        $data = Room::where('name', $request->name)->where('type', $request->type)->first();
+        if($data){
+            return redirect('room');
+        }
+
         Room::create([
             'type' => $request->type,
             'name' => $request->name,

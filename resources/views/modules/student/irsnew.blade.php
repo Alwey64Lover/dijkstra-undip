@@ -84,7 +84,7 @@
         )
     )
         <div class="alert alert-info bg-secondary2">
-            @if (activeIrs()->is_submitted)
+            @if (activeIrs()->is_submitted && activeIrs()->action_name != 1)
                 <button type="button" class="mt-2 btn btn-primary float-end unsubmitIrs" data-bs-toggle="modal" data-bs-target="#submitIrs" data-type="unsubmit">
                     Unsubmit IRS
                 </button>
@@ -97,8 +97,11 @@
                 @if(
                     activeIrs()->is_submitted
                 )
-                    IRS sudah disubmit. Apabila ingin merubah IRS, silahkan hubungi dosen wali.
-                </div>
+                    @if (activeIrs()->action_name == 1)
+                        IRS telah disetujui dosen wali. Untuk melakukan perubahan IRS, silahkan menghubungi dosen wali.
+                    @else
+                        IRS telah disubmit. Untuk melakukan perubahan IRS sebelum disetujui dosen wali, dapat menekan tombol unsubmit IRS.
+                    @endif
                 @elseif(
                     strtotime(now()) >= strtotime($schedules->irs_filling_priority->start) &&
                     strtotime(now()) <= strtotime($schedules->irs_filling_priority->end)
@@ -223,7 +226,7 @@
                 Info
             </h3>
             <p class="lead">
-                IRS ditutup
+                Buat IRS ditutup
             </p>
         </div>
     @endif
@@ -336,14 +339,14 @@ function fetchCourseClass() {
                         <div class="course-card bg-${course.status_color}"
                              data-course-id="${course?.id}"
                              data-course-name="${course?.course_department_detail?.course?.name}"
-                             data-status="${course?.course_department_detail?.status == 'mandatory' ? 'wajib' : 'pilihan'}"
+                             data-status="${course?.course_department_detail?.status == 'mandatory' ? 'Wajib' : 'Pilihan'}"
                              data-sks="${course.course_department_detail?.sks}"
                              data-time="${formatTime(course.start_time)} - ${formatTime(course.end_time)}"
                              data-class="${course.name}"
                              data-status-color="${course.status_color}"
                              data-uri-form="${uriForm}">
                             <strong>${course?.course_department_detail?.course?.name}</strong><br>
-                            <span>${course?.course_department_detail?.status == 'mandatory' ? 'wajib' : 'pilihan'}</span><br>
+                            <span>${course?.course_department_detail?.status == 'mandatory' ? 'Wajib' : 'Pilihan'}</span><br>
                             <span>${course.course_department_detail?.sks} SKS</span><br>
                             <span>${formatTime(course.start_time)} - ${formatTime(course.end_time)} (Kelas ${course.name})</span>
                         </div>

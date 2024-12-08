@@ -108,8 +108,12 @@
                                                     @if (!$student->herRegistrations->isEmpty())
                                                         @if ($student->herRegistrations->sortByDesc('semester')->first()->status == 'active')
                                                             <p class="text-success">Aktif</p>
+                                                        @elseif ($student->herRegistrations->sortByDesc('semester')->first()->status == 'leave')
+                                                            <p class="text-warning">Cuti</p>
+                                                        @elseif ($student->herRegistrations->sortByDesc('semester')->first()->status == 'graduate')
+                                                            <p class="text-primary">Lulus</p>
                                                         @else
-                                                            <p class="text-warning">{{ $student->herRegistrations->sortByDesc('semester')->first()->status }}</p>
+                                                            <p class="text-danger">Keluar (DO)</p>
                                                         @endif
                                                     @else
                                                         <p class="text-danger">Non-aktif</p>

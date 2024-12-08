@@ -27,16 +27,18 @@ class AcademicSeeder extends DatabaseSeeder
 
             $herRegistrations = [];
             foreach ($students as $keyStudent => $student) {
+                $i = 1;
                 foreach ($academicYears as $keyAcademicYear => $academicYear) {
-                    for ($i=1; $i <= 6; $i++) {
-                        $herRegistrations[] =
-                            $this->data([
-                                'student_id' => $student->id,
-                                'academic_year_id' => $academicYear['id'],
-                                'semester' => $i,
-                                'status' => 0,
-                            ]);
-                    }
+                    // for ($i=1; $i <= 6; $i++) {
+                    $herRegistrations[] =
+                        $this->data([
+                            'student_id' => $student->id,
+                            'academic_year_id' => $academicYear['id'],
+                            'semester' => $i,
+                            'status' => 0,
+                        ]);
+                    // }
+                    $i++;
                 }
             }
 

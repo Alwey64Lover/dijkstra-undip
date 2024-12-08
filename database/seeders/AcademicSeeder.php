@@ -35,7 +35,7 @@ class AcademicSeeder extends DatabaseSeeder
                             'student_id' => $student->id,
                             'academic_year_id' => $academicYear['id'],
                             'semester' => $i,
-                            'status' => 0,
+                            'status' => array_keys(HerRegistration::STATUSES)[0],
                         ]);
                     // }
                     $i++;

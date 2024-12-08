@@ -137,11 +137,16 @@ class IrsController extends Controller
         $courseIds = $request->courseIds ?? [];
 
         $data = CourseClass::whereIn('course_department_detail_id', $courseIds)
+
             ->with([
                 'CourseDepartmentDetail.course',
                 'room',
                 'irsInfo' => function($query){
-                    $query->where('irs_id', activeIrs()->id);
+                    $query->where('irs_id', activeIrs()->id)->whereHas('irs', function($query){
+                        $query->whereHas('herRegistration', function($query){
+                            $query->where('student_id', user()->student->id);
+                        });
+                    });
                 }
             ])
             ->get()
@@ -198,7 +203,7 @@ class IrsController extends Controller
                 ]
             );
         }
-
+        // dd($data);
         return response($data);
     }
 

@@ -120,6 +120,9 @@
             $('#modal_delete').modal('show');
         }
 
+        @if (
+            user()->role === "dean"
+        )
         $('#datatable').DataTable({
             order: [[1, 'asc']],
             columnDefs: [{
@@ -128,6 +131,11 @@
             }],
             responsive: false
         });
+        @else
+        $('#datatable').DataTable({
+            responsive: false
+        });
+        @endif
 
         let selectedRooms = new Set(), allRooms = new Set(@json($columns->where('status','!=', 'accepted')->pluck('id')));
 
@@ -144,7 +152,7 @@
             const roomId = $(this).data('room-id');
 
             $(this).is(':checked') ? selectedRooms.add(roomId) : selectedRooms.delete(roomId);
-            
+
             console.log(selectedRooms,allRooms)
             $('#select-all').prop('checked', selectedRooms.size === allRooms.size);
             $('#select-button').prop('disabled', selectedRooms.size == 0);

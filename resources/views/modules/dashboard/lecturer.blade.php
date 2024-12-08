@@ -74,6 +74,8 @@
                                         <th>Email</th>
                                         @if ($filled === 'filled')
                                             <th>Status IRS</th>
+                                        @else
+                                            <th>Status</th>
                                         @endif
                                         <th></th>
                                     </tr>
@@ -94,13 +96,25 @@
                                             <td>{{ $student->year }}</td>
                                             <td>{{ $student->user->email }}</td>
                                             @if ($filled === 'filled')
-                                            <td>
-                                                @if (activeIrs($student->id)->action_name === '1')
-                                                    <p class="text-success">Sudah disetujui</p>
-                                                @else
-                                                <p class="text-danger">Belum disetujui</p>
-                                                @endif
-                                            </td>
+                                                <td>
+                                                    @if (activeIrs($student->id)->action_name === '1')
+                                                        <p class="text-success">Sudah disetujui</p>
+                                                    @else
+                                                    <p class="text-danger">Belum disetujui</p>
+                                                    @endif
+                                                </td>
+                                            @else
+                                                <td>
+                                                    @if (!$student->herRegistrations->isEmpty())
+                                                        @if ($student->herRegistrations->sortByDesc('semester')->first()->status == 'active')
+                                                            <p class="text-success">Aktif</p>
+                                                        @else
+                                                            <p class="text-warning">{{ $student->herRegistrations->sortByDesc('semester')->first()->status }}</p>
+                                                        @endif
+                                                    @else
+                                                        <p class="text-danger">Non-aktif</p>
+                                                    @endif
+                                                </td>
                                             @endif
                                             <td>
                                                 <a href="irs/{{ $student->id }}"><button class="btn btn-primary" type="button">Detail</button></a>

@@ -90,7 +90,7 @@
                                                     @endif
                                                 @else
                                                     @if ($column->status == 'accepted')
-                                                        Sudah Di Setujui
+                                                        <p class="text-success">Sudah disetujui</p>
                                                     @else
                                                         <a href="{{ route('academic-room.accept', $column->id) }}" class="btn icon icon-left btn-success" data-bs-toggle-tooltip="tooltip" data-bs-placement="bottom" title="Setujui">
                                                             <i class="bi bi-check2-circle"></i>

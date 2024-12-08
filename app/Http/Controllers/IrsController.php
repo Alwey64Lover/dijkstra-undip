@@ -42,6 +42,7 @@ class IrsController extends Controller
             ->with(['courseClass', 'courseClass.CourseDepartmentDetail.course',
             'courseClass.CourseDepartmentDetail.lecturers.user', 'courseClass.room'])
             ->get();
+            // dd($data['irs']);
 
             if($request->ajax()){
                 $html = view('modules.student.irstable', ['irsmhs' => $data['irsmhs']])->render();

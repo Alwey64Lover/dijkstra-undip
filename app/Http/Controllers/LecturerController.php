@@ -96,6 +96,8 @@ class LecturerController extends Controller
             ->with(['courseClass.courseDepartmentDetail.lecturers.user'])
             ->with(['courseClass.room'])
             ->get();
+            // dd('irsDetails', $data['irsDetails']);
+
 
             $data['semester'] = [
                 'type' => 'select',

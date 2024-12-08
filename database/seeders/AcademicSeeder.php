@@ -23,52 +23,33 @@ class AcademicSeeder extends DatabaseSeeder
         $courseClasses = CourseClass::all()->toArray();
 
         // Her Registration
-            $student = Student::where('nim', '24060122140044')->with('lecturer.user')->first();
+            $students = Student::with('lecturer.user')->get();
 
-            $herRegistrations = [
-                $this->data([
-                    'student_id' => $student->id,
-                    'academic_year_id' => $academicYears[0]['id'],
-                    'semester' => 1,
-                    'status' => array_keys(HerRegistration::STATUSES)[0],
-                ]),
-                $this->data([
-                    'student_id' => $student->id,
-                    'academic_year_id' => $academicYears[1]['id'],
-                    'semester' => 2,
-                    'status' => array_keys(HerRegistration::STATUSES)[0],
-                ]),
-                $this->data([
-                    'student_id' => $student->id,
-                    'academic_year_id' => $academicYears[2]['id'],
-                    'semester' => 3,
-                    'status' => array_keys(HerRegistration::STATUSES)[0],
-                ]),
-                $this->data([
-                    'student_id' => $student->id,
-                    'academic_year_id' => $academicYears[3]['id'],
-                    'semester' => 4,
-                    'status' => array_keys(HerRegistration::STATUSES)[0],
-                ]),
-                $this->data([
-                    'student_id' => $student->id,
-                    'academic_year_id' => $academicYears[4]['id'],
-                    'semester' => 5,
-                    'status' => array_keys(HerRegistration::STATUSES)[0],
-                ]),
-                $this->data([
-                    'student_id' => $student->id,
-                    'academic_year_id' => $academicYears[5]['id'],
-                    'semester' => 6,
-                    'status' => array_keys(HerRegistration::STATUSES)[0],
-                ])
-            ];
+            $herRegistrations = [];
+            foreach ($students as $keyStudent => $student) {
+                foreach ($academicYears as $keyAcademicYear => $academicYear) {
+                    for ($i=1; $i <= 6; $i++) {
+                        $herRegistrations[] =
+                            $this->data([
+                                'student_id' => $student->id,
+                                'academic_year_id' => $academicYear['id'],
+                                'semester' => $i,
+                                'status' => 0,
+                            ]);
+                    }
+                }
+            }
+
+            HerRegistration::insert($herRegistrations);
+
+
 
         // IRS
-            $irss = [
-                $this->data([
-                    'her_registration_id' => $herRegistrations[0]['id'],
-                    'semester' => $herRegistrations[0]['semester'],
+            $irss = [];
+            foreach ($herRegistrations as $keyHerRegistration => $herRegistration) {
+                $irss[] = $this->data([
+                    'her_registration_id' => $herRegistration['id'],
+                    'semester' => $herRegistration['semester'],
                     'status_name' => array_keys(Irs::STATUSES)[1],
                     'status_at' => now(),
                     'is_submitted' => true,
@@ -76,80 +57,53 @@ class AcademicSeeder extends DatabaseSeeder
                     'action_name' => array_keys(Irs::ACTIONS)[1],
                     'action_at' => now(),
                     'action_by_id' => $student->lecturer->user->id,
-                ]),
-                $this->data([
-                    'her_registration_id' => $herRegistrations[1]['id'],
-                    'semester' => $herRegistrations[1]['semester'],
-                    'is_submitted' => true,
-                    'status_name' => array_keys(Irs::STATUSES)[1],
-                    'status_at' => now(),
-                    'status_by_id' => $student->lecturer->user->id,
-                    'action_name' => array_keys(Irs::ACTIONS)[1],
-                    'action_at' => now(),
-                    'action_by_id' => $student->lecturer->user->id,
-                ]),
-                $this->data([
-                    'her_registration_id' => $herRegistrations[2]['id'],
-                    'semester' => $herRegistrations[2]['semester'],
-                    'is_submitted' => true,
-                    'status_name' => array_keys(Irs::STATUSES)[1],
-                    'status_at' => now(),
-                    'status_by_id' => $student->lecturer->user->id,
-                    'action_name' => array_keys(Irs::ACTIONS)[1],
-                    'action_at' => now(),
-                    'action_by_id' => $student->lecturer->user->id,
-                ]),
-                $this->data([
-                    'her_registration_id' => $herRegistrations[3]['id'],
-                    'is_submitted' => true,
-                    'semester' => $herRegistrations[3]['semester'],
-                    'status_name' => array_keys(Irs::STATUSES)[1],
-                    'status_at' => now(),
-                    'status_by_id' => $student->lecturer->user->id,
-                    'action_name' => array_keys(Irs::ACTIONS)[1],
-                    'action_at' => now(),
-                    'action_by_id' => $student->lecturer->user->id,
-                ]),
-                $this->data([
-                    'her_registration_id' => $herRegistrations[4]['id'],
-                    'semester' => $herRegistrations[4]['semester'],
-                    'status_name' => array_keys(Irs::STATUSES)[1],
-                    'is_submitted' => true,
-                    'status_at' => now(),
-                    'status_by_id' => $student->lecturer->user->id,
-                    'action_name' => array_keys(Irs::ACTIONS)[1],
-                    'action_at' => now(),
-                    'action_by_id' => $student->lecturer->user->id,
-                ]),
-            ];
+                ]);
+            }
+
+            Irs::insert($irss);
+
 
         // irs details
-            $irsDetails = [
-                // Semester 1
-                $this->data([
-                    'irs_id' => $irss[0]['id'],
-                    'course_class_id' => $courseClasses[0]['id'],
-                    'sks' => 4,
-                    'retrieval_status' => 0,
-                ]),
+            $irss = Irs::all();
+            $irsDetails = [];
 
-                // Semester 2
-                // Semester 3
-                // Semester 4
-                // Semester 5
-            ];
+            foreach ($irss as $keyIrs => $irs) {
 
-            $khs = [
-                $this->data([
-                    'irs_detail_id' => $irsDetails[0]['id'],
-                    'score' => 80
-                ])
-            ];
+                $courseClasses = CourseClass::whereHas('CourseDepartmentDetail', function($query) use($irs) {
+                    $query->whereHas('courseDepartment', function($query) use($irs) {
+                        $query->where('academic_year_id', $irs->herRegistration->academic_year_id);
+                    });
+                })->inRandomOrder()->get();
+
+
+                $totalSks = 0;
+                foreach ($courseClasses as $key => $courseClass) {
+                    if ($courseClass->CourseDepartmentDetail && $totalSks + $courseClass->CourseDepartmentDetail->sks <= 24) {
+                        $irsDetails[] = $this->data([
+                            'irs_id' => $irs->id,
+                            'course_class_id' => $courseClass->id,
+                            'sks' => $courseClass->CourseDepartmentDetail->sks,
+                            'retrieval_status' => 0,
+                        ]);
+
+                        $totalSks += $courseClass->CourseDepartmentDetail->sks;
+                    }
+
+                    if ($totalSks >= 24) {
+                        break;
+                    }
+                }
+            }
+
+            // $khs = [
+            //     $this->data([
+            //         'irs_detail_id' => $irsDetails[0]['id'],
+            //         'score' => 80
+            //     ])
+            // ];
 
         // Insert Data
-            HerRegistration::insert($herRegistrations);
-            Irs::insert($irss);
             IrsDetail::insert($irsDetails);
-            Khs::insert($khs);
+            // Khs::insert($khs);
     }
 }

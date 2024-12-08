@@ -46,12 +46,12 @@ class AcademicYearSeeder extends DatabaseSeeder
                     'is_active' => true,
                     'schedules' => json_encode([
                         'irs_filling_priority' => [
-                            'start' => '2024-12-10 00:00:00',
-                            'end' => '2024-12-11 00:00:00',
+                            'start' => '2024-12-07 00:00:00',
+                            'end' => '2024-12-08 00:00:00',
                         ],
                         'irs_filling_general' => [
-                            'start' => '2024-12-12 00:00:00',
-                            'end' => '2024-12-13 00:00:00',
+                            'start' => '2024-12-08 00:00:00',
+                            'end' => '2024-12-14 00:00:00',
                         ],
                         'irs_changes' => [
                             'start' => '2024-12-14 00:00:00',

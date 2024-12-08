@@ -54,9 +54,9 @@ class AcademicSeeder extends DatabaseSeeder
                     'semester' => $herRegistration['semester'],
                     'status_name' => array_keys(Irs::STATUSES)[1],
                     'status_at' => now(),
-                    'is_submitted' => true,
+                    'is_submitted' => academicYearId() != $herRegistration['academic_year_id'],
                     'status_by_id' => $student->lecturer->user->id,
-                    'action_name' => array_keys(Irs::ACTIONS)[1],
+                    'action_name' =>  academicYearId() == $herRegistration['academic_year_id'] ? array_keys(Irs::ACTIONS)[0] : array_keys(Irs::ACTIONS)[1],
                     'action_at' => now(),
                     'action_by_id' => $student->lecturer->user->id,
                 ]);

@@ -147,7 +147,7 @@ class SchedulingSeeder extends DatabaseSeeder
                         'room_id' => $rooms[rand(0, count($rooms) - 1)]['id'],
                         'course_department_detail_id' => $courseDepartmentDetail['id'],
                         'name' => 'A',
-                        'day' => array_keys(CourseClass::DAYS)[0],
+                        'day' => array_keys(CourseClass::DAYS)[rand(0, count(CourseClass::DAYS) - 1)],
                         'start_time' => $start,
                         'end_time' => $end,
                     ]);

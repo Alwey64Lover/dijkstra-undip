@@ -116,9 +116,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['roles:student'])->group(function () {
         Route::get('get-course-class', [IrsController::class, 'getCourseClass'])->name('irs.get-course-class');
         Route::post('submit-irs', [IrsController::class, 'submitIrs'])->name('irs.submit-irs');
-        Route::get('/export-pdf', [IrsController::class, 'exportPdf']);
         Route::simpleResource('irs', IrsController::class);
     });
+
+    Route::get('/export-pdf', [IrsController::class, 'exportPdf']);
 });
 
 require __DIR__.'/auth.php';

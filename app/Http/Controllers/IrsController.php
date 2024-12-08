@@ -8,6 +8,7 @@ use App\Models\HerRegistration;
 use App\Models\Irs;
 use App\Models\IrsDetail;
 use App\Models\IrsTemporaryCourse;
+use App\Models\Student;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
@@ -241,15 +242,15 @@ class IrsController extends Controller
         return redirect()->back()->with('success', 'IRS berhasil di'.$message.'!');
     }
 
-    public function exportPdf()
+    public function exportPdf(Request $request)
     {
         try {
+            $getStudent = Student::find($request->student_id);
             // Ambil data IRS mahasiswa
-            $studentId = user()->student->id; // Pastikan user login memiliki relasi student
-            $studentName = user()->name;
-            $studentNim = user()->student->nim;
+            $studentId = @user()->student->id ?? $getStudent->id; // Pastikan user login memiliki relasi student
+            $studentName = @user()->name ?? $getStudent->name;
+            $studentNim = @user()->student->nim ?? $getStudent->nim;
             // $tahunakdmk = AcademicYears::get();
-            // dd($studentName);
             $latestSemester = (int) HerRegistration::where('student_id', $studentId)
             ->whereHas('irs', function($query){
                 $query->where('action_name', 1);
@@ -258,12 +259,13 @@ class IrsController extends Controller
             ->value('semester');
 
             $selectedSemester = $request->semester ?? $latestSemester;
-
-            $irsmhs= IrsDetail::whereHas('irs', function($query) use ($selectedSemester,$studentId){
+            // dd($selectedSemester, $studentId);
+            $irsmhs= IrsDetail::
+            whereHas('irs', function($query) use ($selectedSemester,$studentId){
                 $query->whereHas('herRegistration', function($query) use($studentId, $selectedSemester){
                     $query->where([
                         ['student_id', $studentId],
-                        ['semester', $selectedSemester]
+                        ['semester', 6]
                     ]);
                 });
             })

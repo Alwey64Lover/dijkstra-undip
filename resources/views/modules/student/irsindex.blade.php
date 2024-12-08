@@ -37,6 +37,8 @@
                 data: { semester: semester },
                 success: function(response){
                     $('#table-content').html(response.html);
+
+                    $('#cetak-irs-btn').attr('href', `/export-pdf?semester=${semester}`);
                 },
                 error: function(xhr){
                     console.error('Error fetching data:', xhr);

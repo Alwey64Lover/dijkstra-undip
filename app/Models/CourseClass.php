@@ -23,8 +23,6 @@ class CourseClass extends Model
         'wednesday' => 'Rabu',
         'thursday' => 'Kamis',
         'friday' => 'Jumat',
-        'saturday' => 'Sabtu',
-        'sunday' => 'Minggu',
     ];
 
     public function CourseDepartmentDetail(){

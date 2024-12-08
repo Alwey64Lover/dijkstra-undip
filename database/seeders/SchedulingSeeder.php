@@ -140,8 +140,10 @@ class SchedulingSeeder extends DatabaseSeeder
 
             foreach ($courseDepartmentDetails as $key => $courseDepartmentDetail) {
                 $start = $times[rand(0, count($times) - 1)];
-                $end = date('H:i', strtotime($times[rand(0, count($times) - 1)]) + 60 * 60);
-                // dd($courseDepartmentDetail);
+
+                $duration = 50 * $courseDepartmentDetail['sks'];
+
+                $end = date('H:i', strtotime($start . " + $duration minutes"));
                 $courseClasses[] =
                     $this->data([
                         'room_id' => $rooms[rand(0, count($rooms) - 1)]['id'],

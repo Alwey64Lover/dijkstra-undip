@@ -69,3 +69,4 @@ class AcademicYearSeeder extends DatabaseSeeder
             AcademicYear::insert($academicYears);
     }
 }
+

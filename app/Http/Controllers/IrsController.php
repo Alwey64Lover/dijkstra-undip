@@ -250,14 +250,22 @@ class IrsController extends Controller
             $studentNim = user()->student->nim;
             // $tahunakdmk = AcademicYears::get();
             // dd($studentName);
-            $latestSemester = (int) Irs::where('student_id', $studentId)
+            $latestSemester = (int) HerRegistration::where('student_id', $studentId)
+            ->whereHas('irs', function($query){
+                $query->where('action_name', 1);
+            })
             ->orderBy('semester', 'desc')
-            ->value('semester') - 1;
+            ->value('semester');
+
             $selectedSemester = $request->semester ?? $latestSemester;
 
-            $irsmhs = IrsDetail::whereHas('irs', function ($query) use ($studentId) {
-                $query->where('student_id', $studentId)
-                      ->where('semester', 1);
+            $irsmhs= IrsDetail::whereHas('irs', function($query) use ($selectedSemester,$studentId){
+                $query->whereHas('herRegistration', function($query) use($studentId, $selectedSemester){
+                    $query->where([
+                        ['student_id', $studentId],
+                        ['semester', $selectedSemester]
+                    ]);
+                });
             })
             ->with([
                 'courseClass.CourseDepartmentDetail.course',

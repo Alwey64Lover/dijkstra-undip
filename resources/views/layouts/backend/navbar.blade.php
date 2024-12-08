@@ -1,7 +1,7 @@
 <div class="header-top">
     <div class="container d-flex align-items-center justify-content-between">
         <div class="logo logo-md">
-            <a href="index.html">
+            <a href="">
                 <img src="{{ asset('storage/static/dijkstraLogo.png') }}" alt="Logo" style="height: 78px; width: auto; margin:-22px; margin-left: 15px">
             </a>
         </div>

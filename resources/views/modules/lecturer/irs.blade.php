@@ -5,7 +5,7 @@
 @section('content')
     <section class="section">
         <div class="card mb-2">
-            <div class="card-header col-12 mb-3">
+            <div class="card-header col-12 pb-0">
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <div class="avatar avatar-md2" >
                         <img src="{{ asset('assets/compiled/jpg/1.jpg') }}" alt="Avatar">
@@ -15,7 +15,9 @@
                     <h6 style="margin: 0">{{ $student->user->name }}</h6>
                     @if (isset($irsDetails->first()->irs))
                         @if ($irsDetails->first()->irs->action_name === '1')
-                            <button class="ms-auto btn btn-primary">Cetak IRS</button>
+                            <a href="/export-pdf?student_id={{ $student->id }}&semester={{ request()->semester }}" id="cetak-irs-btn" class="ms-auto btn btn-primary">
+                                Cetak IRS
+                            </a>
                         @endif
                         {{-- @dd($irsDetails->first()->irs->herRegistration->academicYear->is_active) --}}
                         @if ($irsDetails->first()->irs->herRegistration->academicYear->is_active == 1)
@@ -36,7 +38,7 @@
                         <x-form-element :element="@$semester"/>
                     </div>
                 </div>
-                <button id="irs-button" class="ms-auto btn btn-primary rounded-pill me-2" style="width: 230.38px">IRS</button>
+                {{-- <button id="irs-button" class="ms-auto btn btn-primary rounded-pill me-2" style="width: 230.38px">IRS</button> --}}
                 {{-- <form action="/khs/{{ $student->nim }}"method="GET" style="display: inline;">
                     @csrf
                     <input type="hidden" name="nim" value="{{ $student->nim }}">

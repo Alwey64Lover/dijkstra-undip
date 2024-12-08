@@ -277,16 +277,14 @@ class CourseDepartmentDetailController extends Controller
         $courseDepartmentDetail = CourseDepartmentDetail::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'string|max:255',
             'semester' => 'required|integer|min:1|max:8',
             'sks' => 'required|integer|min:1|max:6',
             'lecturer_ids' => 'required|array',
             'lecturer_ids.*' => 'exists:lecturers,id'
         ]);
 
-        $courseDepartmentDetail->course->update([
-            'name' => $validated['name']
-        ]);
+       
 
         $courseDepartmentDetail->update([
             'semester' => $validated['semester'],

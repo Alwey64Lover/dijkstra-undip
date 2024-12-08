@@ -30,7 +30,7 @@
                     @csrf
                     @if (user()->role === 'dean')
                         <div class="d-flex justify-content-end">
-                            <button disabled id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui Ruangan Terpilih</button>
+                            <button disabled id="select-button" class="btn btn-success mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom">Setujui Ruangan Terpilih</button>
                         </div>
                     @endif
                     <div class="table-responsive">

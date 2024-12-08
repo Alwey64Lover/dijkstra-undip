@@ -20,7 +20,7 @@
                             </a>
                         @endif
                         {{-- @dd($irsDetails->first()->irs->herRegistration->academicYear->is_active) --}}
-                        @if ($irsDetails->first()->irs->herRegistration->academicYear->is_active == 1)
+                        @if ($irsDetails->first()->irs->herRegistration->academicYear->is_active == 1 && $irsDetails->first()->irs->is_submitted == 1)
                             @if($irsDetails->first()->irs->action_name != 1)
                                 <a class="ms-auto" href='/irs/{{ $irsDetails->first()->irs->id }}/accept'>
                                     <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="IRS yang disetujui akan dijalankan mahasiswa untuk semester ini.">Setujui IRS</button>

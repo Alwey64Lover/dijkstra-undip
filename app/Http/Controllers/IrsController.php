@@ -110,7 +110,8 @@ class IrsController extends Controller
 
             $data['availablecourses'] = CourseDepartmentDetail::
                 whereHas('courseDepartment', function($query){
-                    $query->where('academic_year_id', academicYearId());
+                    $query->where('academic_year_id', academicYearId())
+                        ->where('action_name', 'accepted');
                 })
                 ->where(function($query) use($schedules, $latestSemester){
                     // dd(strtotime(date('Y-m-d H:i:s')), strtotime(date('Y-m-d H:i:s', strtotime($schedules->irs_filling_priority->start))));
@@ -140,24 +141,29 @@ class IrsController extends Controller
                 'CourseDepartmentDetail.course',
                 'room',
                 'irsInfo' => function($query){
-                    $query->where('irs_id', activeIrs()->id);
-                }
+                    $query->where('irs_id', activeIrs()->id)->whereHas('irs', function($query){
+                        $query->whereHas('herRegistration', function($query){
+                            $query->where('student_id', user()->student->id);
+                        });
+                    });
+                },
+                'irsDetail'
             ])
             ->get()
             ->map(function ($courseClass) use ($courseIds) {
-                if ($courseClass->irsInfo->isNotEmpty()) {
+                if ($courseClass->irsDetail->isNotEmpty()) {
                     $courseClass->status_color = 'success';
                 } elseif (CourseClass::where('course_department_detail_id', $courseClass->course_department_detail_id)
                         ->get()
                         ->contains(function ($item) {
-                            return $item->irsInfo->isNotEmpty();
+                            return $item->irsDetail->isNotEmpty();
                         })
                 ) {
                     $courseClass->status_color = 'secondary';
                 } elseif (CourseClass::where('course_department_detail_id', $courseClass->course_department_detail_id)
                         ->get()
                         ->every(function ($item) {
-                            return $item->irsInfo->isEmpty();
+                            return $item->irsDetail->isEmpty();
                         })
                 ) {
                     $courseClass->status_color = 'warning';
@@ -180,7 +186,7 @@ class IrsController extends Controller
                             && $item->irsInfo->isNotEmpty();
                     });
 
-                    if ($overlapping) {
+                    if ($overlapping && $courseClass->status_color != 'secondary') {
                         $courseClass->status_color = 'danger';
                     }
                 }

@@ -38,4 +38,15 @@ class CourseClass extends Model
     public function irsInfo(){
         return $this->hasMany(IrsDetail::class);
     }
+
+    public function irsDetail()
+    {
+        return $this->hasMany(IrsDetail::class)
+            ->where('irs_id', activeIrs()->id)
+            ->whereHas('irs', function($query) {
+                $query->whereHas('herRegistration', function($query) {
+                    $query->where('student_id', user()->student->id);
+                });
+            });
+    }
 }

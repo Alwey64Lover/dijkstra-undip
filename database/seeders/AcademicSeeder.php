@@ -56,6 +56,12 @@ class AcademicSeeder extends DatabaseSeeder
                     'semester' => 5,
                     'status' => array_keys(HerRegistration::STATUSES)[0],
                 ]),
+                $this->data([
+                    'student_id' => $student->id,
+                    'academic_year_id' => $academicYears[5]['id'],
+                    'semester' => 6,
+                    'status' => array_keys(HerRegistration::STATUSES)[0],
+                ])
             ];
 
         // IRS

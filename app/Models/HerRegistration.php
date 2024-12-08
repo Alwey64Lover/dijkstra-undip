@@ -21,6 +21,7 @@ class HerRegistration extends Model
         'active' => 'Aktif',
         'leave' => 'Cuti',
         'drop_out' => 'Keluar(DO)',
+        'graduate' => 'Lulus'
     ];
 
     public function irs(){
